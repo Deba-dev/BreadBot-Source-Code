@@ -19,6 +19,7 @@ buttons = "^0.1.9"
 DiscordUtils = "^1.2.8"
 discordmongopy = "^0.2.0"
 prsaw = "^0.2.0"
+PyNaCl = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 

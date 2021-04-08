@@ -174,7 +174,7 @@ class Config(commands.Cog):
         description="Set the channel for the chatbot to respond to messages!",
         name="channel"
     )
-    @commands.is_owner()
+    @commands.has_permissions(manage_channels=True)
     async def chatbot_channel(self,ctx,channel:discord.TextChannel):
         data = await self.bc.chatbot.find(ctx.guild.id)
         if not data:
@@ -187,7 +187,7 @@ class Config(commands.Cog):
         description="Enable/Disable the chatbot!",
         name="toggle"
     )
-    @commands.is_owner()
+    @commands.has_permissions(manage_channels=True)
     async def chatbot_toggle(self,ctx):
         data = await self.bc.chatbot.find(ctx.guild.id)
         if not data:
@@ -201,7 +201,7 @@ class Config(commands.Cog):
         description="Delete your settings for your chatbot!",
         name="delete"
     )
-    @commands.is_owner()
+    @commands.has_permissions(manage_channels=True)
     async def chatbot_delete(self,ctx):
         data = await self.bc.chatbot.find(ctx.guild.id)
         if not data:
@@ -346,7 +346,7 @@ class Config(commands.Cog):
     async def lvl_message(self,ctx,*,message:str=None):
         data = await self.bc.ranks.find(ctx.guild.id)
         if message is None:
-            await ctx.send("""
+            return await ctx.send("""
 **Arguments for level up message**
 
 {member} - member who leveled up

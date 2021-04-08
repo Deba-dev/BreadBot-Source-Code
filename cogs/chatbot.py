@@ -14,6 +14,8 @@ class ChatBot(commands.Cog):
         data = await self.bc.chatbot.find(msg.guild.id)
         if data is None:
             return
+        if not data["isenabled"]:
+            return
         if msg.channel.id == data["channel"]:
             response =  rs.get_ai_response(msg.content)
             await msg.reply(response)

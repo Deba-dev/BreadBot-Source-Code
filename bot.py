@@ -188,7 +188,7 @@ class BreadBot(commands.AutoShardedBot):
 
     
     def run(self, a):
-        token = os.environ.get("token2")
+        token = os.environ.get("token")
         keep_alive.keep_alive()
         
         super().run(token, reconnect=True)

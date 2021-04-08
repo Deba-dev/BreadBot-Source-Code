@@ -104,7 +104,7 @@ class Fun(commands.Cog):
 
     @tasks.loop(minutes=60)
     async def refresh_memes(self):
-        subreddit = reddit.subreddit("memes")
+        subreddit = reddit.subreddit("crappydesign")
         top = subreddit.top(limit=500)
         self.subs.clear()
         for submission in top:

@@ -1,0 +1,200 @@
+{
+    "96fDb": {
+        "Command": "Play",
+        "Error Type": "RuntimeError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 547, in _play\n    await ctx.invoke(self._join)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/context.py\", line 135, in invoke\n    ret = await command.callback(*arguments, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 368, in _join\n    ctx.voice_state.voice = await destination.connect()\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1150, in connect\n    voice = cls(client, self)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/voice_client.py\", line 199, in __init__\n    raise RuntimeError(\"PyNaCl library needed in order to use voice\")\n",
+            "RuntimeError: PyNaCl library needed in order to use voice\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: RuntimeError: PyNaCl library needed in order to use voice\n"
+        ]
+    },
+    "782eD745": {
+        "Command": "Play",
+        "Error Type": "RuntimeError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 547, in _play\n    await ctx.invoke(self._join)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/context.py\", line 135, in invoke\n    ret = await command.callback(*arguments, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 368, in _join\n    ctx.voice_state.voice = await destination.connect()\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1150, in connect\n    voice = cls(client, self)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/voice_client.py\", line 199, in __init__\n    raise RuntimeError(\"PyNaCl library needed in order to use voice\")\n",
+            "RuntimeError: PyNaCl library needed in order to use voice\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: RuntimeError: PyNaCl library needed in order to use voice\n"
+        ]
+    },
+    "173Dc3": {
+        "Command": "Play",
+        "Error Type": "RuntimeError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 547, in _play\n    await ctx.invoke(self._join)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/context.py\", line 135, in invoke\n    ret = await command.callback(*arguments, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 368, in _join\n    ctx.voice_state.voice = await destination.connect()\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1150, in connect\n    voice = cls(client, self)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/voice_client.py\", line 199, in __init__\n    raise RuntimeError(\"PyNaCl library needed in order to use voice\")\n",
+            "RuntimeError: PyNaCl library needed in order to use voice\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: RuntimeError: PyNaCl library needed in order to use voice\n"
+        ]
+    },
+    "8A67912": {
+        "Command": "Blacklist",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 790, in prepare\n    await self._parse_arguments(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 697, in _parse_arguments\n    transformed = await self.transform(ctx, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 552, in transform\n    return await self.do_conversion(ctx, converter, argument, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 505, in do_conversion\n    return await self._actual_conversion(ctx, converter, argument, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 451, in _actual_conversion\n    ret = await instance.convert(ctx, argument)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/converter.py\", line 191, in convert\n    raise MemberNotFound(argument)\n",
+            "discord.ext.commands.errors.MemberNotFound: Member \"623806286936539136\" not found.\n"
+        ]
+    },
+    "C4232576": {
+        "Command": "Reload",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 558, in reload\n    self.bc.load_extension(f\"cogs.{ext[:-3]}\")\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 935, in send\n    data = await state.http.send_message(channel.id, content, tts=tts, embed=embed,\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 247, in request\n    raise HTTPException(r, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.0.value: Must be 1024 or fewer in length.\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.0.value: Must be 1024 or fewer in length.\n"
+        ]
+    },
+    "576e5": {
+        "Command": "Meme",
+        "Error Type": "IndexError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/fun.py\", line 203, in meme\n    meme = random.choice(self.subs)\n",
+            "  File \"/usr/lib/python3.8/random.py\", line 290, in choice\n    raise IndexError('Cannot choose from an empty sequence') from None\n",
+            "IndexError: Cannot choose from an empty sequence\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: Cannot choose from an empty sequence\n"
+        ]
+    },
+    "c5c5303": {
+        "Command": "Meme",
+        "Error Type": "IndexError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/fun.py\", line 203, in meme\n    meme = random.choice(self.subs)\n",
+            "  File \"/usr/lib/python3.8/random.py\", line 290, in choice\n    raise IndexError('Cannot choose from an empty sequence') from None\n",
+            "IndexError: Cannot choose from an empty sequence\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: Cannot choose from an empty sequence\n"
+        ]
+    },
+    "ccC06": {
+        "Command": "Meme",
+        "Error Type": "IndexError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/fun.py\", line 203, in meme\n    meme = random.choice(self.subs)\n",
+            "  File \"/usr/lib/python3.8/random.py\", line 290, in choice\n    raise IndexError('Cannot choose from an empty sequence') from None\n",
+            "IndexError: Cannot choose from an empty sequence\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: Cannot choose from an empty sequence\n"
+        ]
+    },
+    "59424e2": {
+        "Command": "Meme",
+        "Error Type": "IndexError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/fun.py\", line 203, in meme\n    meme = random.choice(self.subs)\n",
+            "  File \"/usr/lib/python3.8/random.py\", line 290, in choice\n    raise IndexError('Cannot choose from an empty sequence') from None\n",
+            "IndexError: Cannot choose from an empty sequence\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: Cannot choose from an empty sequence\n"
+        ]
+    },
+    "5804706": {
+        "Command": "Memberinfo",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 152, in memberinfo\n    await ctx.send(embed=em)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 935, in send\n    data = await state.http.send_message(channel.id, content, tts=tts, embed=embed,\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 247, in request\n    raise HTTPException(r, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.3.value: This field is required\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.3.value: This field is required\n"
+        ]
+    },
+    "e57ac2B": {
+        "Command": "Memberinfo",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 152, in memberinfo\n    await ctx.send(embed=em)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 935, in send\n    data = await state.http.send_message(channel.id, content, tts=tts, embed=embed,\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 247, in request\n    raise HTTPException(r, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.3.value: This field is required\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.3.value: This field is required\n"
+        ]
+    }
+}

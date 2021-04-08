@@ -164,7 +164,7 @@ class Invites(commands.Cog):
                     file = discord.File('images/overlap.png')
                     await channel.send(file=file,embed=em)
                     sus = False
-                elif int(year) == 0 and int(month) in range(1, 2):
+                elif int(year) == 0 and int(month) not in range(0, 3):
                     em = discord.Embed(
                         title="Welcome {}".format(member),
                         description='Welcome {} to **{}**. You are our `{}{}` member!'.format(member.mention, member.guild.name,len(member.guild.members), ending)
@@ -174,7 +174,7 @@ class Invites(commands.Cog):
                     file = discord.File('images/overlap.png')
                     await channel.send(file=file,embed=em)
                     sus = False
-                elif int(year) == 0 and int(month) == 0:
+                elif int(year) == 0 and int(month) < 2:
                     em = discord.Embed(
                         title="Welcome {}".format(member),
                         description='Welcome {} to **{}**. You are our `{}{}` member!'.format(member.mention, member.guild.name,len(member.guild.members), ending)

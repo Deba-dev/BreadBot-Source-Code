@@ -29,6 +29,11 @@ def format_num(num):
     # add more suffixes if you need them
     return '%.2f%s' % (num, ['', 'K', 'M', 'B', 'T', 'Qd'][magnitude])
 
+async def save_audit_logs(guild):
+    with open(f'audit_logs_{guild.name}', 'w+') as f:
+        async for entry in guild.audit_logs(limit=100):
+            f.write('{0.user} did {0.action} to {0.target}\n\n'.format(entry))
+
 class Owner(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
@@ -60,6 +65,12 @@ class Owner(commands.Cog):
             description=notes
         )
         await ctx.send(embed=em)
+    
+    @commands.command()
+    @commands.is_owner()
+    async def audit(self,ctx):
+        await save_audit_logs(ctx.guild)
+        await ctx.send("Saved audit logs in a text file")
     
     @changelogs.command()
     async def add(self,ctx,version,*,notes):
@@ -743,13 +754,6 @@ Map: {}
         except Exception as e:
             await ctx.send("Failed to load {}:\n{}".format(cog,e))
         await ctx.send("Cog {} loaded".format(cog))
-
-    @commands.command()
-    async def cum(self,ctx):
-        rand = random.randint(1,10)
-        embed = discord.Embed(title="You Rolled A...", color = discord.Colour.blue())
-        embed.add_field(name = "Number: ", value = rand)
-        await ctx.send(embed=embed)
                 
 
 

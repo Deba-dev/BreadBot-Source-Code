@@ -95,7 +95,7 @@ class Ranks(commands.Cog):
         rank = data["members"].index(user) 
         if user["xp"] >= user["maxXp"]:
             user["level"] += 1
-            newxp = user["maxXp"] / 0.91
+            newxp = user["maxXp"] + 40 * user["level"]
             newxp = int(newxp)
             user["maxXp"] = newxp
             user["xp"] = 0
