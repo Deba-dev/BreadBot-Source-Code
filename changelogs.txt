@@ -1,6 +1,5 @@
 
-**Version:** 0.9.5
+**Version:** 1.0.0
 **Notes:**
-- Fixed chatbot needing api key
-- Fixed Music Skip Votes always needing 3 votes instead of the amount of humans in the vc
-- Fixed welcome system not working            
+- Added source command for breadbot code
+- polished music            

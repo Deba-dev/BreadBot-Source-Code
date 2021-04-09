@@ -29,7 +29,7 @@ def gen_code():
             former.append(random.choice(num))
     return ''.join(map(str, former))
 
-class example(commands.Cog):
+class Events(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
 
@@ -156,4 +156,4 @@ def write_json(data, filename):
 
 
 def setup(bc):
-    bc.add_cog(example(bc))
+    bc.add_cog(Events(bc))

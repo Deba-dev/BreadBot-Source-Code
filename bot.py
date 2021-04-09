@@ -194,12 +194,6 @@ class BreadBot(commands.AutoShardedBot):
         
         super().run(token, reconnect=True)
 
-    def run2(self, a):
-        token = os.environ.get("token2")
-        keep_alive.keep_alive()
-        
-        super().run(token, reconnect=True)
-
 def read_json(filename):
     with open(f"{filename}.json", "r") as file:
         data = json.load(file)

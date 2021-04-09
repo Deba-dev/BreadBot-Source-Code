@@ -33,16 +33,16 @@ class Checking(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.channel)
     async def source(self, ctx, *, command: str = None):
         source_url = 'https://github.com/RealBongoChongo/BreadBot-Source-Code'
-        branch = 'main'
+        branch = 'master'
         if command is None:
             return await ctx.send(source_url)
 
         if command == 'master':
-            src = type(self.client.help_command)
+            src = type(self.bc.help_command)
             module = src.__module__
             filename = inspect.getsourcefile(src)
         else:
-            obj = self.client.get_command(command.replace('.', ' '))
+            obj = self.bc.get_command(command.replace('.', ' '))
             if obj is None:
                 return await ctx.send('Could not find command.')
 
@@ -61,7 +61,7 @@ class Checking(commands.Cog):
             source_url = 'https://github.com/Rapptz/discord.py'
             branch = 'master'
 
-        final_url = f'<{source_url}/tree/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>'
+        final_url = f'<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>'
         await ctx.send(final_url)
 
     @commands.command(

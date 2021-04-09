@@ -331,5 +331,21 @@
             "  File \"/home/runner/Bot/cogs/music.py\", line 599, in ensure_voice_state\n    raise commands.CommandError('Bot is already in a voice channel.')\n",
             "discord.ext.commands.errors.CommandError: Bot is already in a voice channel.\n"
         ]
+    },
+    "c258cE": {
+        "Command": "Source",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 45, in source\n    obj = self.client.get_command(command.replace('.', ' '))\n",
+            "AttributeError: 'Checking' object has no attribute 'client'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Checking' object has no attribute 'client'\n"
+        ]
     }
 }
