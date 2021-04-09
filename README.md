@@ -11,7 +11,7 @@ If you want to join my servers you can click here:
     <img src="https://discordapp.com/api/guilds/680221497197068308/widget.png?style=banner4" alt="Discord" />
 </a>
 <a href="https://discord.gg/hfMfFH3has" target="_blank" rel="noopener noreferrer">
-    <img src="https://discordapp.com/api/guilds/680221497197068308/widget.png?style=banner4" alt="Discord" />
+    <img src="https://discordapp.com/api/guilds/760950684849537124/widget.png?style=banner4" alt="Discord" />
 </a>
 
 Im lazy rn so im gonna finish this readme in another day
