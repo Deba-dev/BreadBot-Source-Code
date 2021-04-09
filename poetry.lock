@@ -246,7 +246,7 @@ description = "Create API wrappers/clients in minutes, enjoying both blocking an
 name = "instant-api-client"
 optional = false
 python-versions = ">=3.6"
-version = "0.1.1"
+version = "0.1.2"
 
 [package.dependencies]
 httpx = "0.16.1"
@@ -351,10 +351,10 @@ description = "PRSAW, an acronym for `Python Random Stuff API Wrapper`, is a wra
 name = "prsaw"
 optional = false
 python-versions = "*"
-version = "0.2.0"
+version = "0.3.1"
 
 [package.dependencies]
-instant-api-client = "0.1.1"
+instant-api-client = "0.1.2"
 
 [[package]]
 category = "main"
@@ -521,7 +521,7 @@ python-versions = "*"
 version = "2021.3.31"
 
 [metadata]
-content-hash = "6a729648cda87d380d08921ab76fe6bf79889b890ff2ae641d1156b8c3879aad"
+content-hash = "ddcf68922abd526600fed6e31dedbafb030aef2478a193d2bad8775b7a54e6de"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -675,8 +675,8 @@ idna = [
     {file = "idna-3.1.tar.gz", hash = "sha256:c5b02147e01ea9920e6b0a3f1f7bb833612d507592c837a6c49552768f4054e1"},
 ]
 instant-api-client = [
-    {file = "instant-api-client-0.1.1.tar.gz", hash = "sha256:c230ef115a2f065a46c0f39b5b7a40689ea7f525897ca1d07cee6790874439bf"},
-    {file = "instant_api_client-0.1.1-py3-none-any.whl", hash = "sha256:2b293e822511c52349900916b1473fbd152e4857b12448294437360aaf6537b1"},
+    {file = "instant-api-client-0.1.2.tar.gz", hash = "sha256:1a9efa7262f4f011060d036ad0c2df1c482f7181222858dabb8236048bce389a"},
+    {file = "instant_api_client-0.1.2-py3-none-any.whl", hash = "sha256:bb4a045cad36ab25c403434ce84a1eabdd044bba2dd8f42353169edc2080eedc"},
 ]
 itsdangerous = [
     {file = "itsdangerous-1.1.0-py2.py3-none-any.whl", hash = "sha256:b12271b2047cb23eeb98c8b5622e2e5c5e9abd9784a153e9d8ef9cb4dd09d749"},
@@ -827,7 +827,7 @@ prawcore = [
     {file = "prawcore-2.0.0.tar.gz", hash = "sha256:b498d9b6f54991005e727d5235c8f49ea5ba0c9a6d793fb743b40fa089cd36d1"},
 ]
 prsaw = [
-    {file = "prsaw-0.2.0.tar.gz", hash = "sha256:57155e766713e5e44fd5fb1eb372a5394308323b0c98781b529c3af3944052a1"},
+    {file = "prsaw-0.3.1.tar.gz", hash = "sha256:1d62e9806883cdb193cd2e65c29a76c1f62105c771a012403522387878fa1f37"},
 ]
 pycparser = [
     {file = "pycparser-2.20-py2.py3-none-any.whl", hash = "sha256:7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"},

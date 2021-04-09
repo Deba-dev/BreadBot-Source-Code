@@ -354,46 +354,43 @@ class Music(commands.Cog):
         ctx.voice_state = self.get_voice_state(ctx)
 
     async def cog_command_error(self, ctx: commands.Context, error: commands.CommandError):
+        if isinstance(error,commands.MissingPermissions):
+            return
         await ctx.send('An error occurred: {}'.format(str(error)))
 
-    @commands.command(name='join', invoke_without_subcommand=True)
+    @commands.command(name='join', invoke_without_subcommand=True, aliases=["summon"])
     async def _join(self, ctx: commands.Context):
         """Joins a voice channel."""
 
+        if not ctx.author.voice or not ctx.author.voice.channel:
+            return await ctx.send('You are not connected to any voice channel.')
+
         destination = ctx.author.voice.channel
         if ctx.voice_state.voice:
-            await ctx.voice_state.voice.move_to(destination)
-            return
+            if ctx.author.guild_permissions.manage_guild:
+                await ctx.voice_state.voice.move_to(destination)
+                return
+            else:
+                return await ctx.send("I'm already in a voice channel!")
+        else:
+            ctx.voice_state.voice = await destination.connect()
 
-        ctx.voice_state.voice = await destination.connect()
-
-    @commands.command(name='summon')
-    @commands.has_permissions(manage_guild=True)
-    async def _summon(self, ctx: commands.Context, *, channel: discord.VoiceChannel = None):
-        """Summons the bot to a voice channel.
-        If no channel was specified, it joins your channel.
-        """
-
-        if not channel and not ctx.author.voice:
-            raise VoiceError('You are neither connected to a voice channel nor specified a channel to join.')
-
-        destination = channel or ctx.author.voice.channel
-        if ctx.voice_state.voice:
-            await ctx.voice_state.voice.move_to(destination)
-            return
-
-        ctx.voice_state.voice = await destination.connect()
 
     @commands.command(name='leave', aliases=['disconnect'])
-    @commands.has_permissions(manage_guild=True)
     async def _leave(self, ctx: commands.Context):
         """Clears the queue and leaves the voice channel."""
 
         if not ctx.voice_state.voice:
             return await ctx.send('Not connected to any voice channel.')
 
-        await ctx.voice_state.stop()
-        del self.voice_states[ctx.guild.id]
+        if len(ctx.author.voice.channel.members) <= 2:
+            await ctx.voice_state.stop()
+            del self.voice_states[ctx.guild.id]
+        else:
+            if ctx.author.guild_permissions.manage_guild:
+                await ctx.voice_state.stop()
+                del self.voice_states[ctx.guild.id]
+            await ctx.send("There are other people in this vc that might be listening!")
 
     @commands.command(name='volume')
     @commands.is_owner()
@@ -581,15 +578,6 @@ class Music(commands.Cog):
                     await ctx.voice_state.songs.put(song)
                     await ctx.send('Enqueued {}'.format(str(source)))
             
-    @_join.before_invoke
-    @_play.before_invoke
-    async def ensure_voice_state(self, ctx: commands.Context):
-        if not ctx.author.voice or not ctx.author.voice.channel:
-            raise commands.CommandError('You are not connected to any voice channel.')
-
-        if ctx.voice_client:
-            if ctx.voice_client.channel != ctx.author.voice.channel:
-                raise commands.CommandError('Bot is already in a voice channel.')
 
 def setup(bot):
     bot.add_cog(Music(bot))

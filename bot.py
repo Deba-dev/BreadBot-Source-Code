@@ -58,6 +58,7 @@ class BreadBot(commands.AutoShardedBot):
         
         self.owner = owner
         self.remove_command("help")
+        self.blacklisted_users = {}
         self.muted_users = {}
         self.afk = {}
         self.heistdata = {}

@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
 from prsaw import RandomStuff
-rs = RandomStuff()
+import os
+rs = RandomStuff(api_key = os.environ.get("prsawapi"))
 
 class ChatBot(commands.Cog):
     def __init__(self,bc):

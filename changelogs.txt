@@ -1,9 +1,6 @@
 
-**Version:** 0.9.0
+**Version:** 0.9.5
 **Notes:**
-- Added chatbot
-- Made lock command revert permissions to before lock
-- put all automod commands into automod command
-- New welcome image
-- Improved link detector
-- removed translator            
+- Fixed chatbot needing api key
+- Fixed Music Skip Votes always needing 3 votes instead of the amount of humans in the vc
+- Fixed welcome system not working            

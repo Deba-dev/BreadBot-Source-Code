@@ -4,6 +4,7 @@ import random
 from discord.ext.commands import cooldown, BucketType
 from random import choice
 from PIL import *
+import inspect,os
 import math
 import datetime
 
@@ -27,6 +28,41 @@ def format_num(num):
 class Checking(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
+
+    @commands.command(name="source",aliases=["github","spoonfeedme"])
+    @commands.cooldown(1, 1, commands.BucketType.channel)
+    async def source(self, ctx, *, command: str = None):
+        source_url = 'https://github.com/RealBongoChongo/BreadBot-Source-Code'
+        branch = 'main'
+        if command is None:
+            return await ctx.send(source_url)
+
+        if command == 'master':
+            src = type(self.client.help_command)
+            module = src.__module__
+            filename = inspect.getsourcefile(src)
+        else:
+            obj = self.client.get_command(command.replace('.', ' '))
+            if obj is None:
+                return await ctx.send('Could not find command.')
+
+            # since we found the command we're looking for, presumably anyway, let's
+            # try to access the code itself
+            src = obj.callback.__code__
+            module = obj.callback.__module__
+            filename = src.co_filename
+
+        lines, firstlineno = inspect.getsourcelines(src)
+        if not module.startswith('discord'):
+            # not a built-in command
+            location = os.path.relpath(filename).replace('\\', '/')
+        else:
+            location = module.replace('.', '/') + '.py'
+            source_url = 'https://github.com/Rapptz/discord.py'
+            branch = 'master'
+
+        final_url = f'<{source_url}/tree/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>'
+        await ctx.send(final_url)
 
     @commands.command(
         description="Check your level in your server!"

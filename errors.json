@@ -196,5 +196,140 @@
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
             "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.3.value: This field is required\n"
         ]
+    },
+    "7BC07": {
+        "Command": "Reload",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 569, in reload\n    await ctx.send(embed=embed)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 935, in send\n    data = await state.http.send_message(channel.id, content, tts=tts, embed=embed,\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 247, in request\n    raise HTTPException(r, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.0.value: Must be 1024 or fewer in length.\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.0.value: Must be 1024 or fewer in length.\n"
+        ]
+    },
+    "fa4c68": {
+        "Command": "Join",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 792, in prepare\n    await self.call_before_hooks(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 732, in call_before_hooks\n    await self._before_invoke(instance, ctx)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 596, in ensure_voice_state\n    raise commands.CommandError('Bot is already in a voice channel.')\n",
+            "discord.ext.commands.errors.CommandError: Bot is already in a voice channel.\n"
+        ]
+    },
+    "7614b2D": {
+        "Command": "Join",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 792, in prepare\n    await self.call_before_hooks(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 732, in call_before_hooks\n    await self._before_invoke(instance, ctx)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 597, in ensure_voice_state\n    raise commands.CommandError('Bot is already in a voice channel.')\n",
+            "discord.ext.commands.errors.CommandError: Bot is already in a voice channel.\n"
+        ]
+    },
+    "FdFa56": {
+        "Command": "Join",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 792, in prepare\n    await self.call_before_hooks(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 732, in call_before_hooks\n    await self._before_invoke(instance, ctx)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 596, in ensure_voice_state\n    raise commands.CommandError('Bot is already in a voice channel.')\n",
+            "discord.ext.commands.errors.CommandError: Bot is already in a voice channel.\n"
+        ]
+    },
+    "6d329f8": {
+        "Command": "Join",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 792, in prepare\n    await self.call_before_hooks(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 732, in call_before_hooks\n    await self._before_invoke(instance, ctx)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 597, in ensure_voice_state\n    raise commands.CommandError('Bot is already in a voice channel.')\n",
+            "discord.ext.commands.errors.CommandError: Bot is already in a voice channel.\n"
+        ]
+    },
+    "46F11": {
+        "Command": "Join",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 792, in prepare\n    await self.call_before_hooks(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 732, in call_before_hooks\n    await self._before_invoke(instance, ctx)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 593, in ensure_voice_state\n    raise commands.CommandError('You are not connected to any voice channel.')\n",
+            "discord.ext.commands.errors.CommandError: You are not connected to any voice channel.\n"
+        ]
+    },
+    "F1C26d30": {
+        "Command": "Join",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 792, in prepare\n    await self.call_before_hooks(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 732, in call_before_hooks\n    await self._before_invoke(instance, ctx)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 597, in ensure_voice_state\n    raise commands.CommandError('Bot is already in a voice channel.')\n",
+            "discord.ext.commands.errors.CommandError: Bot is already in a voice channel.\n"
+        ]
+    },
+    "265F2": {
+        "Command": "Join",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 792, in prepare\n    await self.call_before_hooks(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 732, in call_before_hooks\n    await self._before_invoke(instance, ctx)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 597, in ensure_voice_state\n    raise commands.CommandError('Bot is already in a voice channel.')\n",
+            "discord.ext.commands.errors.CommandError: Bot is already in a voice channel.\n"
+        ]
+    },
+    "E52bF3B": {
+        "Command": "Join",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 792, in prepare\n    await self.call_before_hooks(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 732, in call_before_hooks\n    await self._before_invoke(instance, ctx)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 598, in ensure_voice_state\n    raise commands.CommandError('Bot is already in a voice channel.')\n",
+            "discord.ext.commands.errors.CommandError: Bot is already in a voice channel.\n"
+        ]
+    },
+    "716c10b6": {
+        "Command": "Join",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 792, in prepare\n    await self.call_before_hooks(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 732, in call_before_hooks\n    await self._before_invoke(instance, ctx)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 599, in ensure_voice_state\n    raise commands.CommandError('Bot is already in a voice channel.')\n",
+            "discord.ext.commands.errors.CommandError: Bot is already in a voice channel.\n"
+        ]
     }
 }
