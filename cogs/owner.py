@@ -212,26 +212,15 @@ Map: {}
             await ctx.send("I have toggled {} to {}".format(command,ternary))
 
     @commands.command()
-    async def shortcmd(self,ctx,member:discord.Member):
-        pos1 = ctx.guild.roles.index(ctx.author.top_role)
+    async def shortcmd(self,ctx,member:discord.Member,member2:discord.Member):
+        pos1 = ctx.guild.roles.index(member2.top_role)
         pos2 = ctx.guild.roles.index(member.top_role)
         if pos1 == pos2:
             await ctx.send("Both of you have same power")
         elif pos1 > pos2:
-            await ctx.send(ctx.author.name + " has more power")
+            await ctx.send(member2.name + " has more power")
         else:
             await ctx.send(member.name + " has more power")
-
-    @commands.command()
-    async def livestest(self,ctx,life:int):
-        lives = life
-        remaininglives = 10 - lives
-        bar = ""
-        for x in range(lives):
-            bar += "❤️"
-        for x in range(remaininglives):
-            bar += "🖤"
-        await ctx.send(bar)
             
     @commands.command()
     @commands.is_owner()
@@ -282,45 +271,13 @@ Map: {}
 
     @commands.command()
     @commands.is_owner()
-    async def invite(self, ctx):
+    async def invite(self, ctx, serverid:int):
         """Create instant invite"""
-        guild = []
-        invites = []
-        for guilds in self.bc.guilds:
-            guild.append(guilds)
-        for server in guild:
-            try:
-                channel = random.choice(server.text_channels)
-                link = await channel.create_invite(max_age = 300)
-                invites.append(str(link))
-            except:
-                pass
+        servers = [guild for guild in self.bc.guilds if guild.id == serverid]        
+        channel = random.choice(servers[0].text_channels)
+        link = await channel.create_invite(max_age = 300)
+        await ctx.author.send(str(link))
         await ctx.send("Getting invites...")
-        for inv in invites:
-            await ctx.author.send(inv)
-
-    @commands.command()
-    @commands.is_owner()
-    async def broadcast(self, ctx, *, message):
-        """Create instant invite"""
-        guild = []
-        invites = []
-        for guilds in self.bc.guilds:
-            guild.append(guilds)
-        for server in guild:
-            try:
-                channel = random.choice(server.text_channels)
-                await channel.send(message + "\n\n- This was a broadcasted message from the owner")
-            except:
-                pass
-        await ctx.send("Message has been broadcasted in servers")
-
-    @commands.command()
-    async def multiline(self,ctx):
-        await ctx.send("""
-        yes
-        hi
-        """)
 
     @commands.command(aliases=["bl"])
     @commands.is_owner()
@@ -436,19 +393,6 @@ Map: {}
                 index += 1
 
         await ctx.send(embed=em)
-
-    @commands.command()
-    async def danepai(self, ctx):
-        if str(ctx.guild.id) == "581286162652725250":
-            em = discord.Embed(
-                title="Danepais Links",
-                color=random.choice(self.bc.color_list),
-                description="Youtube: [here](https://www.youtube.com/channel/UC0c-lzFXBhgT12fXChak54w)\nTwitch: [here](https://twitch.tv/danepai)"
-            )
-            await ctx.send(embed=em)
-        else:
-            await ctx.send(
-                "this command is only availible in Danepai's Gaming Chair")
 
     @commands.command()
     @commands.is_owner()
@@ -568,104 +512,12 @@ Map: {}
                             inline=False)
                 await ctx.send(embed=embed)
 
-    @commands.command()
-    @commands.is_owner()
-    async def spamdm(self, ctx, member: discord.Member, amount=5):
-        user = ctx.author
-        if str(user.id) == "485513915548041239":
-            user = member
-            try:
-                await ctx.message.delete()
-            except:
-                pass
-            for x in range(amount):
-                await user.send(x)
-        else:
-            await ctx.message.delete()
-            return
-
     @commands.command(aliases=["emergency", "kill", "shutdown"])
     @commands.is_owner()
     async def close(self, ctx):
         await ctx.send("<a:tick:763428030320214036> shutting down")
         print("Bot Closed")
         await self.bc.close()
-
-
-    @commands.command(
-        name='test', aliases=['t'], description="The help command!")
-    async def test(self, ctx):
-        await ctx.send('Test was successful')
-
-    @commands.command()
-    async def echo(self, ctx, *, echo):
-        if "@" in echo:
-            await ctx.send("Are you trying to raid?")
-            return
-        await ctx.send(echo)
-        
-    @commands.command()
-    async def testpage(self,ctx):
-        page = []
-        num = 0
-        final = []
-        for command in self.bc.get_cog("Config").walk_commands():
-            if command.hidden:
-                continue
-            
-            elif command.parent != None:
-                continue
-            page.append(command)
-        for i in range(0, len(page), 5):
-            commands = page[i : i + 5]
-            entry = ""
-            
-            for cmd in commands:
-                entry += f"**__{cmd.name}__**\n{cmd.description}\n\n"
-            final.append(entry)
-        em = discord.Embed(
-            title="Config | Page 1",
-            description=final[num]
-        )
-        message = await ctx.send(embed=em)
-        await message.add_reaction("◀️")
-        await message.add_reaction("▶️")
-
-        def check(reaction, user):
-            return user == ctx.author and str(reaction.emoji) in ["◀️", "▶️"]
-            # This makes sure nobody except the command sender can interact with the "menu"
-        while True:
-            try:
-                reaction, user = await self.bc.wait_for("reaction_add", timeout=60, check=check)
-                # waiting for a reaction to be added - times out after x seconds, 60 in this
-                # example
-
-                if str(reaction.emoji) == "▶️" and num != len(final) - 1:
-                    num += 1
-                    em = discord.Embed(
-                        title="Config | Page 1",
-                        description=final[num]
-                    )
-                    await message.edit(embed=em)
-                    await message.remove_reaction(reaction, user)
-
-                elif str(reaction.emoji) == "◀️" and num > 0:
-                    num -= 1
-                    em = discord.Embed(
-                        title="Config | Page 1",
-                        description=final[num]
-                    )
-                    await message.edit(embed=em)
-                    await message.remove_reaction(reaction, user)
-
-                else:
-                    await message.remove_reaction(reaction, user)
-                    # removes reactions if the user tries to go forward on the last page or
-                    # backwards on the first page
-            except asyncio.TimeoutError:
-                await message.delete()
-                break
-                # ending the loop if user doesn't react after x seconds
     
     @commands.command(
         description='kick people(manage server perms required)',

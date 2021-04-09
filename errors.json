@@ -347,5 +347,41 @@
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
             "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Checking' object has no attribute 'client'\n"
         ]
+    },
+    "7528d07": {
+        "Command": "Reload",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 567, in reload\n    user = member\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 935, in send\n    data = await state.http.send_message(channel.id, content, tts=tts, embed=embed,\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 247, in request\n    raise HTTPException(r, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.0.value: Must be 1024 or fewer in length.\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.0.value: Must be 1024 or fewer in length.\n"
+        ]
+    },
+    "8812E65": {
+        "Command": "Help",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/help.py\", line 131, in help_command\n    await ctx.send(embed=em)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 935, in send\n    data = await state.http.send_message(channel.id, content, tts=tts, embed=embed,\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 241, in request\n    raise Forbidden(r, data)\n",
+            "discord.errors.Forbidden: 403 Forbidden (error code: 50013): Missing Permissions\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: Forbidden: 403 Forbidden (error code: 50013): Missing Permissions\n"
+        ]
     }
 }
