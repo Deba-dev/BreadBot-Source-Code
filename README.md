@@ -7,6 +7,6 @@ I prefer that you dont copy and paste this code because you wont learn anything.
 
 If you want to join my server you can click here:
 
-<a href="https://discord.gg/awy35MJ5pc" target="_blank">
+<a href="https://discord.gg/awy35MJ5pc" target="_blank" rel="noopener noreferrer">
     <img src="https://discordapp.com/api/guilds/680221497197068308/widget.png?style=banner4" alt="Discord" />
 </a>
