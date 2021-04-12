@@ -61,7 +61,7 @@ class Moderation(commands.Cog):
                 with open('muteroles.json', 'r') as f:
                     channel = json.load(f)
                 guild = self.bc.get_guild(value['guildId'])
-                member = guild.get_member(value['id'])
+                member = guild.get_member(value["_id"])
 
                 role = discord.utils.get(guild.roles, id=int(channel[str(guild.id)]))
                 if role in member.roles:
@@ -113,7 +113,7 @@ class Moderation(commands.Cog):
             pass
 
         data = {
-            'id': member.id,
+            "_id": member.id,
             'mutedAt': datetime.datetime.now(),
             'muteDuration': time or None,
             'mutedBy': ctx.author.id,
@@ -341,7 +341,7 @@ class Moderation(commands.Cog):
         if data2:
             return await ctx.send("This channel is already locked!")
         else:
-            data2 = {"id": ctx.channel.id, "perms": {}}
+            data2 = {"_id": ctx.channel.id, "perms": {}}
         #Before channel locks the perms are saved into db
         data2["perms"] = self._overwrites_to_json(ctx.channel.overwrites)
         for role in ctx.guild.roles:
@@ -427,13 +427,13 @@ class Moderation(commands.Cog):
         data = await self.bc.warns.find(ctx.guild.id)
         if not data:
             data = {
-                "id": ctx.guild.id,
+                "_id": ctx.guild.id,
                 "cases": 0,
                 str(member.id): [],
             }            
         if str(member.id) not in data:
             data = {
-                "id": ctx.guild.id,
+                "_id": ctx.guild.id,
                 "cases": data["cases"],
                 str(member.id): [],
             }

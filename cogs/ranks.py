@@ -82,7 +82,7 @@ class Ranks(commands.Cog):
         if msg.author.bot:
             return
         if data is None:
-            data = {"id":msg.guild.id, "multi":1, "message":"{member} you just leveled up to level {level} GG!","channel": None, "members": [], "blacklisted": [], "rewards": {}}
+            data = {"_id":msg.guild.id, "multi":1, "message":"{member} you just leveled up to level {level} GG!","channel": None, "members": [], "blacklisted": [], "rewards": {}}
             data["members"].append({"userid": msg.author.id, "level":1, "xp": 0, "maxXp": 35})
         isindata = False    
         for member in data["members"]:

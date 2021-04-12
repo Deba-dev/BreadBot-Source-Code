@@ -383,5 +383,81 @@
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
             "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: Forbidden: 403 Forbidden (error code: 50013): Missing Permissions\n"
         ]
+    },
+    "0bF01035": {
+        "Command": "Responsetime",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 229, in responsetime\n    await ctx.invoke(self.bc.get_command(command))\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/context.py\", line 135, in invoke\n    ret = await command.callback(*arguments, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 450, in _skip\n    if not ctx.voice_state.is_playing:\n",
+            "AttributeError: 'Context' object has no attribute 'voice_state'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Context' object has no attribute 'voice_state'\n"
+        ]
+    },
+    "af18a37": {
+        "Command": "Run",
+        "Error Type": "SyntaxError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 242, in run\n    parsed = ast.parse(body)\n",
+            "  File \"/usr/lib/python3.8/ast.py\", line 47, in parse\n    return compile(source, filename, mode, flags,\n",
+            "  File \"<unknown>\", line 6\n",
+            "    prefixes.update_one({\"_id\": 122333, {\"$set\": {\"prefix\": \"l\"}}})\n",
+            "                                                                 ^\n",
+            "SyntaxError: invalid syntax\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: SyntaxError: invalid syntax (<unknown>, line 6)\n"
+        ]
+    },
+    "B0F2b813": {
+        "Command": "Run",
+        "Error Type": "SyntaxError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 242, in run\n    parsed = ast.parse(body)\n",
+            "  File \"/usr/lib/python3.8/ast.py\", line 47, in parse\n    return compile(source, filename, mode, flags,\n",
+            "  File \"<unknown>\", line 6\n",
+            "    prefixes.update_one({\"_id\": 122333, {\"$set\": {\"prefix\": \"adf\"}}})\n",
+            "                                                                   ^\n",
+            "SyntaxError: invalid syntax\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: SyntaxError: invalid syntax (<unknown>, line 6)\n"
+        ]
+    },
+    "6699F914": {
+        "Command": "Run",
+        "Error Type": "IndexError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 244, in run\n    self.insert_returns(body)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 47, in insert_returns\n    self.insert_returns(body[-1].orelse)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 42, in insert_returns\n    if isinstance(body[-1], ast.Expr):\n",
+            "IndexError: list index out of range\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: list index out of range\n"
+        ]
     }
 }

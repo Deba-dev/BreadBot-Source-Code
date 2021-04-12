@@ -45,7 +45,7 @@ class ReactionRoles(commands.Cog):
         for item in reaction_roles:
             role = guild.get_role(item["role"])
             desc += f"{item['id']}: {role.mention}\n"
-            await message.add_reaction(item["id"])
+            await message.add_reaction(item["_id"])
 
         embed.description = desc
         await message.edit(embed=embed)
@@ -53,7 +53,7 @@ class ReactionRoles(commands.Cog):
     async def get_current_reactions(self, guild_id):
         data = await self.bc.reaction_roles.get_all()
         data = filter(lambda r: r['guild_id'] == guild_id, data)
-        data = map(lambda r: r["id"], data)
+        data = map(lambda r: r["_id"], data)
         return list(data)
 
     @commands.group(
@@ -91,11 +91,11 @@ class ReactionRoles(commands.Cog):
 
         m = await channel.send(embed=embed)
         for item in reaction_roles:
-            await m.add_reaction(item["id"])
+            await m.add_reaction(item["_id"])
 
         await self.bc.config.upsert(
             {
-                "id": ctx.guild.id,
+                "_id": ctx.guild.id,
                 "message_id": m.id,
                 "channel_id": m.channel.id,
                 "is_enabled": True,
@@ -139,7 +139,7 @@ class ReactionRoles(commands.Cog):
                 return
 
         emoji = str(emoji)
-        await self.bc.reaction_roles.upsert({"id": emoji, "role": role.id, "guild_id": ctx.guild.id})
+        await self.bc.reaction_roles.upsert({"_id": emoji, "role": role.id, "guild_id": ctx.guild.id})
 
         await self.rebuild_role_embed(ctx.guild.id)
         await ctx.send("That is added and good to go!")

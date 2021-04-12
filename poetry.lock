@@ -141,7 +141,7 @@ description = "A mongodb api wrapper to use in your discord bot"
 name = "discordmongopy"
 optional = false
 python-versions = "*"
-version = "0.2.0"
+version = "0.3.0"
 
 [package.dependencies]
 pymongo = "*"
@@ -521,7 +521,7 @@ python-versions = "*"
 version = "2021.3.31"
 
 [metadata]
-content-hash = "ddcf68922abd526600fed6e31dedbafb030aef2478a193d2bad8775b7a54e6de"
+content-hash = "780aaa2db6b63ecccbf16a14d3b716ca47ca6bcf0fbd20ea22c1ada9c9912289"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -644,7 +644,7 @@ discord = [
     {file = "discord.py-1.6.0.tar.gz", hash = "sha256:ba8be99ff1b8c616f7b6dcb700460d0222b29d4c11048e74366954c465fdd05f"},
 ]
 discordmongopy = [
-    {file = "discordmongopy-0.2.0-py3-none-any.whl", hash = "sha256:c63da96be9e54e2a86ed194084b6516dff1a9e07179c9f0b982473a6c21cca30"},
+    {file = "discordmongopy-0.3.0-py3-none-any.whl", hash = "sha256:d7f7bc2c254efa9925950225632633beaa472303cae59265dc6e78882e1df3a8"},
 ]
 discordutils = [
     {file = "DiscordUtils-1.2.8-py3-none-any.whl", hash = "sha256:75e878ca29ffab365770187ea2fdb0cafc33535da8a8efc9b8247e8352005977"},

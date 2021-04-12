@@ -82,7 +82,7 @@ class ServerEvents(commands.Cog):
             ppl = []
             member = value["authorid"]
             member = await self.bc.fetch_user(member)
-            msg = value["id"]
+            msg = value["_id"]
             winners = value["winners"]
             reward = value['reward']
             currentTime = datetime.datetime.now()
@@ -156,7 +156,7 @@ class ServerEvents(commands.Cog):
         msg = await channel.send(embed=em)
         await msg.add_reaction("🎉")
         data = {
-            "id": msg.id,
+            "_id": msg.id,
             'duration': time,
             'startedat': datetime.datetime.now(),
             'channelId': msg.channel.id,

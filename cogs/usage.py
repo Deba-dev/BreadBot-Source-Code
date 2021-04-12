@@ -17,7 +17,7 @@ class Usage(commands.Cog):
 
         if await self.bc.cmd_usage.find(ctx.command.qualified_name) is None:
             await self.bc.cmd_usage.upsert(
-                {"id": ctx.command.qualified_name, "count": 1}
+                {"_id": ctx.command.qualified_name, "count": 1}
             )
         else:
             await self.bc.cmd_usage.increment(
@@ -31,7 +31,7 @@ class Usage(commands.Cog):
     @commands.cooldown(1, 5, BucketType.user)
     async def command_stats(self, ctx):
         data = await self.bc.cmd_usage.get_all()
-        command_map = {item["id"]: item["count"] for item in data}
+        command_map = {item["_id"]: item["count"] for item in data}
 
         # get total commands run
         total_commands_run = sum(command_map.values())

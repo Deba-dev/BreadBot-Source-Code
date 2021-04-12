@@ -45,7 +45,7 @@ class Invites(commands.Cog):
             return
         data = await self.bc.invites.find(inviter.id)
         if data is None:
-            data = {"id": inviter.id, "count": 0, "usersInvited": []}
+            data = {"_id": inviter.id, "count": 0, "usersInvited": []}
 
         data["count"] += 1
         data["usersInvited"].append(member.id)

@@ -178,7 +178,7 @@ class Config(commands.Cog):
     async def chatbot_channel(self,ctx,channel:discord.TextChannel):
         data = await self.bc.chatbot.find(ctx.guild.id)
         if not data:
-            data = {"id":ctx.guild.id, "channel":channel.id, "isenabled": True}
+            data = {"_id":ctx.guild.id, "channel":channel.id, "isenabled": True}
         data["channel"] = channel.id
         await self.bc.chatbot.upsert(data)
         await ctx.send("I have set the chatbot channel to {0.mention}".format(channel))
@@ -378,7 +378,7 @@ class Config(commands.Cog):
         if not channel:
             return await ctx.send("Specify a channel!")
         elif not data or "channel" not in data:
-            data = {"id": ctx.guild.id, "channel": None, "limit": 5, "toggled": True, "messages": []}
+            data = {"_id": ctx.guild.id, "channel": None, "limit": 5, "toggled": True, "messages": []}
         data["channel"] = channel.id
         await self.bc.starboard.upsert(data)
         await ctx.send(f"The starboard channel is now {channel.mention}")
@@ -438,7 +438,7 @@ class Config(commands.Cog):
     async def censor_add(self,ctx,word:str):
         data = await self.bc.censor.find(ctx.guild.id)
         if not data or "words" not in data:
-            data = {"id": ctx.guild.id, "words": [], "toggled": True}
+            data = {"_id": ctx.guild.id, "words": [], "toggled": True}
         data["words"].append(word)
         await self.bc.censor.upsert(data)
         await ctx.send(f"{word} has been added to the censor filter", delete_after=5)
@@ -463,7 +463,7 @@ class Config(commands.Cog):
     async def censor_toggle(self,ctx):
         data = await self.bc.censor.find(ctx.guild.id)
         if not data or "words" not in data:
-            data = {"id": ctx.guild.id, "words": [], "toggled": True}
+            data = {"_id": ctx.guild.id, "words": [], "toggled": True}
         data["toggled"] = not data["toggled"]
         ternary = "enabled" if data["toggled"] else "disabled"
         await self.bc.censor.upsert(data)
@@ -488,21 +488,29 @@ class Config(commands.Cog):
     async def prefix(self,ctx, *, prefix=None):
         if prefix == None:
             prefix = self.bc.DEFAULTPREFIX
-        await self.bc.prefixes.upsert({"id": ctx.guild.id, "prefix": prefix})
+        await self.bc.prefixes.upsert({"_id": ctx.guild.id, "prefix": prefix})
         await ctx.send(
             f"The guild prefix has been set to `{prefix}`. Use `{prefix}prefix [prefix]` to change it again!"
         )
     
-    @commands.command(description='change the channel for your suggestion channel.', usage='<channel>')
+    @commands.group(description='change the channel for your suggestion channel.', usage='<channel>', invoke_without_command=True)
     @commands.has_permissions(manage_channels=True)
-    async def suggestions(self,ctx, channel:discord.TextChannel=None):
-        if channel == None:
-            await ctx.send("Please specify a channel")
-            return
-        await self.bc.suggestions.upsert({"id": ctx.guild.id, "numbers": 0,"channel":channel.id,"suggestions":[]})
+    async def suggestions(self,ctx):
+        await ctx.invoke(self.bc.get_command('help'), entity="suggestions")
+
+    @suggestions.command(name="channel",description='change the channel for your suggestion channel.', usage='<channel>', invoke_without_command=True)
+    @commands.has_permissions(manage_channels=True)
+    async def suggestions_channel(self,ctx, channel:discord.TextChannel):
+        await self.bc.suggestions.upsert({"_id": ctx.guild.id, "numbers": 0,"channel":channel.id,"suggestions":[]})
         await ctx.send(
             f"Suggestions channel is {channel.mention}"
         )
+
+    @suggestions.command(name="reset",description='change the channel for your suggestion channel.', usage='<channel>')
+    @commands.has_permissions(manage_channels=True)
+    async def suggestions_reset(self,ctx):
+        await self.bc.suggestions.delete(ctx.guild.id)
+        await ctx.send("I have reset the suggestion settings")
 
     @commands.command(
         name="deleteprefix", aliases=["dp"], description="Delete your guilds prefix!", usage=" "
@@ -510,7 +518,7 @@ class Config(commands.Cog):
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
     async def deleteprefix(self, ctx):
-        await self.bc.prefixes.unset({"id": ctx.guild.id, "prefix": 1})
+        await self.bc.prefixes.unset({"_id": ctx.guild.id, "prefix": 1})
         await ctx.send("This guilds prefix has been set back to the default")
     
     @commands.command(
@@ -528,7 +536,7 @@ class Config(commands.Cog):
             await ctx.send("Please set up a modlogs channel!")
             return
         if not data or "channel" not in data:
-            data = {"id": ctx.guild.id, "channel": channel.id}
+            data = {"_id": ctx.guild.id, "channel": channel.id}
         else:
             data["channel"] = channel.id
         await self.bc.modlogs.upsert(data)
@@ -543,7 +551,7 @@ class Config(commands.Cog):
     async def welcome_channel(self, ctx, channel: discord.TextChannel):
         data = await self.bc.welcomes.find(ctx.guild.id)
         if not data or "channel" not in data:
-            data = {"id": ctx.guild.id, "channel":channel.id, "auth": False}
+            data = {"_id": ctx.guild.id, "channel":channel.id, "auth": False}
         data["channel"] = channel.id
         await self.bc.welcomes.upsert(data)
         await ctx.send("The welcome channel is now {}".format(channel.mention))
@@ -557,7 +565,7 @@ class Config(commands.Cog):
     async def wel_role(self,ctx,*,role:discord.Role):
         data = await self.bc.welcomes.find(ctx.guild.id)
         if not data:
-            data = {"id": ctx.guild.id, "channel":None, "role":None, "auth": False}
+            data = {"_id": ctx.guild.id, "channel":None, "role":None, "auth": False}
         data["role"] = role.id
         await self.bc.welcomes.upsert(data)
         await ctx.send("The welcome role is now {}".format(role.name))
@@ -588,6 +596,10 @@ class Config(commands.Cog):
                     print("yes")
         await ctx.send(f"The captcha is now {ternary}")
         
+    @welcome.command(description="Delete your welcome settings", name="delete")
+    async def welcome_delete(self,ctx):
+        await self.bc.welcomes.delete(ctx.guild.id)
+        await ctx.send("I have deleted the settings for the welcome system")
 
     @commands.command(description='syncs your muterole with your channels(sets muteroles in all channels to no send messages)', usage=' ')
     @commands.has_permissions(manage_roles=True)
@@ -633,7 +645,7 @@ class Config(commands.Cog):
             return
         data = await self.bc.leaves.find(ctx.guild.id)
         if data is None:
-            data = {"id": ctx.guild.id, "channel": None}
+            data = {"_id": ctx.guild.id, "channel": None}
         data["channel"] = channel.id
         await self.bc.leaves.upsert(data)
         await ctx.send(f"Leaves channel is now set to {channel.mention}")
@@ -644,7 +656,7 @@ class Config(commands.Cog):
         if thingy == "add" or thingy == "set":
             data = await self.bc.modroles.find(ctx.guild.id)
             if data is None or "roles" not in data:
-                data = {"id": ctx.guild.id, "roles": []}
+                data = {"_id": ctx.guild.id, "roles": []}
             data["roles"].append(role.id)
             await self.bc.modroles.upsert(data)
             await ctx.send(f"Modrole `{role.name}` added")
@@ -663,7 +675,7 @@ class Config(commands.Cog):
     async def linkslonyadd(self,ctx,channel:discord.TextChannel):
         data = await self.bc.linksonly.find(ctx.guild.id)
         if data is None or "channels" not in data:
-            data = {"id": ctx.guild.id, "channels": []}
+            data = {"_id": ctx.guild.id, "channels": []}
         data["channels"].append(channel.id)
         await self.bc.linksonly.upsert(data)
         await ctx.send(f"channel `{channel.name}` added")

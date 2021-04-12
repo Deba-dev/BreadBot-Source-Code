@@ -295,7 +295,7 @@ Map: {}
     async def premium(self,ctx):
         data = await self.bc.premium.find(ctx.guild.id)
         if not data:
-            data = {"id": ctx.guild.id}
+            data = {"_id": ctx.guild.id}
             await self.bc.premium.upsert(data)
             await ctx.send("server is now premium")
         else:

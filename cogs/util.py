@@ -81,7 +81,7 @@ class Utility(commands.Cog):
     async def tag_create(self,ctx,name,*,content:commands.clean_content):
         data = await self.bc.tags.find(ctx.guild.id)
         if data is None:
-            data = {"id": ctx.guild.id, "tags":{}}
+            data = {"_id": ctx.guild.id, "tags":{}}
         if name in data["tags"].keys():
             return await ctx.send("That tag already exists!")
         data["tags"][name] = {}
@@ -94,7 +94,7 @@ class Utility(commands.Cog):
     async def tag_edit(self,ctx,name,*,content:commands.clean_content):
         data = await self.bc.tags.find(ctx.guild.id)
         if data is None:
-            data = {"id": ctx.guild.id, "tags":{}}
+            data = {"_id": ctx.guild.id, "tags":{}}
         try:
             tag = data["tags"][name]
         except KeyError:
