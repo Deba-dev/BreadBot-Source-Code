@@ -58,7 +58,6 @@ class BreadBot(commands.AutoShardedBot):
         
         self.owner = owner
         self.remove_command("help")
-        self.blacklisted_users = {}
         self.muted_users = {}
         self.afk = {}
         self.heistdata = {}
@@ -117,6 +116,8 @@ class BreadBot(commands.AutoShardedBot):
         self.tags = discordmongo.Mongo(connection_url=self.db, dbname="tags")
         self.chatbot = discordmongo.Mongo(connection_url=self.db, dbname="chatbot")
         self.locked = discordmongo.Mongo(connection_url=self.db, dbname="locked")
+        self.logs = discordmongo.Mongo(connection_url=self.db, dbname="cmdlogs")
+        self.economy = discordmongo.Mongo(connection_url=self.db, dbname="economy")
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py'):
                 self.load_extension(f'cogs.{filename[:-3]}')
@@ -125,7 +126,9 @@ class BreadBot(commands.AutoShardedBot):
         async def before_any_command(ctx):
             data = read_json("blacklist")
             self.blacklisted_users = data["blacklistedUsers"]
+            print(self.blacklisted_users)
             if ctx.author.id in self.blacklisted_users:
+                print("yes")
                 error = tools.errors.Blacklisted(ctx)
                 raise await error.send()
             
@@ -147,19 +150,13 @@ class BreadBot(commands.AutoShardedBot):
         currentGAWs = await self.giveaways.get_all()
         
         for mute in currentMutes:
-            self.muted_users[mute["id"]] = mute
+            self.muted_users[mute["_id"]] = mute
         for heist in currentHeists:
-            self.heistdata[heist["id"]] = heist
+            self.heistdata[heist["_id"]] = heist
         for GAW in currentGAWs:
-            self.GAWdata[GAW["id"]] = GAW
+            self.GAWdata[GAW["_id"]] = GAW
         print(self.user.id)
         self.launch_time = datetime.datetime.utcnow()
-
-        to_leave = self.get_guild(789534405886607411)
-        await to_leave.leave()
-
-        #channel = self.get_channel(762446252117590026)
-        #await channel.send("Version 0.3.7\n- Fixed Lock command not letting modroles set message\n- Added lootboxes for every 10 levels\n- added translate command\n- Heists now can be used for every server")
 
     async def on_message(self,message):
         data = await self.prefixes.get_by_id(message.guild.id)

@@ -85,7 +85,7 @@ class Support(commands.Cog):
                 desc = cmd.short_doc or cmd.description
                 signature = self.get_command_signature(cmd, ctx)
                 subcommand = "Has subcommands" if hasattr(cmd, "all_commands") else ""
-                usage = cmd.usage if cmd.usage is not None else ""
+                usage = cmd.usage if cmd.usage is not None else cmd.signature
 
                 commands_entry += (
                     f"• **__{cmd.name}__**\n```\n{signature}\n```\n{desc}\n"
@@ -117,7 +117,7 @@ class Support(commands.Cog):
             )
             em.set_thumbnail(url=ctx.guild.icon_url)
             em.add_field(name="Config | Page 1", value=f"`{prefix}help 1`")
-            em.add_field(name="Economy | Page 2", value=f"`{prefix}help 2`")
+            em.add_field(name="Economy (BEING REWRITTEN) | Page 2", value=f"`{prefix}help 2`")
             em.add_field(name="Fun | Page 3", value=f"`{prefix}help 3`")
             em.add_field(name="Moderation | Page 4", value=f"`{prefix}help 4`")
             em.add_field(name="Utility | Page 5", value=f"`{prefix}help 5`")
@@ -191,7 +191,7 @@ class Support(commands.Cog):
     @commands.command(
         description="Check out the links of the bot",
         usage=" ",
-        aliases=["about"]
+        aliases=["about", "botinfo"]
     )
     async def info(self,ctx):
         em = discord.Embed(
@@ -200,8 +200,8 @@ class Support(commands.Cog):
         )
         em.add_field(name="About",value="I am a bot that provides economy, moderation, configuration, and more!",inline=False)
         em.add_field(name="What do I provide?", value="**- Economy\n- Welcome system\n- Leave system\n- Moderation\n- Suspicious account detector\n- And More!**")
-        em.add_field(name="<a:tick:763428030320214036>| Important links",value=f"**[Support Server](https://discord.gg/zuv2XW6tzb) | [Invite Me!](https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=2146958839) | [Vote For Me!](https://top.gg/bot/760871722718855169/vote) | [Very cool discord!](https://discord.gg/fz5EYUfEFp)**",inline=False)
-        em.add_field(name="❓| Informative Links",value="**[discord.py docs](https://discordpy.readthedocs.io/en/latest/) | [Bot Page](https://top.gg/bot/760871722718855169) | [My Own Discord Server](https://bit.ly/BongoDiscord) | Contact: dank BongoPlayzYT#1508**")
+        em.add_field(name="<a:tick:763428030320214036>| Important links",value="**[Support Server](https://discord.gg/zuv2XW6tzb) | [Invite Me!](https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=2146958839) | [Vote For Me!](https://top.gg/bot/760871722718855169/vote) | [Very cool discord!](https://discord.gg/fz5EYUfEFp) | [Dashboard](https://breadbotdash.tk)**",inline=False)
+        em.add_field(name="❓| Informative Links",value="**[discord.py docs](https://discordpy.readthedocs.io/en/latest/) | [Bot Page](https://top.gg/bot/760871722718855169) | [My Own Discord Server](https://bit.ly/BongoDiscord) | Contact: dank BongoPlayzYT#1646**")
         em.add_field(name="Easy Way to contact me", value="Just dm me (the bot) if you have an issue, suggestion, or someone u want to report abusing the bot.", inline=False)
         await ctx.send(embed=em)
 

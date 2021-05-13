@@ -83,13 +83,13 @@ class Ranks(commands.Cog):
             return
         if data is None:
             data = {"_id":msg.guild.id, "multi":1, "message":"{member} you just leveled up to level {level} GG!","channel": None, "members": [], "blacklisted": [], "rewards": {}}
-            data["members"].append({"userid": msg.author.id, "level":1, "xp": 0, "maxXp": 35})
+            data["members"].append({"username": "{}#{}".format(msg.author.name, msg.author.discriminator), "userid": msg.author.id, "level":1, "xp": 0, "maxXp": 35, "rank": None})
         isindata = False    
         for member in data["members"]:
             if member["userid"] == msg.author.id:
                 isindata = True
         if not isindata:
-            data["members"].append({"userid": msg.author.id, "level":1, "xp": 0, "maxXp": 35})
+            data["members"].append({"username": "{}#{}".format(msg.author.name, msg.author.discriminator), "userid": msg.author.id, "level":1, "xp": 0, "maxXp": 35, "rank": None})
         user = next((user for user in data["members"] if user['userid'] == msg.author.id), None)
         user["xp"] += 1*data["multi"]
         rank = data["members"].index(user) 
@@ -110,16 +110,19 @@ class Ranks(commands.Cog):
             saveddict = user
             data["members"].remove(user)
             data["members"].insert(rank-1, saveddict) 
+            user["rank"] = rank + 1
             await self.bc.ranks.upsert(data)
-        elif data["members"][rank-1]["level"] == user["level"] and data["members"][rank-1]["xp"] < user["xp"]and rank != 0:
+        elif data["members"][rank-1]["level"] == user["level"] and data["members"][rank-1]["xp"] < user["xp"] and rank != 0:
             saveddict = user
             data["members"].remove(user)
             data["members"].insert(rank-1, saveddict)
+            user["rank"] = rank + 1
+            await self.bc.ranks.upsert(data)
         if str(user["level"]) in data["rewards"].keys():
             role = discord.utils.get(msg.guild.roles, id=int(data["rewards"][str(user["level"])]))
             await msg.author.add_roles(role)
         
-
+        user["rank"] = rank + 1
         await self.bc.ranks.upsert(data)
 
 

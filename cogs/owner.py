@@ -12,14 +12,11 @@ import json
 import os
 import asyncio
 import traceback
+import requests
 from io import BytesIO
 import time
 import datetime
 from tools import commands2
-from tools import hypixel
-from tools.hypixel import Player, Skyblock,SkyblockPlayer
-
-hypixel.setkey("e411c189-0633-4ad0-9493-f4f902353bd3")
 
 def format_num(num):
     magnitude = 0
@@ -54,6 +51,30 @@ class Owner(commands.Cog):
         for members in guild.members:
             member.append(members.name + "#" + members.discriminator)
         return member
+    
+    @commands.command()
+    @commands.is_owner()
+    async def thumbnail(self, ctx, episode, desc):
+        im = Image.open("images/thumbnail.png").convert("RGB")
+        draw = ImageDraw.Draw(im)
+        font = ImageFont.truetype("LondrinaSolid-Regular.ttf", 60)
+        draw.text((290,240), f"( Episode {episode} )", fill = (160, 160, 160), font = font)
+        def fittext(txt,imgfraction):
+            fontsize = 1
+            img_fraction = imgfraction
+
+            font = ImageFont.truetype("LondrinaSolid-Regular.ttf", fontsize)
+            while font.getsize(txt)[0] < img_fraction*im.size[0]:
+                # iterate until the text size is just larger than the criteria
+                fontsize += 1
+                font = ImageFont.truetype("LondrinaSolid-Regular.ttf", fontsize)
+
+            # optionally de-increment to be sure it is less than criteria
+            fontsize -= 1
+            return ImageFont.truetype("LondrinaSolid-Regular.ttf", fontsize)
+        draw.text((260,320), f"{desc}", fill = (160, 160, 160), font = fittext(desc, 0.60))
+        im.save("images/output.png")
+        await ctx.send(file=discord.File("images/output.png"))
 
     @commands.group(invoke_without_command=True)
     async def changelogs(self,ctx):
@@ -69,8 +90,10 @@ class Owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def audit(self,ctx):
-        await save_audit_logs(ctx.guild)
-        await ctx.send("Saved audit logs in a text file")
+        data = await self.bc.logs.find(ctx.guild.id)
+        if data is None:
+            return await ctx.send("There are no logs!")
+        await ctx.send(data["logs"])
     
     @changelogs.command()
     async def add(self,ctx,version,*,notes):
@@ -82,87 +105,6 @@ class Owner(commands.Cog):
 """.format(version,notes))
         self.bc.version = version
         await ctx.send("I have updated the changelogs!")
-
-    @commands.command()
-    async def hypixel(self,ctx,user):
-        player = hypixel.Player(user)
-        data = player.getdata()
-        if data:
-            em = discord.Embed(
-                title = "Hypixel Stats for {}".format(data["name"]),
-                color = random.choice(self.bc.color_list)
-            )
-            em.add_field(name="Rank",value=data["rank"])
-            em.add_field(name="Network Level", value=data["level"])
-            if data["guild"] is not None:
-                em.add_field(name="Guild", value=data["guild"]["name"])
-            else:
-                em.add_field(name="Guild",value="No Guild")
-            if not data["recentgames"]:
-                em.add_field(name="Recent Game", value="None")
-            else:
-                mode = data["recentgames"][0]["mode"].replace("FOUR_FOUR","4x4x4x4").replace("FOUR_THREE","3x3x3x3").replace("EIGHT_TWO", "Doubles").replace("EIGHT_ONE", "Solos")
-                em.add_field(name="Recent Game", value="""
-```yaml
-Name: {}
-Mode: {}
-Map: {}
-```
-""".format(data["recentgames"][0]["gameType"],mode,data["recentgames"][0]["map"]))
-            await ctx.send(embed=em)
-        else:
-            await ctx.send("This user has been recently searched!")
-
-    @commands.group(invoke_without_command=True)
-    async def skyblock(self,ctx):
-        await ctx.invoke(self.bc.get_command("help"), entity="skyblock")
-        
-    @skyblock.command(name="player")
-    async def skyblock_player(self,ctx,user):
-        player = SkyblockPlayer(user)
-        stats1 = player.getprofile()
-        if stats1 is None:
-            return await ctx.send("This player does not exist!")
-        stats = stats1["members"][stats1["profile_id"]]["stats"]
-        objectives = stats1["members"][stats1["profile_id"]]["objectives"]
-        em = discord.Embed(
-            title=f"Hypixel Profile Stats for {user}"
-        )
-        em.add_field(name="Kills", value=stats["kills"])
-        em.add_field(name="Deaths", value=stats["deaths"])
-        em.add_field(name="Best Crit Damage", value=stats["highest_critical_damage"])
-        em.add_field(name="Total Auction Bids", value=stats["auctions_bids"])
-        em.add_field(name="Highest Auction Bid", value=stats["auctions_highest_bid"])
-        em.add_field(name="Complete Objectives",value=len({key: value for key, value in objectives.items() if value["status"] == "COMPLETE"}))
-        await ctx.send(embed=em)
-    
-    @skyblock.command(name="banking")
-    async def skyblock_banking(self,ctx,user):
-        player = SkyblockPlayer(user)
-        stats1 = player.getprofile()
-        if stats1 is None:
-            return await ctx.send("This player does not exist!")
-        print(stats1.keys())
-
-    @skyblock.group(invoke_without_command=True)
-    async def bazaar(self,ctx):
-        await ctx.invoke(self.bc.get_command("help"), entity="skyblock bazaar")
-    
-    @bazaar.command(name="item")
-    async def bazaar_item(self,ctx,*,item):
-        sb = Skyblock()
-        item = sb.getbazaar(item)
-        if item is None:
-            return await ctx.send("That item doesn't exist or it is not sold on the bazaar!")
-        item = item["quick_status"]
-        em = discord.Embed(
-            title="Bazaar stats for {}".format(item["productId"].lower().capitalize())
-        )
-        em.add_field(name="Buy Price",value=item["buyPrice"])
-        em.add_field(name="Sell Price", value=item["sellPrice"])
-        em.add_field(name="Buy Orders",value=item["buyOrders"])
-        em.add_field(name="Sell Orders", value = item["sellOrders"])
-        await ctx.send(embed=em)
 
     @commands.command()
     async def rankcolor(self,ctx,*,rgb):
@@ -381,7 +323,7 @@ Map: {}
         index = 1
         for amt in total:
             id_ = leader_board[amt]
-            member = self.bc.fetch_user(id_)
+            member = await self.bc.fetch_user(id_)
             name = member.name
             em.add_field(
                 name=f"{index}.\nName: `{name}`",
@@ -438,8 +380,6 @@ Map: {}
         else:
             prefix = data["prefix"]
         if message.author.id == self.bc.user.id:
-            return
-        if message.author.id in self.bc.blacklisted_users:
             return
         if message.author != message.author.bot and not message.author.bot:
             if not message.guild and not message.content.startswith(prefix):

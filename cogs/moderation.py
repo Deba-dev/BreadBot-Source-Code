@@ -143,6 +143,11 @@ class Moderation(commands.Cog):
             elif int(seconds):
                 await ctx.send(f"Muted {member.display_name} for {seconds} seconds")
                 await self.postmodlog(ctx.guild,"Mute",ctx.author,ctx.channel,member=member,duration=f"{seconds} seconds")
+        data = await self.bc.logs.find(ctx.guild.id)
+        if not data:
+            data = {"_id": ctx.guild.id, "logs": []}
+        data["logs"].append({"Moderator": ctx.author.name + "#" + str(ctx.author.discriminator), "Action": ctx.command.qualified_name, "Target": f"{member.name}#{member.discriminator}", "Target ID": member.id, "Date": str(datetime.datetime.utcnow().strftime("%x %X"))})
+        await self.bc.logs.upsert(data)
 
     @commands.command(
         name='unmute',
@@ -171,6 +176,11 @@ class Moderation(commands.Cog):
             return
 
         await member.remove_roles(role)
+        data = await self.bc.logs.find(ctx.guild.id)
+        if not data:
+            data = {"_id": ctx.guild.id, "logs": []}
+        data["logs"].append({"Moderator": ctx.author.name + "#" + str(ctx.author.discriminator), "Action": ctx.command.qualified_name, "Target": f"{member.name}#{member.discriminator}", "Target ID": member.id, "Date": str(datetime.datetime.utcnow().strftime("%x %X"))})
+        await self.bc.logs.upsert(data)
         await self.postmodlog(ctx.guild,"Unmute",ctx.author,ctx.channel,member=member)
         await ctx.send(f"Unmuted `{member.display_name}`")
 
@@ -187,6 +197,11 @@ class Moderation(commands.Cog):
                       role: discord.Role):
         await member.add_roles(role)
         await ctx.message.delete()
+        data = await self.bc.logs.find(ctx.guild.id)
+        if not data:
+            data = {"_id": ctx.guild.id, "logs": []}
+        data["logs"].append({"Moderator": ctx.author.name + "#" + str(ctx.author.discriminator), "Action": ctx.command.qualified_name, "Target": f"{member.name}#{member.discriminator}", "Target ID": member.id, "Date": str(datetime.datetime.utcnow().strftime("%x %X"))})
+        await self.bc.logs.upsert(data)
         await ctx.send(f'{member} Was Given {role}')
 
     @commands.command(description='Massnick everyone anythin', usage='<name>')
@@ -239,6 +254,11 @@ class Moderation(commands.Cog):
             return
         await ctx.message.delete()
         await member.remove_roles(role)
+        data = await self.bc.logs.find(ctx.guild.id)
+        if not data:
+            data = {"_id": ctx.guild.id, "logs": []}
+        data["logs"].append({"Moderator": ctx.author.id, "Action": ctx.command.qualified_name, "Target": f"{member.name}#{member.discriminator}", "Target ID": member.id, "Date": str(datetime.datetime.utcnow().strftime("%x %X"))})
+        await self.bc.logs.upsert(data)
         await ctx.send(f'{role} was taken from {member}')
 
     @commands.command(
@@ -266,16 +286,18 @@ class Moderation(commands.Cog):
                 f"you were kicked from {ctx.guild.name} for the following reason:\n\n{reason}"
             )
         except:
-            await ctx.send("member has been kicked but i could not send a dm to them")
-            await self.postmodlog(ctx.guild,"Kick",ctx.author,ctx.channel,reason)
-            return
+            await ctx.send("An error occured trying to dm this member!")
         try:
             await member.kick(reason=reason)
+            await ctx.send("I have kicked this member!")
         except:
-            await ctx.send("Could Not Kick This Member because I am missing permissions")
-            return
-        await ctx.send(f'successfully kicked {user}')
-        await self.postmodlog(ctx.guild,"Kick",ctx.author,ctx.channel,member,reason)
+            await ctx.send("Could not kick this member!")
+        await self.postmodlog(ctx.guild,"Kick",ctx.author,ctx.channel,reason)
+        data = await self.bc.logs.find(ctx.guild.id)
+        if not data:
+            data = {"_id": ctx.guild.id, "logs": []}
+        data["logs"].append({"Moderator": ctx.author.name + "#" + str(ctx.author.discriminator), "Action": ctx.command.qualified_name, "Target": f"{member.name}#{member.discriminator}", "Target ID": member.id, "Date": str(datetime.datetime.utcnow().strftime("%x %X"))})
+        await self.bc.logs.upsert(data)
 
     @commands.command()
     async def channelsync(self,ctx):
@@ -299,20 +321,23 @@ class Moderation(commands.Cog):
             return
         await ctx.message.delete()
         try:
-            await member.ban(reason=reason)
-        except:
-            await ctx.send("Could Not Ban This Member because I am missing permissions")
-            return
-        try:
             await user.send(
                 f"you were banned from {ctx.guild.name} for the following reason:\n\n{reason}"
             )
         except:
-            await ctx.send("member has been banned but i could not send a dm to them")
-            await self.postmodlog(ctx.guild,"Ban",ctx.author,ctx.channel,member,reason)
-            return
-        await ctx.send(f'successfully banned {user}')
-        await self.postmodlog(ctx.guild,"Ban",ctx.author,ctx.channel,member=member,reason=reason)
+            await ctx.send("An error occured trying to dm this member!")
+        try:
+            await member.ban(reason=reason)
+            await ctx.send("I have ban this member!")
+        except:
+            await ctx.send("Could not ban this member!")
+        await self.postmodlog(ctx.guild,"Ban",ctx.author,ctx.channel,reason)
+        data = await self.bc.logs.find(ctx.guild.id)
+        if not data:
+            data = {"_id": ctx.guild.id, "logs": []}
+        data["logs"].append({"Moderator": ctx.author.name + "#" + str(ctx.author.discriminator), "Action": ctx.command.qualified_name, "Target": f"{member.name}#{member.discriminator}", "Target ID": member.id, "Date": str(datetime.datetime.utcnow().strftime("%x %X"))})
+        await self.bc.logs.upsert(data)
+        
     @commands.command(
         description='Unban someone by their id',
         usage='<userid>'
@@ -322,6 +347,11 @@ class Moderation(commands.Cog):
         member = await self.bc.fetch_user(int(member))
         await ctx.guild.unban(member)
         await ctx.send(f"unbanned {member.name}")
+        data = await self.bc.logs.find(ctx.guild.id)
+        if not data:
+            data = {"_id": ctx.guild.id, "logs": []}
+        data["logs"].append({"Moderator": ctx.author.name + "#" + str(ctx.author.discriminator), "Action": ctx.command.qualified_name, "Target": f"{member.name}#{member.discriminator}", "Target ID": member.id, "Date": str(datetime.datetime.utcnow().strftime("%x %X"))})
+        await self.bc.logs.upsert(data)
         await self.postmodlog(ctx.guild,"Unban",ctx.author,ctx.channel)
     @commands.command(
         name='purge',
@@ -437,12 +467,17 @@ class Moderation(commands.Cog):
                 "cases": data["cases"],
                 str(member.id): [],
             }
-            data[str(member.id)].append({"warning": len(data[str(member.id)]) + 1, "reason": reason,"moderator":ctx.author.id, "case": data["cases"] + 1})
+            data[str(member.id)].append({"warning": len(data[str(member.id)]) + 1, "reason": reason,"moderator":ctx.author.id, "case": data["cases"] + 1, "date": str(datetime.datetime.utcnow())})
             data["cases"] += 1
         else:
-            data[str(member.id)].append({"warning": len(data[str(member.id)]) + 1, "reason": reason,"moderator":ctx.author.id, "case": data["cases"] + 1})
+            data[str(member.id)].append({"warning": len(data[str(member.id)]) + 1, "reason": reason,"moderator":ctx.author.id, "case": data["cases"] + 1, "date": str(datetime.datetime.utcnow())})
             data["cases"] += 1
         await self.bc.warns.upsert(data)
+        data = await self.bc.logs.find(ctx.guild.id)
+        if not data:
+            data = {"_id": ctx.guild.id, "logs": []}
+        data["logs"].append({"Moderator": ctx.author.name + "#" + str(ctx.author.discriminator), "Action": ctx.command.qualified_name, "Target": f"{member.name}#{member.discriminator}", "Target ID": member.id, "Date": str(datetime.datetime.utcnow().strftime("%x %X"))})
+        await self.bc.logs.upsert(data)
         await ctx.send("Warned **{}** for the reason:\n`{}`".format(member,reason))
         await self.postmodlog(ctx.guild,"Warn",ctx.author,ctx.channel,member=member,reason=reason,case=data["cases"])
 
@@ -468,7 +503,7 @@ class Moderation(commands.Cog):
                 reason = thing["reason"]
                 mod = await self.bc.fetch_user(thing["moderator"])
                 case = thing["case"]
-                em.add_field(name=f"Warning {warnno}",value=f"Reason: {reason}\nModerator: {mod}\nCase: {case}",inline=False)
+                em.add_field(name=f"Warning {warnno}",value=f"Reason: {reason}\nModerator: {mod}\nDate: {thing['date']}\nCase: {case}",inline=False)
             await ctx.send(embed=em)
 
     @commands.command(

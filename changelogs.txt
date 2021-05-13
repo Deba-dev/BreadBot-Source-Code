@@ -1,5 +1,5 @@
 
-**Version:** 1.0.0
+**Version:** 1.0.5
 **Notes:**
-- Added source command for breadbot code
-- polished music            
+- Economy Being Rewritten
+- Added dashboard to info page            

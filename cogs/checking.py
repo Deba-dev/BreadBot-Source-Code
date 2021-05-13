@@ -7,6 +7,10 @@ from PIL import *
 import inspect,os
 import math
 import datetime
+from tools import hypixel
+from tools.hypixel import Player, Skyblock,SkyblockPlayer
+
+hypixel.setkey("e411c189-0633-4ad0-9493-f4f902353bd3")
 
 def convert_size(bytes):
     if bytes == 0:
@@ -28,6 +32,87 @@ def format_num(num):
 class Checking(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
+
+    @commands.command()
+    async def hypixel(self,ctx,user):
+        player = hypixel.Player(user)
+        data = player.getdata()
+        if data:
+            em = discord.Embed(
+                title = "Hypixel Stats for {}".format(data["name"]),
+                color = random.choice(self.bc.color_list)
+            )
+            em.add_field(name="Rank",value=data["rank"])
+            em.add_field(name="Network Level", value=data["level"])
+            if data["guild"] is not None:
+                em.add_field(name="Guild", value=data["guild"]["name"])
+            else:
+                em.add_field(name="Guild",value="No Guild")
+            if not data["recentgames"]:
+                em.add_field(name="Recent Game", value="None")
+            else:
+                mode = data["recentgames"][0]["mode"].replace("FOUR_FOUR","4x4x4x4").replace("FOUR_THREE","3x3x3x3").replace("EIGHT_TWO", "Doubles").replace("EIGHT_ONE", "Solos")
+                em.add_field(name="Recent Game", value="""
+```yaml
+Name: {}
+Mode: {}
+Map: {}
+```
+""".format(data["recentgames"][0]["gameType"],mode,data["recentgames"][0]["map"]))
+            await ctx.send(embed=em)
+        else:
+            await ctx.send("This user has been recently searched!")
+
+    @commands.group(invoke_without_command=True)
+    async def skyblock(self,ctx):
+        await ctx.invoke(self.bc.get_command("help"), entity="skyblock")
+        
+    @skyblock.command(name="player")
+    async def skyblock_player(self,ctx,user):
+        player = SkyblockPlayer(user)
+        stats1 = player.getprofile()
+        if stats1 is None:
+            return await ctx.send("This player does not exist!")
+        stats = stats1["members"][stats1["profile_id"]]["stats"]
+        objectives = stats1["members"][stats1["profile_id"]]["objectives"]
+        em = discord.Embed(
+            title=f"Hypixel Profile Stats for {user}"
+        )
+        em.add_field(name="Kills", value=stats["kills"])
+        em.add_field(name="Deaths", value=stats["deaths"])
+        em.add_field(name="Best Crit Damage", value=stats["highest_critical_damage"])
+        em.add_field(name="Total Auction Bids", value=stats["auctions_bids"])
+        em.add_field(name="Highest Auction Bid", value=stats["auctions_highest_bid"])
+        em.add_field(name="Complete Objectives",value=len({key: value for key, value in objectives.items() if value["status"] == "COMPLETE"}))
+        await ctx.send(embed=em)
+    
+    @skyblock.command(name="banking")
+    async def skyblock_banking(self,ctx,user):
+        player = SkyblockPlayer(user)
+        stats1 = player.getprofile()
+        if stats1 is None:
+            return await ctx.send("This player does not exist!")
+        print(stats1.keys())
+
+    @skyblock.group(invoke_without_command=True)
+    async def bazaar(self,ctx):
+        await ctx.invoke(self.bc.get_command("help"), entity="skyblock bazaar")
+    
+    @bazaar.command(name="item")
+    async def bazaar_item(self,ctx,*,item):
+        sb = Skyblock()
+        item = sb.getbazaar(item)
+        if item is None:
+            return await ctx.send("That item doesn't exist or it is not sold on the bazaar!")
+        item = item["quick_status"]
+        em = discord.Embed(
+            title="Bazaar stats for {}".format(item["productId"].lower().capitalize())
+        )
+        em.add_field(name="Buy Price",value=item["buyPrice"])
+        em.add_field(name="Sell Price", value=item["sellPrice"])
+        em.add_field(name="Buy Orders",value=item["buyOrders"])
+        em.add_field(name="Sell Orders", value = item["sellOrders"])
+        await ctx.send(embed=em)
 
     @commands.command(name="source",aliases=["github","spoonfeedme"])
     @commands.cooldown(1, 1, commands.BucketType.channel)
@@ -79,7 +164,7 @@ class Checking(commands.Cog):
         if next((user for user in data["members"] if user['userid'] == member.id), None) is None:
             data["members"].append({"userid": member.id, "level":1, "xp": 0, "maxXp": 35})
         user = next((user for user in data["members"] if user['userid'] == member.id), None)
-        member = await self.bc.fetch_user(user["userid"])    
+        member = await self.bc.get_user(user["userid"])    
         avatar = member.avatar_url_as(format=None,static_format='png',size=1024)
         await avatar.save('images/Avatar.png')
         im = Image.open('images/Avatar.png').convert("RGB")
@@ -300,7 +385,6 @@ Joined: {}
             embed.add_field(name='Filesize Limit?', value=f'{convert_size(ctx.guild.filesize_limit)}')
             embed.add_field(name='Large?', value=f'{ctx.guild.large}')
             embed.add_field(name='Server Level!', value=f'{level}', inline=False)
-            embed.add_field(name=f"Server Roles ({len(roles)})", value=", ".join([role.mention for role in roles]), inline=False)
             embed.set_footer(text=f'Prompted by {ctx.author}', icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
         
