@@ -118,8 +118,9 @@ class BreadBot(commands.AutoShardedBot):
         self.locked = discordmongo.Mongo(connection_url=self.db, dbname="locked")
         self.logs = discordmongo.Mongo(connection_url=self.db, dbname="cmdlogs")
         self.economy = discordmongo.Mongo(connection_url=self.db, dbname="economy")
+        self.rickroll = discordmongo.Mongo(connection_url=self.db, dbname="rickroll")
         for filename in os.listdir('./cogs'):
-            if filename.endswith('.py'):
+            if filename.endswith('.py') and not filename.startswith("_"):
                 self.load_extension(f'cogs.{filename[:-3]}')
                 
         @self.before_invoke

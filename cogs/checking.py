@@ -164,7 +164,7 @@ Map: {}
         if next((user for user in data["members"] if user['userid'] == member.id), None) is None:
             data["members"].append({"userid": member.id, "level":1, "xp": 0, "maxXp": 35})
         user = next((user for user in data["members"] if user['userid'] == member.id), None)
-        member = await self.bc.get_user(user["userid"])    
+        member = self.bc.get_user(user["userid"])    
         avatar = member.avatar_url_as(format=None,static_format='png',size=1024)
         await avatar.save('images/Avatar.png')
         im = Image.open('images/Avatar.png').convert("RGB")
@@ -221,7 +221,7 @@ Map: {}
         )
         em.set_thumbnail(url=ctx.guild.icon_url)
         for member in data["members"]:
-            if data["members"].index(member) == 9:
+            if data["members"].index(member) == 10:
                 break
             _member = ctx.guild.get_member(member["userid"])
             rank = data["members"].index(member) + 1
@@ -266,7 +266,10 @@ Joined: {}
         if len(roles) == 0:
             em.add_field(name="Member Roles (0)", value="This user has no roles", inline=False)
         else:
-            em.add_field(name=f"Member Roles ({len(roles)})", value=", ".join([role.mention for role in roles]), inline=False)
+            if len(str([role.mention for role in roles])) < 1025:
+                em.add_field(name=f"Member Roles ({len(roles)})", value=", ".join([role.mention for role in roles]), inline=False)
+            else:
+                em.add_field(name=f"Member Roles ({len(roles)})", value="Too many roles to send", inline=False)
         em.add_field(name="General Permissions",value=", ".join([f"{perm[0].replace('_', ' ')}" for perm in user.guild_permissions if perm[1] and perm[0] in self.bc.main_perms]),inline=False)
         em.set_footer(text=f'Member ID: {user.id}')
         em.set_thumbnail(url=user.avatar_url)

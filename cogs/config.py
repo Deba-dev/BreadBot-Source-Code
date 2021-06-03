@@ -32,9 +32,26 @@ class Config(commands.Cog):
     def __init__(self, bc):
       self.bc = bc
 
+    @commands.command()
+    @commands.has_permissions(manage_guild=True)
+    async def ricktoggle(self,ctx):
+        data = await self.bc.rickroll.find(ctx.guild.id)
+        if not data:
+            data = {"_id": ctx.guild.id, "enabled": False}
+        data["enabled"] = not data["enabled"]
+        await self.bc.rickroll.upsert(data)
+        ternary = "enabled" if data["enabled"] else "disabled"
+        await ctx.send("The rickroll detector is now {}".format(ternary))
+ 
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"\n{self.__class__.__name__} Cog has been loaded\n-----")
+
+    @commands.command()
+    @commands.has_permissions(manage_guild=True)
+    async def leaveserver(self,ctx):
+        await ctx.send("Goodbye people of this server :(_ _")
+        await ctx.guild.leave()
 
     @commands.Cog.listener()
     async def on_message(self,message):
@@ -68,14 +85,15 @@ class Config(commands.Cog):
                             webhook = webhooks[0]
                         except:
                             try:
-                                webhook = await message.channel.create_webhook(name='Danepai filter')
+                                webhook = await message.channel.create_webhook(name='Breadbot filter')
                             except:
                                 pass
                         if webhook:
                             await webhook.send(
                                 content=new_message,
                                 username=message.author.nick or message.author.name,
-                                avatar_url=message.author.avatar_url
+                                avatar_url=message.author.avatar_url,
+                                allowed_mentions=discord.AllowedMentions.none()
                             )
             else:
                 pass
@@ -292,33 +310,33 @@ class Config(commands.Cog):
     
     @rewards.command(name="add",pass_context=True)
     @commands.has_permissions(manage_guild=True)
-    async def rewards_add(self,ctx,level,*,role:discord.Role=None):
+    async def rewards_add(self,ctx,level,*,role:discord.Role):
+        try:
+            data = await self.bc.ranks.find(ctx.guild.id)
+            if data is None:
+                return
+            try:
+                test = int(level)
+            except:
+                return await ctx.send("The level must be an integer!")
+            data["rewards"][str(level)] = role.id
+            await ctx.send("Added `{}` to the rewards.".format(role.name))
+            await self.bc.ranks.upsert(data)
+        except Exception as e:
+            print(e)
+        
+    @rewards.command(name="remove")
+    @commands.has_permissions(manage_guild=True)
+    async def rewards_remove(self,ctx,level):
         data = await self.bc.ranks.find(ctx.guild.id)
         if data is None:
             return
-        if not role:
-            return await ctx.send("Please specify a role!")
         try:
             test = int(level)
         except:
             return await ctx.send("The level must be an integer!")
-        data["rewards"][str(level)] = role.id
-        await ctx.send("Added `{}` to the rewards.".format(role.name))
-        await self.bc.ranks.upsert(data)
-        
-    @rewards.command(name="remove")
-    @commands.has_permissions(manage_guild=True)
-    async def rewards_remove(self,ctx,channel:discord.TextChannel=None):
-        data = await self.bc.ranks.find(ctx.guild.id)
-        if data is None:
-            return
-        if not channel:
-            return await ctx.send("Please specify a channel!")
-        try:
-            data["blacklisted"].remove(channel.id)
-        except:
-            return await ctx.send("That channel isnt blacklisted!")
-        await ctx.send("Removed {} from the blacklisted channels.".format(channel.mention))
+        data["rewards"].pop(str(level))
+        await ctx.send("Removed all role rewards for that level to the rewards.")
         await self.bc.ranks.upsert(data)
 
     @lvlsettings.command(name="multi",description="Increase your xp multiplier")

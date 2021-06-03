@@ -14,7 +14,7 @@ time_regex = re.compile("(?:(\d{1,5})(h|s|m|d||))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400,"":1}
 
 async def gawedit(msg,data,bc,edit = None):
-    author = await bc.fetch_user(data["authorid"])
+    author = bc.get_user(data["authorid"])
     started = data['startedat']
     whendone = data['startedat'] + relativedelta(seconds=data['duration'])
     timeleft = whendone - datetime.datetime.now()
@@ -81,12 +81,19 @@ class ServerEvents(commands.Cog):
         for key, value in heist.items():
             ppl = []
             member = value["authorid"]
-            member = await self.bc.fetch_user(member)
+            member = self.bc.get_user(member)
             msg = value["_id"]
             winners = value["winners"]
             reward = value['reward']
             currentTime = datetime.datetime.now()
-            guild = self.bc.get_guild(value['guildId'])
+            try:
+                guild = self.bc.get_guild(value['guildId'])
+            except:
+                await self.bc.giveaways.delete(msg)
+                try:
+                    self.bc.GAWdata.pop(msg)
+                except KeyError:
+                    pass
             channel = self.bc.get_channel(value['channelId'])
             ctx = discord.utils.get(guild.text_channels, id=value['channelId'])
             new_msg = await channel.fetch_message(msg)
@@ -95,9 +102,16 @@ class ServerEvents(commands.Cog):
             users.pop(users.index(self.bc.user))
             await gawedit(new_msg,value,self.bc,"something")
             if currentTime >= unmuteTime:
+                if len(users) == 0:
+                    await self.bc.giveaways.delete(msg)
+                    try:
+                        self.bc.GAWdata.pop(msg)
+                    except KeyError:
+                        pass
+                    return await ctx.send("A winner could not be determined.")
                 for x in range(winners):
                     ppl.append(random.choice(users))
-                await ctx.send("The people who won the giveaway for **{}** were: `{}`\nMessage link: https://discord.com/channels/{}/{}/{}".format(reward,", ".join([user.name for user in ppl]),guild.id,channel.id,new_msg.id))
+                await ctx.send("The people who won the giveaway for **{}** were: {}\nMessage link: https://discord.com/channels/{}/{}/{}".format(reward,", ".join([user.mention for user in ppl]),guild.id,channel.id,new_msg.id))
                 await gawedit(new_msg,value,self.bc)
                 await self.bc.giveaways.delete(msg)
                 try:
@@ -178,7 +192,7 @@ class ServerEvents(commands.Cog):
             users.pop(users.index(self.bc.user))
             for x in range(winners):
                 ppl.append(random.choice(users))
-            await ctx.send("The new people who won the giveaway were: `{}`\nMessage link: https://discord.com/channels/{}/{}/{}".format(", ".join([user.name for user in ppl]),ctx.guild.id,channel.id,new_msg.id))
+            await ctx.send("The new people who won the giveaway were: {}\nMessage link: https://discord.com/channels/{}/{}/{}".format(", ".join([user.mention for user in ppl]),ctx.guild.id,channel.id,new_msg.id))
         except Exception:
             #await ctx.send(traceback.format_exc())
             return
@@ -193,9 +207,16 @@ class ServerEvents(commands.Cog):
             new_msg = await channel.fetch_message(msgid)
             users = await new_msg.reactions[0].users().flatten()
             users.pop(users.index(self.bc.user))
+            if len(users) == 0:
+                await self.bc.giveaways.delete(new_msg)
+                try:
+                    self.bc.GAWdata.pop(new_msg)
+                except KeyError:
+                    pass
+                return await ctx.send("A winner could not be determined.")
             for x in range(winners):
                 ppl.append(random.choice(users))
-            await ctx.send("The people who won the giveaway for **{}** were: `{}`\nMessage link: https://discord.com/channels/{}/{}/{}".format(data["reward"],", ".join([user.name for user in ppl]),ctx.guild.id,channel.id,new_msg.id))
+            await ctx.send("The people who won the giveaway for **{}** were: {}\nMessage link: https://discord.com/channels/{}/{}/{}".format(data["reward"],", ".join([user.nmention for user in ppl]),ctx.guild.id,channel.id,new_msg.id))
             await gawedit(new_msg,data,self.bc)
             await self.bc.giveaways.delete(msgid)
             try:

@@ -2,7 +2,9 @@ import discord
 from discord.ext import commands
 from prsaw import RandomStuff
 import os
-rs = RandomStuff(api_key = os.environ.get("prsawapi"))
+import aiohttp
+rs = RandomStuff(api_key = os.environ.get("prsawapi"), async_mode=True)
+rs.base_url = "https://api.pgamerx.com/v4"
 
 class ChatBot(commands.Cog):
     def __init__(self,bc):
@@ -18,8 +20,11 @@ class ChatBot(commands.Cog):
         if not data["isenabled"]:
             return
         if msg.channel.id == data["channel"]:
-            response =  rs.get_ai_response(msg.content)
-            await msg.reply(response)
+            async with aiohttp.ClientSession(headers={"x-api-key": os.environ.get("prsawapi")}) as session:
+                async with session.get("https://api.pgamerx.com/v4/ai", params={'type':"stable" , 'message':msg.content, "lang": "en"}) as res:
+                    text = await res.json()
+                    await msg.reply(text[0]["message"])
+
             
 
 def setup(bc):

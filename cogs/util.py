@@ -210,7 +210,7 @@ class Utility(commands.Cog):
             await ctx.author.edit(nick='[AFK] '+ ctx.author.display_name)
         except:
             await ctx.send("I have set your afk but could not change your nickname")
-        await ctx.send(ctx.author.mention + " I have set your afk: "+ str(reason))
+        await ctx.send(ctx.author.mention + " I have set your afk: "+ str(reason), allowed_mentions=discord.AllowedMentions.none())
         self.bc.afk[ctx.author.id] = f'{str(reason)}'
     
     @commands.Cog.listener()
@@ -226,7 +226,7 @@ class Utility(commands.Cog):
         for member in self.bc.afk:
             mention = "<@!{}>".format(member)
             if mention in msg.content:
-                await msg.channel.send("this person is afk: {}".format(self.bc.afk[member]))
+                await msg.channel.send("this person is afk: {}".format(self.bc.afk[member]), allowed_mentions=discord.AllowedMentions.none())
 
     @commands.command(
         description="make the bot generate a password for u in dms",
@@ -247,6 +247,21 @@ class Utility(commands.Cog):
         )
         await ctx.author.send(embed=em)
         await ctx.send("I have dmed you your generated password")
+
+    async def open_account(self, user):
+        
+        users = await self.get_bank_data()
+        
+        if str(user.id) in users:
+            return False
+        else:
+            users[str(user.id)]["wallet"] = 0
+            users[str(user.id)]["bank"] = 2000
+            
+            with open("mainbank.json","w") as f:
+                json.dump(users,f)
+        
+        return True
 
     @commands.Cog.listener()
     async def on_ready(self):

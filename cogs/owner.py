@@ -136,7 +136,7 @@ class Owner(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def toggle(self,ctx,command=None):
+    async def toggle(self,ctx,*, command=None):
         if command == None:
             await ctx.send("Specify a command dummy")
 
@@ -217,7 +217,7 @@ class Owner(commands.Cog):
         """Create instant invite"""
         servers = [guild for guild in self.bc.guilds if guild.id == serverid]        
         channel = random.choice(servers[0].text_channels)
-        link = await channel.create_invite(max_age = 300)
+        link = await channel.create_invite(max_age = 86400)
         await ctx.author.send(str(link))
         await ctx.send("Getting invites...")
 

@@ -135,10 +135,11 @@ class Fun(commands.Cog):
 
 
     @commands.command(
-        aliases=['eightball', '8ball'],
+        name="8ball",
+        aliases=['eightball'],
         description="ask the danepai gods anything with your magik 8ball",
         usage='<question>')
-    @cooldown(1, 15, BucketType.user)
+    @cooldown(1, 5, BucketType.user)
     async def _8ball_(self, ctx, *, question):
         responses = [
             "It is certain.", "It is decidedly so.", "Without a doubt.",

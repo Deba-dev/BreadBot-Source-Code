@@ -1,18 +1,132 @@
 {
-    "aA715Ed": {
-        "Command": "Rich",
-        "Error Type": "TypeError",
+    "37195b7F": {
+        "Command": "Giveaway Start",
+        "Error Type": "ValueError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 467, in _actual_conversion\n    return converter(argument)\n",
+            "ValueError: invalid literal for int() with base 10: '10m'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 1340, in invoke\n    await ctx.invoked_subcommand.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 790, in prepare\n    await self._parse_arguments(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 697, in _parse_arguments\n    transformed = await self.transform(ctx, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 552, in transform\n    return await self.do_conversion(ctx, converter, argument, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 505, in do_conversion\n    return await self._actual_conversion(ctx, converter, argument, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 476, in _actual_conversion\n    raise BadArgument('Converting to \"{}\" failed for parameter \"{}\".'.format(name, param.name)) from exc\n",
+            "discord.ext.commands.errors.BadArgument: Converting to \"int\" failed for parameter \"winners\".\n"
+        ]
+    },
+    "519F1D": {
+        "Command": "Invite",
+        "Error Type": "Unspecified",
         "Error": [
             "Traceback (most recent call last):\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
-            "  File \"/home/runner/Bot/cogs/economy.py\", line 553, in rich\n    em.add_field(name=f\"{index}. {await self.bc.get_user(user['_id'])}\", value=f\"{user['wallet']}\", inline=False)\n",
-            "TypeError: object User can't be used in 'await' expression\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 220, in invite\n    link = await channel.create_invite(max_age = 86400)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 750, in create_invite\n    data = await self._state.http.create_invite(self.id, reason=reason, **fields)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 241, in request\n    raise Forbidden(r, data)\n",
+            "discord.errors.Forbidden: 403 Forbidden (error code: 50013): Missing Permissions\n",
             "\nThe above exception was the direct cause of the following exception:\n\n",
             "Traceback (most recent call last):\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: TypeError: object User can't be used in 'await' expression\n"
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: Forbidden: 403 Forbidden (error code: 50013): Missing Permissions\n"
+        ]
+    },
+    "6167922c": {
+        "Command": "Reload",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 453, in reload\n    await ctx.send(embed=embed)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 935, in send\n    data = await state.http.send_message(channel.id, content, tts=tts, embed=embed,\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 247, in request\n    raise HTTPException(r, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.0.value: Must be 1024 or fewer in length.\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.fields.0.value: Must be 1024 or fewer in length.\n"
+        ]
+    },
+    "D8Ea9B": {
+        "Command": "Roles",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 403, in roles\n    await ctx.send(embed=em)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 935, in send\n    data = await state.http.send_message(channel.id, content, tts=tts, embed=embed,\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 247, in request\n    raise HTTPException(r, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.description: Must be 2048 or fewer in length.\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embed.description: Must be 2048 or fewer in length.\n"
+        ]
+    },
+    "27ad8": {
+        "Command": "Lvlsettings Rewards Remove",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 1340, in invoke\n    await ctx.invoked_subcommand.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 1340, in invoke\n    await ctx.invoked_subcommand.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 790, in prepare\n    await self._parse_arguments(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 697, in _parse_arguments\n    transformed = await self.transform(ctx, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 552, in transform\n    return await self.do_conversion(ctx, converter, argument, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 505, in do_conversion\n    return await self._actual_conversion(ctx, converter, argument, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 451, in _actual_conversion\n    ret = await instance.convert(ctx, argument)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/converter.py\", line 331, in convert\n    raise ChannelNotFound(argument)\n",
+            "discord.ext.commands.errors.ChannelNotFound: Channel \"<@&825481527273717831>\" not found.\n"
+        ]
+    },
+    "4588D37": {
+        "Command": "Play",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 547, in _play\n    await ctx.invoke(self._join)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/context.py\", line 135, in invoke\n    ret = await command.callback(*arguments, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 376, in _join\n    ctx.voice_state.voice = await destination.connect()\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1147, in connect\n    raise ClientException('Already connected to a voice channel.')\n",
+            "discord.errors.ClientException: Already connected to a voice channel.\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 864, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: ClientException: Already connected to a voice channel.\n"
+        ]
+    },
+    "5105A9": {
+        "Command": "Share",
+        "Error Type": "ValueError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 467, in _actual_conversion\n    return converter(argument)\n",
+            "ValueError: invalid literal for int() with base 10: 'a'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 902, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 856, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 790, in prepare\n    await self._parse_arguments(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 697, in _parse_arguments\n    transformed = await self.transform(ctx, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 552, in transform\n    return await self.do_conversion(ctx, converter, argument, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 505, in do_conversion\n    return await self._actual_conversion(ctx, converter, argument, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 476, in _actual_conversion\n    raise BadArgument('Converting to \"{}\" failed for parameter \"{}\".'.format(name, param.name)) from exc\n",
+            "discord.ext.commands.errors.BadArgument: Converting to \"int\" failed for parameter \"amount\".\n"
         ]
     }
 }

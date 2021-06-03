@@ -613,6 +613,23 @@ class Economy(commands.Cog):
         await self.bc.economy.upsert(data)
         await self.bc.economy.upsert(data2)
 
+    @commands.command()
+    async def share(self,ctx,member:discord.Member, amount:int):
+        await self.check_acc(ctx.author)
+        data = await self.bc.economy.find(ctx.author.id)
+        await self.check_acc(member)
+        data2 = await self.bc.economy.find(member.id)
+        if amount > data["wallet"]:
+            return await ctx.send("You dont have that much money!")
+        if data["passive"]:
+            return await ctx.send("You are in passive mode you have to turn that off to share coins!")
+        if data2["passive"]:
+            return await ctx.send("This person has passive mode on so you cannot share coins to them!")
+        data["wallet"] -= amount
+        data2["wallet"] += amount
+        await ctx.send("You have now shared **{}** to `{}`".format(amount, member))
+        await self.bc.economy.upsert(data)
+        await self.bc.economy.upsert(data2)
 
     @commands.command(description="rob a person", usage="<user>")
     async def heist(self, ctx, member: discord.Member):

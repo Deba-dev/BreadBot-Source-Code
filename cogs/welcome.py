@@ -16,12 +16,11 @@ class Invites(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
         self.tracker = DiscordUtils.InviteTracker(bc)
-
+    
     @commands.Cog.listener()
     async def on_ready(self):
         await self.tracker.cache_invites()
     
-
     @commands.Cog.listener()
     async def on_invite_create(self, invite):
         await self.tracker.update_invite_cache(invite)
@@ -40,16 +39,32 @@ class Invites(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        inviter = await self.tracker.fetch_inviter(member) # inviter is the member who invited
-        if inviter is None:
-            return
-        data = await self.bc.invites.find(inviter.id)
-        if data is None:
-            data = {"_id": inviter.id, "count": 0, "usersInvited": []}
-
-        data["count"] += 1
-        data["usersInvited"].append(member.id)
-        await self.bc.invites.upsert(data)
+        print(f'{member} has joined a server')
+        try:
+            inviter = await self.tracker.fetch_inviter(member)
+            if inviter is None:
+                class NotFoundInvite:
+                    def something(self):
+                        return None
+                inviter = NotFoundInvite
+                inviter.mention = "I could not find who invited!"
+            data = await self.bc.invites.find(inviter.id)
+            if data is None:
+                data = {"_id": inviter.id, "count": 0, "usersInvited": []}
+        except Exception as e:
+            #print(e)
+            class NotFoundInvite:
+                def something(self):
+                    return None
+            inviter = NotFoundInvite
+            inviter.mention = "I could not find who invited!"
+        if inviter.mention != "I could not find who invited!":
+            data["count"] += 1
+            data["usersInvited"].append(member.id)
+            await self.bc.invites.upsert(data)
+        else:
+            data = {}
+            data["count"] = None
         year = int(datetime.datetime.now().strftime("%Y")) - int(
             member.created_at.strftime("%Y"))
 
@@ -69,7 +84,6 @@ class Invites(commands.Cog):
             member.created_at.strftime("%M"))
         if minute < 0:
             minute = minute + 60
-        print(f'{member} has joined a server')
         bots = 0
         for member in member.guild.members:
             if member.bot == True:
@@ -92,9 +106,14 @@ class Invites(commands.Cog):
         try:
             if data2["channel"] is not None:
                 channel = self.bc.get_channel(data2["channel"])
-            elif data2["channel"] is None and not data2["auth"] and data2["role"] is not None:
-                role = discord.utils.get(member.guild.roles,id=data2["role"])
-                await member.add_roles(role)
+                print("a")
+            elif data2["channel"] is None and not data2["auth"] and data2["role"]:
+                try:
+                    print("b")
+                    role = discord.utils.get(member.guild.roles,id=data2["role"])
+                    await member.add_roles(role)
+                except:
+                    pass
             if channel.name not in member.guild.channels and member not in channel.guild.members:
                 pass
             else:
