@@ -95,8 +95,13 @@ class ServerEvents(commands.Cog):
                 except KeyError:
                     pass
             channel = self.bc.get_channel(value['channelId'])
+            if not guild:
+                continue
             ctx = discord.utils.get(guild.text_channels, id=value['channelId'])
-            new_msg = await channel.fetch_message(msg)
+            try:
+                new_msg = await channel.fetch_message(msg)
+            except:
+                continue
             unmuteTime = value['startedat'] + relativedelta(seconds=value['duration'])
             users = await new_msg.reactions[0].users().flatten()
             users.pop(users.index(self.bc.user))

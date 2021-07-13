@@ -4,6 +4,7 @@ from discord.ext.commands import BucketType
 from copy import deepcopy
 from dateutil.relativedelta import relativedelta
 import random
+import asyncio
 import datetime
 
 shop = [
@@ -474,6 +475,38 @@ class Economy(commands.Cog):
 
     @commands.command()
     @commands.cooldown(1, 30, BucketType.user)
+    async def postmeme(self, ctx):
+        await self.check_acc(ctx.author)
+        data = await self.bc.economy.find(ctx.author.id)
+        choices = ["d", "a", "n", "k"]
+        res = await self.check_for(ctx.author, "laptop")
+        if not res[0]:
+            if res[0][1] == 2:
+                return await ctx.send("You do not have this item!")
+        await ctx.send("""
+- `D` **Dank meme**
+- `A` **A meme**
+- `N` **Normie meme**
+- `K` **Kool meme**
+""")    
+        def check(msg):
+            return msg.author == ctx.author and msg.channel == ctx.channel
+        try:
+            msg = await self.bc.wait_for("message", check=check, timeout=30)
+        except asyncio.TimeoutError:
+            return await ctx.send("Your choices have timed out")
+        else:
+            if msg.content.lower() in choices:
+                earnings = random.randrange(0, 3000)
+                data["wallet"] += earnings
+                await ctx.send("You posted your meme and you got **{}** coins from it".format(earnings))
+                await self.bc.economy.upsert(data)
+            else:
+                return await ctx.send("You did not enter the choices right")
+
+
+    @commands.command()
+    @commands.cooldown(1, 30, BucketType.user)
     async def beg(self,ctx):
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
@@ -687,6 +720,28 @@ class Economy(commands.Cog):
             }
             await self.bc.economy.upsert(data)
 
+    async def check_for(self,member,item_name):
+        data = await self.bc.economy.find(member.id)
+        name_ = None
+        item_name = item_name.lower()
+        for item in shop:
+            if item_name in item["id"]:
+                name_ = item
+                break
+
+        if not name_:
+            return [False, 1]
+
+        iteminbag = False
+        for item in data["bag"]:
+            if item["name"] == name_["name"]:
+                iteminbag = True
+                break
+        if not iteminbag:
+            return [False, 2]
+        
+        return [True]
+
     async def buy_item(self, member, item_name, amount):
         data = await self.bc.economy.find(member.id)
         name_ = None
@@ -698,6 +753,8 @@ class Economy(commands.Cog):
         
         if not name_:
             return [False, 1]
+        else:
+            return [True]
         
         amount = int(amount)
         if data["wallet"] < name_["cost"] * amount:

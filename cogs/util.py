@@ -15,7 +15,11 @@ import math
 from random import choice
 from captcha.image import ImageCaptcha
 import asyncio
+from googletrans import Translator
+from PyDictionary import PyDictionary
+dictionary=PyDictionary()
 image = ImageCaptcha()
+translator = Translator()
 
 def convert_size(bytes):
     if bytes == 0:
@@ -36,6 +40,36 @@ class Utility(commands.Cog):
 
     def __init__(self, bc):
       self.bc = bc
+
+    @commands.command(description="Translate words")
+    async def translate(self, ctx, *, word):
+        result = translator.translate(word, dest="en")
+        em = discord.Embed(
+            title="Translator Results",
+            description="**Result:** {}\n**Source Language:** {}".format(result.text, result.src)
+        )
+        await ctx.send(embed=em)
+
+    @commands.command(description="Get info on a word")
+    async def dictionary(self,ctx,word):
+        meanings = dictionary.meaning(word)
+        msg = ""
+        for type, meanings in meanings.items():
+            msg += f"**{type}**\n\n"
+            for meaning in meanings:
+                msg += f"{meanings.index(meaning) + 1}. {meaning}\n"
+            msg += "\n"
+        embed = discord.Embed(
+            title=f"Word Definition For: {word.capitalize()}",
+            description = msg
+        )
+        embed.add_field(name="Synonyms", value=", ".join([synonym for synonym in dictionary.synonym(word)]))
+        embed.add_field(name="Antonyms", value=", ".join([synonym for synonym in dictionary.antonym(word)]))
+        await ctx.send(embed=embed)
+
+    @commands.command(description="Redo a command instead of typing it out again by replying to the message you want to redo")
+    async def re(self,ctx):
+        await self.bc.process_commands(ctx.message.reference.cached_message)
 
     @commands.command(hidden=True)
     async def cap(self,ctx):
@@ -211,22 +245,33 @@ class Utility(commands.Cog):
         except:
             await ctx.send("I have set your afk but could not change your nickname")
         await ctx.send(ctx.author.mention + " I have set your afk: "+ str(reason), allowed_mentions=discord.AllowedMentions.none())
-        self.bc.afk[ctx.author.id] = f'{str(reason)}'
+        data = await self.bc.afk.find(ctx.guild.id)
+        if not data:
+            data = {"_id": ctx.guild.id, "members": {}}
+        if str(ctx.author.id) not in data["members"].keys():
+            data["members"][str(ctx.author.id)] = {}
+            data["members"][str(ctx.author.id)]["reason"] = str(reason)
+        await self.bc.afk.upsert(data)
     
     @commands.Cog.listener()
     async def on_message(self,msg):
-        if msg.author.display_name.startswith("[AFK] ") or msg.author.id in self.bc.afk:
-            self.bc.afk.pop(msg.author.id)
-            await msg.channel.send("I have taken your afk "+msg.author.mention)
-            filter = msg.author.display_name.split("[AFK] ")
+        data = await self.bc.afk.find(msg.guild.id)
+        if not data:
+            return
+        if msg.author.bot:
+            return
+        for user in msg.mentions:
+            if str(user.id) in data["members"].keys():
+                await msg.channel.send("This user is afk: {}".format(data["members"][str(user.id)]["reason"]), allowed_mentions=discord.AllowedMentions.none())
+                break
+        if str(msg.author.id) in data["members"].keys():
+            await msg.channel.send("Welcome Back! I have taken your afk from you!")
+            data["members"].pop(str(msg.author.id))
             try:
-                await msg.author.edit(nick=filter[0])
+                await msg.author.edit(nick=msg.author.display_name.replace("[AFK] ", ""))
             except:
                 pass
-        for member in self.bc.afk:
-            mention = "<@!{}>".format(member)
-            if mention in msg.content:
-                await msg.channel.send("this person is afk: {}".format(self.bc.afk[member]), allowed_mentions=discord.AllowedMentions.none())
+            await self.bc.afk.upsert(data)
 
     @commands.command(
         description="make the bot generate a password for u in dms",

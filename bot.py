@@ -59,7 +59,6 @@ class BreadBot(commands.AutoShardedBot):
         self.owner = owner
         self.remove_command("help")
         self.muted_users = {}
-        self.afk = {}
         self.heistdata = {}
         self.GAWdata = {}
         self.connection_url = os.environ.get("mongo")
@@ -68,6 +67,7 @@ class BreadBot(commands.AutoShardedBot):
         self.version = lines[1].replace("**Version:** ", "")
         self.DEFAULTPREFIX = DEFAULTPREFIX
         self.dbltoken = os.environ.get("DBLTOKEN")
+        self.gettingmemes = True
         self.colors = {
             "WHITE": 0xFFFFFF,
             "AQUA": 0x1Abc9C,
@@ -119,6 +119,7 @@ class BreadBot(commands.AutoShardedBot):
         self.logs = discordmongo.Mongo(connection_url=self.db, dbname="cmdlogs")
         self.economy = discordmongo.Mongo(connection_url=self.db, dbname="economy")
         self.rickroll = discordmongo.Mongo(connection_url=self.db, dbname="rickroll")
+        self.afk = discordmongo.Mongo(connection_url=self.db, dbname="afk")
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py') and not filename.startswith("_"):
                 self.load_extension(f'cogs.{filename[:-3]}')
@@ -127,9 +128,7 @@ class BreadBot(commands.AutoShardedBot):
         async def before_any_command(ctx):
             data = read_json("blacklist")
             self.blacklisted_users = data["blacklistedUsers"]
-            print(self.blacklisted_users)
             if ctx.author.id in self.blacklisted_users:
-                print("yes")
                 error = tools.errors.Blacklisted(ctx)
                 raise await error.send()
             

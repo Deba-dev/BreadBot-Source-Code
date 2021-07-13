@@ -86,7 +86,7 @@ class Moderation(commands.Cog):
         description="Mutes a given user for an amount of time!",
         usage='<user> [time]'
     )
-    @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_messages=True)
     async def mute(self, ctx, member: discord.Member, *, time: TimeConverter=None):
         with open('muteroles.json', 'r') as f:
             channel = json.load(f)
@@ -205,7 +205,7 @@ class Moderation(commands.Cog):
         await ctx.send(f'{member} Was Given {role}')
 
     @commands.command(description='Massnick everyone anythin', usage='<name>')
-    @commands.has_permissions(manage_nicknames=True)
+    @commands.has_permissions(manage_guild=True)
     async def massnick(self, ctx, *args):
         Nick = ' '.join(map(str, args))
         for member in ctx.guild.members:
@@ -283,7 +283,7 @@ class Moderation(commands.Cog):
         await ctx.message.delete()
         try:
             await user.send(
-                f"you were kicked from {ctx.guild.name} for the following reason:\n\n{reason}"
+                f"You were kicked from {ctx.guild.name} for the following reason:\n\n{reason}"
             )
         except:
             await ctx.send("An error occured trying to dm this member!")
@@ -300,6 +300,7 @@ class Moderation(commands.Cog):
         await self.bc.logs.upsert(data)
 
     @commands.command()
+    @commands.has_permissions(manage_channels=True)
     async def channelsync(self,ctx):
         await ctx.channel.edit(sync_permissions=True)
         await ctx.send("Channel perms synced with category!")
@@ -322,7 +323,7 @@ class Moderation(commands.Cog):
         await ctx.message.delete()
         try:
             await user.send(
-                f"you were banned from {ctx.guild.name} for the following reason:\n\n{reason}"
+                f"You were banned from {ctx.guild.name} for the following reason:\n\n{reason}"
             )
         except:
             await ctx.send("An error occured trying to dm this member!")
@@ -374,7 +375,7 @@ class Moderation(commands.Cog):
             data2 = {"_id": ctx.channel.id, "perms": {}}
         #Before channel locks the perms are saved into db
         data2["perms"] = self._overwrites_to_json(ctx.channel.overwrites)
-        for role in ctx.guild.roles:
+        for role in ctx.channel.overwrites:
             if role.name == self.bc.user.name:
                 continue
             perms = ctx.channel.overwrites_for(role)
@@ -415,6 +416,7 @@ class Moderation(commands.Cog):
             await ctx.channel.set_permissions(guildrole, overwrite=discord.PermissionOverwrite(**permissions))
             await asyncio.sleep(0.5)
         await ctx.send(f"Unlocked {ctx.channel.mention} all roles can talk here now")
+        await self.bc.locked.delete(ctx.channel.id)
         await self.postmodlog(ctx.guild,"Channel Unlock",ctx.author,ctx.channel)
 
     @commands.command(description='set a slowmode to a channel. leave blank to reset. max is 21600 seconds', usage='[seconds]')
@@ -455,6 +457,14 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def warn(self,ctx,member:discord.Member,*,reason="No Reason Given"):
         data = await self.bc.warns.find(ctx.guild.id)
+        pos1 = ctx.guild.roles.index(ctx.author.top_role)
+        pos2 = ctx.guild.roles.index(member.top_role)
+        if pos1 == pos2:
+            await ctx.send("Both of you have the same power so i can not warn this person!")
+            return
+        elif pos1 < pos2:
+            await ctx.send("This person has more power than you so i can not warn him for you!")
+            return
         if not data:
             data = {
                 "_id": ctx.guild.id,
@@ -474,6 +484,12 @@ class Moderation(commands.Cog):
             data["cases"] += 1
         await self.bc.warns.upsert(data)
         data = await self.bc.logs.find(ctx.guild.id)
+        try:
+            await member.send(
+                f"You were warned in {ctx.guild.name} for the following reason:\n\n{reason}"
+            )
+        except:
+            await ctx.send("An error occured trying to dm this member!")
         if not data:
             data = {"_id": ctx.guild.id, "logs": []}
         data["logs"].append({"Moderator": ctx.author.name + "#" + str(ctx.author.discriminator), "Action": ctx.command.qualified_name, "Target": f"{member.name}#{member.discriminator}", "Target ID": member.id, "Date": str(datetime.datetime.utcnow().strftime("%x %X"))})
@@ -511,7 +527,7 @@ class Moderation(commands.Cog):
       description="delete a warn",
       usage="<user> <case #>"
     )
-    @commands.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_guild=True)
     async def deletewarn(self,ctx,member:discord.Member,case:int):
         data = await self.bc.warns.find(ctx.guild.id)
         if not data:

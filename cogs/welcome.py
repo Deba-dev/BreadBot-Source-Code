@@ -15,33 +15,33 @@ image = ImageCaptcha()
 class Invites(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
-        self.tracker = DiscordUtils.InviteTracker(bc)
+        bc.tracker = DiscordUtils.InviteTracker(bc)
     
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.tracker.cache_invites()
+        await self.bc.tracker.cache_invites()
     
     @commands.Cog.listener()
     async def on_invite_create(self, invite):
-        await self.tracker.update_invite_cache(invite)
+        await self.bc.tracker.update_invite_cache(invite)
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        await self.tracker.update_guild_cache(guild)
+        await self.bc.tracker.update_guild_cache(guild)
 
     @commands.Cog.listener()
     async def on_invite_delete(self, invite):
-        await self.tracker.remove_invite_cache(invite)
+        await self.bc.tracker.remove_invite_cache(invite)
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
-        await self.tracker.remove_guild_cache(guild)
+        await self.bc.tracker.remove_guild_cache(guild)
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
         print(f'{member} has joined a server')
         try:
-            inviter = await self.tracker.fetch_inviter(member)
+            inviter = await self.bc.tracker.fetch_inviter(member)
             if inviter is None:
                 class NotFoundInvite:
                     def something(self):
@@ -106,17 +106,12 @@ class Invites(commands.Cog):
         try:
             if data2["channel"] is not None:
                 channel = self.bc.get_channel(data2["channel"])
-                print("a")
-            elif data2["channel"] is None and not data2["auth"] and data2["role"]:
-                try:
-                    print("b")
-                    role = discord.utils.get(member.guild.roles,id=data2["role"])
-                    await member.add_roles(role)
-                except:
-                    pass
             if channel.name not in member.guild.channels and member not in channel.guild.members:
                 pass
             else:
+                message = data2["message"].replace("{member}", member.mention).replace("{server}", member.guild.name).replace("{place}", str(len(member.guild.members))).replace("{ending}", ending)
+                if data2["ping"]:
+                    pingrole = discord.utils.get(member.guild.roles, id=data2["ping"])
                 avatar = member.avatar_url_as(format=None,static_format='png',size=1024)
                 await avatar.save('images/Avatar.png')
                 im = Image.open('images/Avatar.png').convert("RGB")
@@ -163,10 +158,12 @@ class Invites(commands.Cog):
                 draw.text((1325, 320), txt, fill=(255,255,255,255), font=fittext(txt,0.30))
                 background.paste(sidebar,(0,0),sidebar)
                 background.save('images/overlap.png')
+                if data2["ping"]:
+                    await channel.send(pingrole.mention)
                 if int(year) != 0 and int(month) == 0:
                     em = discord.Embed(
                         title="Welcome {}".format(member),
-                        description='Welcome {} to **{}**. You are our `{}{}` member!'.format(member.mention, member.guild.name,len(member.guild.members), ending)
+                        description=message
                     )
                     em.add_field(name="Suspicious? No",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
                     em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
@@ -176,27 +173,37 @@ class Invites(commands.Cog):
                 elif int(year) != 0 and int(month) != 0:
                     em = discord.Embed(
                         title="Welcome {}".format(member),
-                        description='Welcome {} to **{}**. You are our `{}{}` member!'.format(member.mention, member.guild.name,len(member.guild.members), ending)
+                        description=message
                     )
                     em.add_field(name="Suspicious? No",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
                     em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
                     file = discord.File('images/overlap.png')
                     await channel.send(file=file,embed=em)
                     sus = False
-                elif int(year) == 0 and int(month) not in range(0, 3):
+                elif int(year) == 0 and int(month) > 3:
                     em = discord.Embed(
                         title="Welcome {}".format(member),
-                        description='Welcome {} to **{}**. You are our `{}{}` member!'.format(member.mention, member.guild.name,len(member.guild.members), ending)
+                        description=message
+                    )
+                    em.add_field(name="Suspicious? No",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
+                    em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
+                    file = discord.File('images/overlap.png')
+                    await channel.send(file=file,embed=em)
+                    sus = False
+                elif int(year) == 0 and int(month) not in range(0, 2):
+                    em = discord.Embed(
+                        title="Welcome {}".format(member),
+                        description=message
                     )
                     em.add_field(name="Suspicious? A bit sus if you ask me",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
                     em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
                     file = discord.File('images/overlap.png')
                     await channel.send(file=file,embed=em)
                     sus = False
-                elif int(year) == 0 and int(month) < 2:
+                elif int(year) == 0 and int(month) < 1:
                     em = discord.Embed(
                         title="Welcome {}".format(member),
-                        description='Welcome {} to **{}**. You are our `{}{}` member!'.format(member.mention, member.guild.name,len(member.guild.members), ending)
+                        description=message
                     )
                     em.add_field(name="Suspicious? VERY SUS CALL EMERGENCY MEETING",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
                     em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
@@ -206,7 +213,7 @@ class Invites(commands.Cog):
                 else:
                     em = discord.Embed(
                         title="Welcome {}".format(member),
-                        description='Welcome {} to **{}**. You are our `{}{}` member!'.format(member.mention, member.guild.name,len(member.guild.members), ending)
+                        description=message
                     )
                     em.add_field(name="Suspicious? VERY SUS CALL EMERGENCY MEETING",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
                     em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")

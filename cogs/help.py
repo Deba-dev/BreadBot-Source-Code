@@ -201,7 +201,7 @@ class Support(commands.Cog):
         em.add_field(name="About",value="I am a bot that provides economy, moderation, configuration, and more!",inline=False)
         em.add_field(name="What do I provide?", value="**- Economy\n- Welcome system\n- Leave system\n- Moderation\n- Suspicious account detector\n- And More!**")
         em.add_field(name="<a:tick:763428030320214036>| Important links",value="**[Support Server](https://discord.gg/zuv2XW6tzb) | [Invite Me!](https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=2146958839) | [Vote For Me!](https://top.gg/bot/760871722718855169/vote) | [Very cool discord!](https://discord.gg/fz5EYUfEFp) | [Dashboard](https://breadbotdash.tk)**",inline=False)
-        em.add_field(name="❓| Informative Links",value="**[discord.py docs](https://discordpy.readthedocs.io/en/latest/) | [Bot Page](https://top.gg/bot/760871722718855169) | [My Own Discord Server](https://discord.gg/awy35MJ5pc) | Contact: dank BongoPlayzYT#1646**")
+        em.add_field(name="❓| Informative Links",value="**[discord.py docs](https://discordpy.readthedocs.io/en/latest/) | [Bot Page](https://top.gg/bot/760871722718855169) | [My Own Discord Server](https://discord.gg/awy35MJ5pc) | Contact: BongoPlayzYT#1646**")
         em.add_field(name="Easy Way to contact me", value="Just dm me (the bot) if you have an issue, suggestion, or someone u want to report abusing the bot.", inline=False)
         await ctx.send(embed=em)
 

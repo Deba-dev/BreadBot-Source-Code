@@ -54,6 +54,51 @@ class Config(commands.Cog):
         await ctx.guild.leave()
 
     @commands.Cog.listener()
+    async def on_message_edit(self,before, after):
+        if not after.author.bot:
+            data2 = await self.bc.modroles.find(after.guild.id)
+            data3 = await self.bc.censor.find(after.guild.id)
+            if data3:
+                if data2 is not None:
+                    for i in data2["roles"]:
+                        role = discord.utils.get(after.guild.roles,id=i)
+                        if role in after.author.roles:
+                            return
+                        else:
+                            continue
+                else:
+                    pass
+                new_message = after.content
+                caught= False
+                if data3["toggled"]:
+                    for word in data3["words"]:
+                        if re.search(r'(?i)(\b' + r'+\W*'.join(word) + f'|{word})',after.content):
+                            caught = True
+                            try:
+                                await after.delete()
+                            except:
+                                pass
+                            new_message = re.sub(r'(?i)(\b' + r'+\W*'.join(word) + f'|{word})',r'\*'*len(word),new_message)
+                    if caught:
+                        webhooks = await after.channel.webhooks()
+                        try:
+                            webhook = webhooks[0]
+                        except:
+                            try:
+                                webhook = await after.channel.create_webhook(name='Breadbot filter')
+                            except:
+                                pass
+                        if webhook:
+                            await webhook.send(
+                                content=new_message,
+                                username=after.author.nick or after.author.name,
+                                avatar_url=after.author.avatar_url,
+                                allowed_mentions=discord.AllowedMentions.none()
+                            )
+            else:
+                pass
+
+    @commands.Cog.listener()
     async def on_message(self,message):
         if not message.author.bot:
             data2 = await self.bc.modroles.find(message.guild.id)
@@ -524,7 +569,7 @@ class Config(commands.Cog):
             f"Suggestions channel is {channel.mention}"
         )
 
-    @suggestions.command(name="reset",description='change the channel for your suggestion channel.', usage='<channel>')
+    @suggestions.command(name="reset",description='change the channel for your suggestion channel.')
     @commands.has_permissions(manage_channels=True)
     async def suggestions_reset(self,ctx):
         await self.bc.suggestions.delete(ctx.guild.id)
@@ -564,12 +609,36 @@ class Config(commands.Cog):
     async def welcome(self,ctx):
         await ctx.invoke(self.bc.get_command("help"),entity="welcome")
     
+    @welcome.command(name="ping", description="Set a role to ping when a user joins (leave blank to disable)")
+    @commands.has_permissions(manage_guild=True)
+    async def ping(self,ctx, *, role:discord.Role=None):
+        data = await self.bc.welcomes.find(ctx.guild.id)
+        if not data:
+            return await ctx.send("You did not set up a welcome system! Please set one up before making a ping role!")
+        if not role:
+            data["ping"] = None
+        else:
+            data["ping"] = role.id
+        await ctx.send("Success! I have set the ping role!")
+        await self.bc.welcomes.upsert(data)
+
+    @welcome.command(name="message", description="Set a custom message that the bot will send when a user joins!")
+    @commands.has_permissions(manage_guild=True)
+    async def welcome_message(self,ctx, *, message=None):
+        data = await self.bc.welcomes.find(ctx.guild.id)
+        if not data:
+            return await ctx.send("You did not set up a welcome system! Please set one up before making a welcome message!")
+        if not message:
+            return await ctx.send("**Arguments**\nYou can use these arguments and the bot will replace it with the corresponding things.\n\n{member} - Mention of the member\n{server} - Name of the server\n{place} - The place of the member joining\n{ending} - The ending of a number such as st, nd, rd, th")
+        data["message"] = message
+        await ctx.send("I have now set the welcome message!")
+
     @welcome.command(name="channel",description='Set a welcome channel', usage='<channel>')
     @commands.has_permissions(manage_channels=True)
     async def welcome_channel(self, ctx, channel: discord.TextChannel):
         data = await self.bc.welcomes.find(ctx.guild.id)
         if not data or "channel" not in data:
-            data = {"_id": ctx.guild.id, "channel":channel.id, "auth": False}
+            data = {"_id": ctx.guild.id, "channel":channel.id,"role":None, "auth": False, "ping": None, "message": "Welcome {member} to **{server}**. You are our `{place}{ending}` member!"}
         data["channel"] = channel.id
         await self.bc.welcomes.upsert(data)
         await ctx.send("The welcome channel is now {}".format(channel.mention))
@@ -583,7 +652,7 @@ class Config(commands.Cog):
     async def wel_role(self,ctx,*,role:discord.Role):
         data = await self.bc.welcomes.find(ctx.guild.id)
         if not data:
-            data = {"_id": ctx.guild.id, "channel":None, "role":None, "auth": False}
+            data = {"_id": ctx.guild.id, "channel":None ,"role":None, "auth": False, "ping": None, "message": "Welcome {member} to **{server}**. You are our `{place}{ending}` member!"}
         data["role"] = role.id
         await self.bc.welcomes.upsert(data)
         await ctx.send("The welcome role is now {}".format(role.name))
@@ -592,6 +661,7 @@ class Config(commands.Cog):
         description="Adds a captcha for sus people upon joining",
         name="auth"
     )
+    @commands.has_permissions(manage_guild=True)
     async def welcome_auth(self,ctx):
         data = await self.bc.welcomes.find(ctx.guild.id)
         if not data or "role" not in data:
@@ -599,19 +669,6 @@ class Config(commands.Cog):
         data["auth"] = not data["auth"]
         ternary = "enabled" if data["auth"] else "disabled"
         await self.bc.welcomes.upsert(data)
-        if ternary:
-            role = ctx.guild.default_role
-            for muterole in ctx.guild.text_channels:
-                try:
-                    await muterole.set_permissions(role, send_messages=False)
-                except:
-                    print("yes")
-            role = discord.utils.get(ctx.guild.roles,id=data["role"])
-            for muterole in ctx.guild.text_channels:
-                try:
-                    await muterole.set_permissions(role, send_messages=True)
-                except:
-                    print("yes")
         await ctx.send(f"The captcha is now {ternary}")
         
     @welcome.command(description="Delete your welcome settings", name="delete")
@@ -640,7 +697,7 @@ class Config(commands.Cog):
                     await muterole.set_permissions(role, speak=False)
                 except:
                     print("yes")
-        await ctx.send("done")
+        await ctx.send("I have synced the muterole with all channels")
 
     @commands.command(description='Set a muterole', usage='<role>')
     @commands.has_permissions(manage_channels=True)

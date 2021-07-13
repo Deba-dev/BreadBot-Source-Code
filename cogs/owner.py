@@ -379,8 +379,8 @@ class Owner(commands.Cog):
             prefix = self.bc.DEFAULTPREFIX
         else:
             prefix = data["prefix"]
-        if message.author.id == self.bc.user.id:
-            return
+        #if message.author.id == self.bc.user.id:
+         #   return
         if message.author != message.author.bot and not message.author.bot:
             if not message.guild and not message.content.startswith(prefix):
                 await self.bc.get_guild(760950684849537124).get_channel(
@@ -389,10 +389,9 @@ class Owner(commands.Cog):
                     f'User `{message.author}` has sent a report saying: **{message.content}**'
                 )
                 await self.bc.process_commands(message)
-
-        await self.bc.process_commands(message)
         if not message.guild:
             return
+        await self.bc.process_commands(message)
 
     @commands.command(
         name='reload', description="Reload all/one of the bots cogs!")

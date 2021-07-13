@@ -1,17 +1,19 @@
 import discord
 import re
 from discord.ext import commands, tasks
+import asyncio
 import random
 from random import choice
 from discord.ext.commands import cooldown, BucketType
+from PIL import Image, ImageDraw, ImageOps, ImageFont
+import textwrap
 import json
 import sys
 import time
-import praw
-from PIL import *
+import asyncpraw
 import datetime
 #praw = ""
-reddit = praw.Reddit(client_id="Ip5v-geI7BuIUw",
+reddit = asyncpraw.Reddit(client_id="Ip5v-geI7BuIUw",
                      client_secret="5nWhsfqSFtjsMIEW5uf71WQO79DRUw",
                      user_agent="i just get memes",
                      check_for_async=False)
@@ -104,11 +106,12 @@ class Fun(commands.Cog):
 
     @tasks.loop(minutes=60)
     async def refresh_memes(self):
-        subreddit = reddit.subreddit("kidsarefuckingstupid")
+        subreddit = await reddit.subreddit("kidsarefuckingstupid")
         top = subreddit.top(limit=500)
         self.subs.clear()
-        for submission in top:
+        async for submission in top:
             self.subs.append(submission)
+        self.bc.gettingmemes = False
 
     @refresh_memes.before_loop
     async def before_refresh_memes(self):
@@ -130,9 +133,68 @@ class Fun(commands.Cog):
                 final += i.upper()
         await ctx.send(final)
             
+    @commands.command(description="Let's see how fast you can get the cookie")
+    async def cookie(self,ctx):
+        embed=discord.Embed(
+            title="Catch The Cookie!",
+            description="In 5 seconds I will react to this message with a cookie and you have to react as fast as you can!"
+        )
+        msg = await ctx.send(embed=embed)
+        await asyncio.sleep(5)
+        await msg.add_reaction("🍪")
+        def check(reaction, user):
+            return user == ctx.author and str(reaction.emoji) == "🍪"
+        try:
+            start = time.perf_counter()
+            reaction, user = await self.bc.wait_for('reaction_add', timeout=30, check=check)
+        except asyncio.TimeoutError:
+            return await ctx.send("This message has timed out!")
+        else:
+            end = time.perf_counter()
+            await ctx.send("**{}** has caught the cookie in {} seconds!".format(ctx.author, (round((end - start) * 100)) / 100))
 
 
+    @commands.command(description="Test how fast you can type")
+    async def wpm(self,ctx):
+        All_Adjectives = ["The fierce", "The obedient", "The skinny", "The delicious", "The damaged", "The heavy", "The aquatic", "The ancient", "The chivalrous", "The cowardly", "The anxious", "The deranged", "The draconian", "The evanescent", "The quick", "The scaled", "The furry", "The wet", "The dry", "The dark blue", "The French", "The illegal", "The suspicious", "The fresh", "The German", "An arctic", "An ordinary", "The salty", "A dirty", "The loud", "The young", "The colossal", "The fat", "The mysterious", "The silly", "The powerful", "The rich", "The oily", "The poisonous", "The venomous", "The chocolate", "The cold", "The chaotic", "The lawful", "The good", "The evil", "The motivated", "The undead"]
+        All_Subjects = ["kitten", "salmon", "knight", "teacher", "bear", "doctor", "fox", "tapir", "phoenix", "lawyer", "warlock", "dragon", "sheep", "judge", "barrel", "demon", "orc","inspector", "detective", "attorney", "prosecutor", "man", "teenager", "woman", "boy", "girl", "jackal", "ghost", "moth", "pancake", "pan cake", "paladin", "policeman", "samurai", "explorer", "traitor", "king", "queen", "animal", "goldfish", "zombie", "mummy", "witch", "cheerleader", "conductor", "priest", "alien", "god", "deity", "chicken", "butler", "monk"]
+        All_Adverbs = ["quickly", "slowly", "angrily", "gracefully", "hungrily", "fortunately", "cautiously", "foolishly", "stealthily", "weakly", "silently", ]
+        All_Verbs = ["ate", "stole", "bit into", "walked into", "left", "jumped over", "pet", "jumped into", "bought", "remembered", "followed", "talked to", "punched", "kissed", "threw", "drank out of", "voted for", "discovered", "watched", "created", "healed", "was eaten by",]
+        All_Objects = ["the volcano", "the mall", "the apartment", "the jail cell", "the burger", "the pizza", "the capybara", "the candlestick", "the airplane", "the mansion", "the dungeon", "the scythe", "the baguette", "the ghost", "the cupcake", "the bowl of peas", "the snake", "the pearl", "the priest"]
+        All_Punctuation = [".", "!", ]
 
+        Adjective = random.choice(All_Adjectives)
+        Subject3 = random.choice(All_Subjects)
+        Adverby = random.choice(All_Adverbs)
+        Verb = random.choice(All_Verbs)
+        Object1 = random.choice(All_Objects)
+        Punctuation = random.choice(All_Punctuation)
+        offset = margin = 60
+        font = ImageFont.truetype("abel-regular.ttf", 45)
+        im = Image.new("RGB", (720, 420), (0, 0, 0))
+        text = "{} {} {} {} {}{}".format(Adjective, Subject3, Adverby, Verb, Object1, Punctuation)
+        draw = ImageDraw.Draw(im)
+        textwrapped = textwrap.wrap(text, width=35)
+        draw.text((offset,margin), "\n".join(textwrapped), font=font, fill="#ffffff")
+        im.save("images/words.png")
+        await ctx.send(file=discord.File("images/words.png"))
+        await ctx.send("**You must type exactly as it is said on the image. You have 60 seconds**")
+        def check(msg):
+            return msg.author == ctx.author
+        try:
+            start = time.perf_counter()
+            msg = await self.bc.wait_for("message", check=check, timeout=60)
+            if msg.content == text:
+                end = time.perf_counter()
+                embed = discord.Embed(
+                    title="Stats",
+                    description=f"**Time upon completion:** {end - start}\n**Words Per Minute:** {5 / (end - start) * 60}"
+                )
+                return await ctx.send("You have completed the sentence correctly!", embed=embed)
+            else:
+                return await ctx.send("You did not enter the right sentence!")
+        except asyncio.TimeoutError:
+            return await ctx.send("You have run out of time!")
 
     @commands.command(
         name="8ball",
@@ -200,7 +262,8 @@ class Fun(commands.Cog):
         usage=" "
     )
     async def meme(self,ctx):
-
+        if self.bc.gettingmemes:
+            return await ctx.send("Sorry but the memes are still loading! Try again later!")
         meme = random.choice(self.subs)
 
         name=meme.title

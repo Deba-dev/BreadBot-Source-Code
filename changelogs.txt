@@ -1,5 +1,7 @@
 
-**Version:** 1.0.5
+**Version:** 1.4.4
 **Notes:**
-- Economy Being Rewritten
-- Added dashboard to info page            
+- Welcome Message Changable
+- You can now add a role to ping when someone joins
+- Translator is back
+- Made some moderation command perms make sense            

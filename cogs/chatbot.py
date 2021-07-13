@@ -1,10 +1,7 @@
 import discord
 from discord.ext import commands
-from prsaw import RandomStuff
 import os
 import aiohttp
-rs = RandomStuff(api_key = os.environ.get("prsawapi"), async_mode=True)
-rs.base_url = "https://api.pgamerx.com/v4"
 
 class ChatBot(commands.Cog):
     def __init__(self,bc):
