@@ -112,12 +112,13 @@ class Support(commands.Cog):
         if not entity:
             em = discord.Embed(
                 title="Commands",
+                description="",
                 color=random.choice(self.bc.color_list),
                 timestamp=datetime.datetime.utcnow()
             )
             em.set_thumbnail(url=ctx.guild.icon_url)
             em.add_field(name="Config | Page 1", value=f"`{prefix}help 1`")
-            em.add_field(name="Economy (BEING REWRITTEN) | Page 2", value=f"`{prefix}help 2`")
+            em.add_field(name="Economy | Page 2", value=f"`{prefix}help 2`")
             em.add_field(name="Fun | Page 3", value=f"`{prefix}help 3`")
             em.add_field(name="Moderation | Page 4", value=f"`{prefix}help 4`")
             em.add_field(name="Utility | Page 5", value=f"`{prefix}help 5`")

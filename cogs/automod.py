@@ -117,7 +117,7 @@ class AutoMod(commands.Cog):
                 #Antispam Mentions
                 msgs = list(filter(lambda m: _check(m), self.bc.cached_messages))
                 if len(msgs) >= 3:
-                    await after.channel.send("{} Don't spam mentions pls or else!".format(after.author.mention), delete_after=10)
+                    await after.channel.send("{} Don't spam mentions please!".format(after.author.mention), delete_after=10)
                     try:
                         await after.delete()
                     except:

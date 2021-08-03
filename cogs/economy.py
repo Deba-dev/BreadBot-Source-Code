@@ -12,13 +12,15 @@ shop = [
         "name": "Laptop", 
         "desc": "Used to post reddit memes and other stuff", 
         "cost": 5000,
-        "id": "laptop"
+        "id": "laptop",
+        "hidden": False
     },
     {
         "name": "Fishing Pole", 
         "desc": "Used to go fishing with your old man", 
         "cost": 10000,
-        "id": "fishingpole"
+        "id": "fishingpole",
+        "hidden": False
     }
 ]
 
@@ -470,7 +472,8 @@ class Economy(commands.Cog):
             color=random.choice(self.bc.color_list)
         )
         for item in shop:
-            em.add_field(name=f'{item["name"]} — {item["cost"]:,d}',value="{}\nID: `{}`".format(item["desc"], item["id"]), inline=False)
+            if not item["hidden"]:
+                em.add_field(name=f'{item["name"]} — {item["cost"]:,d}',value="{}\nID: `{}`".format(item["desc"], item["id"]), inline=False)
         await ctx.send(embed=em)
 
     @commands.command()

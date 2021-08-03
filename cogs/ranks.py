@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import json
 import random
 from random import choice
@@ -10,70 +10,6 @@ class Ranks(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
 
-    mainshop = [{
-        "name": "DaneEssence",
-        "price": 100000,
-        "description": "essence of dane"
-    },
-                {
-                    "name": "Laptop",
-                    "price": 5000,
-                    "description": "Use this for the internet command"
-                },
-                {
-                    "name": "DaneCoin",
-                    "price": 1000000,
-                    "description": "flex money"
-                },
-                {
-                    "name": "fishingpole",
-                    "price": 5000,
-                    "description":
-                    "get a chance to get a fish and sell it"
-                },
-                {
-                    "name": "fishy",
-                    "price": 200,
-                    "description": "sell this"
-                },
-                {
-                    "name": "rifle",
-                    "price": 10000,
-                    "description": "use this to hunt animals for a good price"                    
-                },
-                {
-                    "name": "dead_animal",
-                    "price": 500,
-                    "description": "sell this"                    
-                },
-                {
-                    "name": "LootBox",
-                    "price": None,
-                    "description": "Get this from each 10 levels you level up with cool stuff inside"                    
-                }]
-    """
-    @commands.Cog.listener()
-    async def on_command_completion(self,ctx):
-
-        await self.open_account(ctx.author)
-        data = await self.bc.prefixes.get_by_id(ctx.guild.id)
-        if not data or "prefix" not in data:
-            prefix = self.bc.DEFAULTPREFIX
-        else:
-            prefix = data["prefix"]
-        bal = await self.update_bank(ctx.author)
-        maths = bal[4] % 5
-        maths = int(maths)
-        await self.update_bank(ctx.author, 1, "xp")
-        if bal[3] > 100 or bal[3] == 100:
-            await self.update_bank(ctx.author, 20000, "bnklmt")
-            await self.update_bank(ctx.author, 1, "level")
-            await self.update_bank(ctx.author, -1 * bal[3], "xp")
-        if maths == 0 and bal[3] == 1:
-            await self.give1(ctx.author, "LootBox", 1)
-        else:
-            pass
-    """
     @commands.Cog.listener()
     async def on_message(self,msg):
         data = await self.bc.ranks.find(msg.guild.id)
@@ -98,7 +34,6 @@ class Ranks(commands.Cog):
             newxp = user["maxXp"] + 40 * user["level"]
             newxp = int(newxp)
             user["maxXp"] = newxp
-            user["xp"] = 0
             if data["channel"] is not None:
                 channel = self.bc.get_channel(int(data["channel"]))
                 setmessage = data["message"].replace("{member}", f"<@{msg.author.id}>")
@@ -111,18 +46,21 @@ class Ranks(commands.Cog):
             data["members"].remove(user)
             data["members"].insert(rank-1, saveddict) 
             user["rank"] = rank + 1
+            data["members"][rank-1]["rank"] = data["members"].index(data["members"][rank-1]) + 1
             await self.bc.ranks.upsert(data)
         elif data["members"][rank-1]["level"] == user["level"] and data["members"][rank-1]["xp"] < user["xp"] and rank != 0:
             saveddict = user
             data["members"].remove(user)
             data["members"].insert(rank-1, saveddict)
             user["rank"] = rank + 1
+            data["members"][rank-1]["rank"] = data["members"].index(data["members"][rank-1]) + 1
             await self.bc.ranks.upsert(data)
         if str(user["level"]) in data["rewards"].keys():
             role = discord.utils.get(msg.guild.roles, id=int(data["rewards"][str(user["level"])]))
             await msg.author.add_roles(role)
         
         user["rank"] = rank + 1
+        user["username"] = "{}#{}".format(msg.author.name, msg.author.discriminator)
         await self.bc.ranks.upsert(data)
 
 

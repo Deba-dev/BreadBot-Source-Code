@@ -3,6 +3,57 @@ from discord.ext import commands
 from PIL import Image, ImageDraw, ImageOps, ImageFont
 from io import BytesIO
 import datetime
+import cv2
+import numpy
+
+def oilPainting(img, templateSize, bucketSize, step):  # templateSize template size, bucketSize bucket array, step template sliding step
+
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    gray = ((gray / 256) * bucketSize).astype(int)  # The partition of the gray image in the bucket
+    h, w = img.shape[:2]
+
+    oilImg = numpy.zeros(img.shape, numpy.uint8)  # Used to store filtered images
+
+    for i in range(0, h, step):
+
+        top = i - templateSize
+        bottom = i + templateSize + 1
+        if top < 0:
+            top = 0
+        if bottom >= h:
+            bottom = h - 1
+
+        for j in range(0, w, step):
+
+            left = j - templateSize
+            right = j + templateSize + 1
+            if left < 0:
+                left = 0
+            if right >= w:
+                right = w - 1
+
+            # Gray level statistics
+            buckets = numpy.zeros(bucketSize, numpy.uint8)  # Bucket array, count the number of gray levels in each bucket
+            bucketsMean = [0, 0, 0]  # For the bucket with the most pixels, find the three-channel color average of all pixels in the bucket
+            # Traverse the template
+            for c in range(top, bottom):
+                for r in range(left, right):
+                    buckets[gray[c, r]] += 1  # The pixels in the template are put into the corresponding buckets in sequence, a bit like a grayscale histogram
+
+            maxBucket = numpy.max(buckets)  # Find the bucket with the most pixels and its index
+            maxBucketIndex = numpy.argmax(buckets)
+
+            for c in range(top, bottom):
+                for r in range(left, right):
+                    if gray[c, r] == maxBucketIndex:
+                        bucketsMean += img[c, r]
+            bucketsMean = (bucketsMean / maxBucket).astype(int)  # Three-channel color mean
+
+            # Oil painting
+            for m in range(step):
+                for n in range(step):
+                    oilImg[m + i, n + j] = (bucketsMean[0], bucketsMean[1], bucketsMean[2])
+    return oilImg
 
 class Images(commands.Cog):
     def __init__(self,bc):
@@ -17,6 +68,20 @@ class Images(commands.Cog):
         inverted = ImageOps.invert(im)
         inverted.save("images/inverted.png")
         await ctx.send(file=discord.File("images/inverted.png"))
+
+    @commands.command(
+        description="make an oil painting of someone",
+        usage="[user]"
+    )
+    async def oil(self,ctx,member:discord.Member=None):
+        if not member:
+            member = ctx.author
+        avatar = member.avatar_url_as(format=None,static_format='png',size=1024)
+        await avatar.save('images/Avatar.png')
+        img = cv2.imread('images/Avatar.png')
+        oil = oilPainting(img, 4, 8, 2)
+        cv2.imwrite('images/oil.png', oil)
+        await ctx.send(file=discord.File("images/oil.png"))
 
     @commands.command(
         description="kick someone in the nuts",

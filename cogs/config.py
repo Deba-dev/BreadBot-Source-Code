@@ -244,7 +244,9 @@ class Config(commands.Cog):
             data = {"_id":ctx.guild.id, "channel":channel.id, "isenabled": True}
         data["channel"] = channel.id
         await self.bc.chatbot.upsert(data)
-        await ctx.send("I have set the chatbot channel to {0.mention}".format(channel))
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="I have set the chatbot channel to #{0.name}".format(channel))
+        await ctx.send(embed=em)
 
     @chatbot.command(
         description="Enable/Disable the chatbot!",
@@ -258,7 +260,9 @@ class Config(commands.Cog):
         data["isenabled"] = not data["isenabled"]
         ternary = "enabled" if data["isenabled"] else "disabled"
         await self.bc.chatbot.upsert(data)
-        await ctx.send("I have set the chatbot to {}".format(ternary))
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="I have set the chatbot to {}".format(ternary))
+        await ctx.send(embed=em)
     
     @chatbot.command(
         description="Delete your settings for your chatbot!",
@@ -270,13 +274,15 @@ class Config(commands.Cog):
         if not data:
             return await ctx.send("You didn't set up the chatbot yet!")
         await self.bc.chatbot.delete(ctx.guild.id)
-        await ctx.send("I have deleted the settings for the chatbot")
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="I have deleted the settings for the chatbot")
+        await ctx.send(embed=em)
 
     @commands.group(invoke_without_command=True)
     async def lvlsettings(self,ctx):
         data = await self.bc.ranks.find(ctx.guild.id)
         prefixes = await self.bc.prefixes.find(ctx.guild.id)
-        if prefixes is None:
+        if prefixes is None or "prefix" not in prefixes:
             prefix = "="
         else:
             prefix = prefixes["prefix"]
@@ -317,7 +323,9 @@ class Config(commands.Cog):
         if not channel:
             return await ctx.send("Please specify a channel!")
         data["blacklisted"].append(channel.id)
-        await ctx.send("Added {} to the blacklisted channels.".format(channel.mention))
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="Added #{} to the blacklisted channels.".format(channel.name))
+        await ctx.send(embed=em)
         await self.bc.ranks.upsert(data)
         
     @blchannels.command(name="remove")
@@ -332,7 +340,9 @@ class Config(commands.Cog):
             data["blacklisted"].remove(channel.id)
         except:
             return await ctx.send("That channel isnt blacklisted!")
-        await ctx.send("Removed {} from the blacklisted channels.".format(channel.mention))
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="Removed #{} from the blacklisted channels.".format(channel.name))
+        await ctx.send(embed=em)
         await self.bc.ranks.upsert(data)
         
     @lvlsettings.group(invoke_without_command=True)
@@ -365,7 +375,9 @@ class Config(commands.Cog):
             except:
                 return await ctx.send("The level must be an integer!")
             data["rewards"][str(level)] = role.id
-            await ctx.send("Added `{}` to the rewards.".format(role.name))
+            em = discord.Embed(color=discord.Color.green())
+            em.set_author(name="Added `{}` to the rewards.".format(role.name))
+            await ctx.send(embed=em)
             await self.bc.ranks.upsert(data)
         except Exception as e:
             print(e)
@@ -381,7 +393,9 @@ class Config(commands.Cog):
         except:
             return await ctx.send("The level must be an integer!")
         data["rewards"].pop(str(level))
-        await ctx.send("Removed all role rewards for that level to the rewards.")
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="Removed all role rewards for that level to the rewards.")
+        await ctx.send(embed=em)
         await self.bc.ranks.upsert(data)
 
     @lvlsettings.command(name="multi",description="Increase your xp multiplier")
@@ -392,17 +406,25 @@ class Config(commands.Cog):
             return await ctx.send("There is no db for this server! Try again")
         data["multi"] = int(multi)
         await self.bc.ranks.upsert(data)
-        await ctx.send("I have updated the multiplier!")
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="I have updated the multiplier!")
+        await ctx.send(embed=em)
 
     @lvlsettings.command(name="channel",description="Change the announcements channel for when someone levels up.")
     @commands.has_permissions(manage_guild=True)
-    async def lvl_channel(self,ctx,channel:discord.TextChannel):
+    async def lvl_channel(self,ctx,channel:discord.TextChannel=None):
         data = await self.bc.ranks.find(ctx.guild.id)
         if data is None:
             return await ctx.send("There is no db for this server! Try again")
-        data["channel"] = channel.id
+        if channel:
+            data["channel"] = channel.id
+        else:
+            data["channel"] = channel
         await self.bc.ranks.upsert(data)
-        await ctx.send(f"I have updated the level up channel to {channel.mention}!")
+        if channel:
+            await ctx.send(f"I have updated the level up channel to {channel.mention}!")
+        else:
+            await ctx.send("The level channel is now unset")
     
     @lvlsettings.command(name="message", description="Change the level up message")
     @commands.has_permissions(manage_guild=True)
@@ -421,7 +443,9 @@ class Config(commands.Cog):
             await ctx.send("Something went wrong! Try again later")
         data["message"] = message
         await self.bc.ranks.upsert(data)
-        await ctx.send("I have updated the level up message")
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="I have updated the level up message")
+        await ctx.send(embed=em)
 
 
     @commands.group(

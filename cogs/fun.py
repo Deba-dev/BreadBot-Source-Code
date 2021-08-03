@@ -75,7 +75,7 @@ class Fun(commands.Cog):
         msg = await self.bc.wait_for('message', check=check, timeout = 30)
         if msg.content.lower() == "yes":
             data = {
-                'id': member.id,
+                '_id': member.id,
                 'mutedAt': datetime.datetime.now(),
                 'muteDuration': time or None,
                 'mutedBy': ctx.author.id,

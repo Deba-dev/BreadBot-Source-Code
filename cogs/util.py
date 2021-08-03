@@ -293,21 +293,6 @@ class Utility(commands.Cog):
         await ctx.author.send(embed=em)
         await ctx.send("I have dmed you your generated password")
 
-    async def open_account(self, user):
-        
-        users = await self.get_bank_data()
-        
-        if str(user.id) in users:
-            return False
-        else:
-            users[str(user.id)]["wallet"] = 0
-            users[str(user.id)]["bank"] = 2000
-            
-            with open("mainbank.json","w") as f:
-                json.dump(users,f)
-        
-        return True
-
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"\n{self.__class__.__name__} Cog has been loaded\n-----")
@@ -343,12 +328,14 @@ class Utility(commands.Cog):
             title="Bot Latency",
             color = random.choice(self.bc.color_list)
         )
+        speeds = []
         for i in range(3):
             counter += 1
             start = time.perf_counter()
             await msg.edit(content="Testing how long it gets from here to discord hq {}/3".format(counter))
             end = time.perf_counter()
             speed = round((end - start) * 1000)
+            speeds.append(speed)
             if speed < 150:
                 em.add_field(name="Ping {}".format(counter), value=f"{speed}ms | Good")
             elif speed in range(150, 250):
@@ -357,42 +344,14 @@ class Utility(commands.Cog):
                 em.add_field(name="Ping {}".format(counter), value=f"{speed}ms | Bad")
         await msg.edit(content=f"`{speed}ms` Ping")
         em.add_field(name="Websocket Ping:",value=f"{round(self.bc.latency * 1000)}ms")
+        sum = 0
+        for speed in speeds:
+            sum += speed
+        average = sum / 3
+        newaverage = int(average * 100)
+        roundedavg = newaverage / 100
+        em.add_field(name="Average Ping:", value=f"{roundedavg}ms")
         await msg.edit(embed=em)
-
-    
-
-    async def open_account(self, guild):
-  
-      users = await self.get_bank_data()
-    
-      if str(guild.id) in users:
-        return False
-      else:
-        users[str(guild.id)] = {}
-        users[str(guild.id)]["channel"] = "Not Set"
-    
-      with open("welcomes.json", "w") as f:
-        json.dump(users,f,indent=4)
-      return True
-  
-  
-    async def get_bank_data(self):
-      with open("welcomes.json", "r") as f:
-        welcome = json.load(f)
-      
-      return welcome
-
-    async def update_bank(self,guild,change = 0,mode = "channel"):
-      welcome = await self.get_bank_data()
-  
-      welcome[str(guild.id)][mode] += int(change)
-  
-      with open("welcomes.json", "w") as f:
-        json.dump(welcome,f,indent=4)
-    
-    
-      bal = [welcome[str(guild.id)]["channel"]]
-      return bal
 
 def setup(bc):
   bc.add_cog(Utility(bc))

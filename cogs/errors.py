@@ -49,6 +49,8 @@ class Errors(commands.Cog):
 
         #Begin actual error handling
         if isinstance(error, commands.errors.NotOwner):
+            if ctx.command.name == "invite":
+                return
             msg = await ctx.message.reply('Only **{}** can use this command.'.format(await self.bc.fetch_user(self.bc.owner)))
             await asyncio.sleep(3)
             await msg.delete()

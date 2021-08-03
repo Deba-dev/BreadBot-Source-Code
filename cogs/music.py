@@ -205,7 +205,7 @@ class Song:
         self.requester = source.requester
     
     def create_embed(self):
-        embed = (discord.Embed(title='Now playing', description='```css\n{0.source.title}\n```'.format(self), color=discord.Color.red())
+        embed = (discord.Embed(title='Now playing', description='```css\n{0.source.title}\n```'.format(self), color=discord.Color.blurple())
                 .add_field(name='Duration', value=self.source.duration)
                 .add_field(name='Requested by', value=self.requester.mention)
                 .add_field(name='Uploader', value='[{0.source.uploader}]({0.source.uploader_url})'.format(self))
@@ -390,7 +390,8 @@ class Music(commands.Cog):
             if ctx.author.guild_permissions.manage_guild:
                 await ctx.voice_state.stop()
                 del self.voice_states[ctx.guild.id]
-            await ctx.send("There are other people in this vc that might be listening!")
+            else:
+                await ctx.send("There are other people in this vc that might be listening!")
 
     @commands.command(name='volume')
     @commands.is_owner()
@@ -431,15 +432,21 @@ class Music(commands.Cog):
             await ctx.message.add_reaction('⏯')
 
     @commands.command(name='stop')
-    @commands.has_permissions(manage_guild=True)
     async def _stop(self, ctx: commands.Context):
         """Stops playing song and clears the queue."""
 
         ctx.voice_state.songs.clear()
 
         if ctx.voice_state.is_playing:
-            ctx.voice_state.voice.stop()
-            await ctx.message.add_reaction('⏹')
+            if len(ctx.author.voice.channel.members) <= 2:
+                await ctx.voice_state.stop()
+                await ctx.message.add_reaction('⏹')
+            else:
+                if ctx.author.guild_permissions.manage_guild:
+                    await ctx.voice_state.stop()
+                    await ctx.message.add_reaction('⏹')
+                else:
+                    await ctx.send("There are other people in this vc that might be listening!")
 
     @commands.command(name='skip', aliases=['s'])
     async def _skip(self, ctx: commands.Context):

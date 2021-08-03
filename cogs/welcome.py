@@ -27,6 +27,10 @@ class Invites(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
+        botcount = len([member for member in guild.members if member.bot])
+        if botcount >= 50:
+            await guild.leave()
+            return
         await self.bc.tracker.update_guild_cache(guild)
 
     @commands.Cog.listener()
