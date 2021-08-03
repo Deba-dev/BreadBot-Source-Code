@@ -13,14 +13,24 @@ shop = [
         "desc": "Used to post reddit memes and other stuff", 
         "cost": 5000,
         "id": "laptop",
-        "hidden": False
+        "hidden": False,
+        "canbuy": True
     },
     {
         "name": "Fishing Pole", 
         "desc": "Used to go fishing with your old man", 
         "cost": 10000,
         "id": "fishingpole",
-        "hidden": False
+        "hidden": False,
+        "canbuy": True
+    },
+    {
+        "name": "Fishy", 
+        "desc": "Sell this", 
+        "cost": 500,
+        "id": "fishy",
+        "hidden": True,
+        "canbuy": False
     }
 ]
 
@@ -507,6 +517,18 @@ class Economy(commands.Cog):
             else:
                 return await ctx.send("You did not enter the choices right")
 
+    @commands.command()
+    @commands.cooldown(1, 45, BucketType.user)
+    async def fish(self, ctx):
+        await self.check_acc(ctx.author)
+        data = await self.bc.economy.find(ctx.author.id)
+        res = await self.check_for(ctx.author, "fishingpole")
+        if not res[0]:
+            if res[0][1] == 2:
+                return await ctx.send("You do not have this item!")
+        fish = random.randrange(1,3)
+        await self.add_item(ctx.author, "fish", fish)
+        await ctx.send("You have caught {} fish".format(fish))
 
     @commands.command()
     @commands.cooldown(1, 30, BucketType.user)
@@ -597,6 +619,8 @@ class Economy(commands.Cog):
             if res[1] == 1:
                 return await ctx.send("That item was not found!")
             if res[1] == 2:
+                return await ctx.send("This item cannot be bought!")
+            if res[1] == 3:
                 return await ctx.send("You don't have enough money in your wallet for this!")
         await ctx.send("Item Bought Successfully!")
 
@@ -745,7 +769,7 @@ class Economy(commands.Cog):
         
         return [True]
 
-    async def buy_item(self, member, item_name, amount):
+    async def add_item(self, member, item_name, amount):
         data = await self.bc.economy.find(member.id)
         name_ = None
         item_name = item_name.lower()
@@ -759,9 +783,37 @@ class Economy(commands.Cog):
         else:
             return [True]
         
+        iteminbag = False
+        for item in data["bag"]:
+            if item["name"] == name_["name"]:
+                item["amount"] += amount
+                iteminbag = True
+                break
+        if not iteminbag:
+            data["bag"].append({"name": name_["name"], "id": name_["id"], "amount": amount})
+        await self.bc.economy.upsert(data)
+        return [True]
+
+    async def buy_item(self, member, item_name, amount):
+        data = await self.bc.economy.find(member.id)
+        name_ = None
+        item_name = item_name.lower()
+        for item in shop:
+            if item_name in item["id"]:
+                name_ = item
+                break
+        
+        if not name_:
+            return [False, 1]
+        else:
+            return [True]
+
+        if not name_["canbuy"]:
+            return [False, 2]
+        
         amount = int(amount)
         if data["wallet"] < name_["cost"] * amount:
-            return [False, 2]
+            return [False, 3]
         
         
         iteminbag = False

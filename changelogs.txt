@@ -1,7 +1,6 @@
 
-**Version:** 1.4.4
+**Version:** 1.5.1
 **Notes:**
-- Welcome Message Changable
-- You can now add a role to ping when someone joins
-- Translator is back
-- Made some moderation command perms make sense            
+- Added fish command
+- Started changing what commands say
+- added oil command            

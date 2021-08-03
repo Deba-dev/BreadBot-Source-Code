@@ -1,3 +1,36 @@
 {
-    
+    "EeA222": {
+        "Command": "Oil",
+        "Error Type": "IndexError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/image.py\", line 82, in oil\n    oil = oilPainting(img, 4, 8, 2)\n",
+            "  File \"/home/runner/Bot/cogs/image.py\", line 55, in oilPainting\n    oilImg[m + i, n + j] = (bucketsMean[0], bucketsMean[1], bucketsMean[2])\n",
+            "IndexError: index 221 is out of bounds for axis 1 with size 221\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 939, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 863, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: index 221 is out of bounds for axis 1 with size 221\n"
+        ]
+    },
+    "69553205": {
+        "Command": "Oil",
+        "Error Type": "IndexError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/image.py\", line 82, in oil\n    oil = oilPainting(img, 4, 8, 2)\n",
+            "  File \"/home/runner/Bot/cogs/image.py\", line 55, in oilPainting\n    oilImg[m + i, n + j] = (bucketsMean[0], bucketsMean[1], bucketsMean[2])\n",
+            "IndexError: index 221 is out of bounds for axis 1 with size 221\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 939, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 863, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: index 221 is out of bounds for axis 1 with size 221\n"
+        ]
+    }
 }

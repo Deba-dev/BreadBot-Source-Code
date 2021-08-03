@@ -76,12 +76,12 @@ class Images(commands.Cog):
     async def oil(self,ctx,member:discord.Member=None):
         if not member:
             member = ctx.author
-        avatar = member.avatar_url_as(format=None,static_format='png',size=1024)
-        await avatar.save('images/Avatar.png')
-        img = cv2.imread('images/Avatar.png')
+        avatar = member.avatar_url_as(format=None,static_format='jpg',size=1024)
+        await avatar.save('images/Avatar.jpg')
+        img = cv2.imread('images/Avatar.jpg')
         oil = oilPainting(img, 4, 8, 2)
-        cv2.imwrite('images/oil.png', oil)
-        await ctx.send(file=discord.File("images/oil.png"))
+        cv2.imwrite('images/oil.jpg', oil)
+        await ctx.send(file=discord.File("images/oil.jpg"))
 
     @commands.command(
         description="kick someone in the nuts",
