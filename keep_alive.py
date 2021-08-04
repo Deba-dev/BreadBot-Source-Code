@@ -1,5 +1,5 @@
 from flask import Flask, request, abort, jsonify
-from discord import Webhook, RequestsWebhookAdapter, Embed, Color
+from discord import Webhook, Embed, Color
 from threading import Thread
 import random
 import re
@@ -30,7 +30,7 @@ def webhook():
         if discord_webhook != "":
             embed_title = "Test" if request_type == 'test' else 'New upvote!'
             embed = Embed(title=embed_title, description=f"**Upvoter: <@{user_id}>** ({user_id})\n**Upvoted bot:** <@{bot_id}> ({bot_id})", timestamp=datetime.datetime.utcnow(), color=Color.green())
-            webhook = Webhook.partial(webhook_id, webhook_token, adapter=RequestsWebhookAdapter())
+            webhook = Webhook.partial(webhook_id, webhook_token)
             webhook.send(embed=embed)
         return '', 200
     else:

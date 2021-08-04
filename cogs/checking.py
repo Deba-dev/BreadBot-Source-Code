@@ -165,7 +165,7 @@ Map: {}
             data["members"].append({"userid": member.id, "level":1, "xp": 0, "maxXp": 35})
         user = next((user for user in data["members"] if user['userid'] == member.id), None)
         member = self.bc.get_user(user["userid"])    
-        avatar = member.avatar_url_as(format=None,static_format='png',size=1024)
+        avatar = member.avatar_as(format=None,static_format='png',size=1024)
         await avatar.save('images/Avatar.png')
         im = Image.open('images/Avatar.png').convert("RGB")
         im = im.resize((120, 120))
@@ -219,7 +219,7 @@ Map: {}
             title = "Level Leaderboard",
             color = random.choice(self.bc.color_list)
         )
-        em.set_thumbnail(url=ctx.guild.icon_url)
+        em.set_thumbnail(url=ctx.guild.icon)
         for member in data["members"]:
             if data["members"].index(member) == 10:
                 break
@@ -272,7 +272,7 @@ Joined: {}
                 em.add_field(name=f"Member Roles ({len(roles)})", value="Too many roles to send", inline=False)
         em.add_field(name="General Permissions",value=", ".join([f"{perm[0].replace('_', ' ')}" for perm in user.guild_permissions if perm[1] and perm[0] in self.bc.main_perms]),inline=False)
         em.set_footer(text=f'Member ID: {user.id}')
-        em.set_thumbnail(url=user.avatar_url)
+        em.set_thumbnail(url=user.avatar)
         await ctx.send(embed=em)
 
     @commands.command(
@@ -289,7 +289,7 @@ Joined: {}
             title=f"{member}'s avatar",
             color=random.choice(self.bc.color_list), timestamp=datetime.datetime.utcnow(),
         )
-        embed.set_image(url=member.avatar_url)
+        embed.set_image(url=member.avatar)
         embed.set_footer(text=f'Requested by: {user}')
         await ctx.send(embed=embed)
 
@@ -321,7 +321,7 @@ Joined: {}
                 color=random.choice(self.bc.color_list),
                 timestamp=datetime.datetime.utcnow()
             )
-            embed.set_thumbnail(url=ctx.guild.icon_url)
+            embed.set_thumbnail(url=ctx.guild.icon)
             embed.add_field(name='Owner?', value=f'{ctx.guild.owner}')
             embed.add_field(name='Owner ID?', value=f'`{ctx.guild.owner.id}`')
             embed.add_field(name='Owner Created at?', value=f"{ctx.guild.owner.created_at.strftime('%a, %#d %B %Y, %I:%M %p')}", inline=False)
@@ -388,7 +388,7 @@ Joined: {}
             embed.add_field(name='Filesize Limit?', value=f'{convert_size(ctx.guild.filesize_limit)}')
             embed.add_field(name='Large?', value=f'{ctx.guild.large}')
             embed.add_field(name='Server Level!', value=f'{level}', inline=False)
-            embed.set_footer(text=f'Prompted by {ctx.author}', icon_url=ctx.author.avatar_url)
+            embed.set_footer(text=f'Prompted by {ctx.author}', icon=ctx.author.avatar)
             await ctx.send(embed=embed)
         
     @commands.command(description='get list of roles and their ids',usage=' ')

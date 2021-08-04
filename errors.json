@@ -32,5 +32,175 @@
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
             "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: index 221 is out of bounds for axis 1 with size 221\n"
         ]
+    },
+    "29E7C2": {
+        "Command": "Oil",
+        "Error Type": "IndexError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/image.py\", line 82, in oil\n    oil = oilPainting(img, 4, 8, 2)\n",
+            "  File \"/home/runner/Bot/cogs/image.py\", line 55, in oilPainting\n    oilImg[m + i, n + j] = (bucketsMean[0], bucketsMean[1], bucketsMean[2])\n",
+            "IndexError: index 461 is out of bounds for axis 1 with size 461\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 939, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 863, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: index 461 is out of bounds for axis 1 with size 461\n"
+        ]
+    },
+    "d462122": {
+        "Command": "Oil",
+        "Error Type": "IndexError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/image.py\", line 82, in oil\n    oil = oilPainting(img, 4, 8, 2)\n",
+            "  File \"/home/runner/Bot/cogs/image.py\", line 55, in oilPainting\n    oilImg[m + i, n + j] = (bucketsMean[0], bucketsMean[1], bucketsMean[2])\n",
+            "IndexError: index 221 is out of bounds for axis 1 with size 221\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 939, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 863, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: index 221 is out of bounds for axis 1 with size 221\n"
+        ]
+    },
+    "55FE49": {
+        "Command": "Re",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/util.py\", line 72, in re\n    await self.bc.process_commands(ctx.message.reference.cached_message)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 993, in process_commands\n    if message.author.bot:\n",
+            "AttributeError: 'NoneType' object has no attribute 'author'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'author'\n"
+        ]
+    },
+    "05044C9": {
+        "Command": "Re",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/util.py\", line 72, in re\n    await self.bc.process_commands(ctx.message.reference.cached_message)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 993, in process_commands\n    if message.author.bot:\n",
+            "AttributeError: 'NoneType' object has no attribute 'author'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'author'\n"
+        ]
+    },
+    "e5252b": {
+        "Command": "Help",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/help.py\", line 119, in help_command\n    em.set_thumbnail(url=ctx.guild.icon_url)\n",
+            "AttributeError: 'Guild' object has no attribute 'icon_url'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Guild' object has no attribute 'icon_url'\n"
+        ]
+    },
+    "CE3d401": {
+        "Command": "Av",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    def pop(self, k, default=None):\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 292, in av\n    embed.set_image(url=member.avatar_url)\n",
+            "AttributeError: 'Member' object has no attribute 'avatar_url'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    \"\"\"\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    These are not created manually, instead they are created via the\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Member' object has no attribute 'avatar_url'\n"
+        ]
+    },
+    "0fA9900": {
+        "Command": "Blackjack",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    def pop(self, k, default=None):\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 228, in blackjack\n    await ctx.send(embed=em, view=Blackjack(amount, self.bc, pcards, bcards, ctx, data))\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1378, in send\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ui/view.py\", line 197, in to_components\n",
+            "AttributeError: 'Blackjack' object has no attribute 'children'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    \"\"\"\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    These are not created manually, instead they are created via the\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Blackjack' object has no attribute 'children'\n"
+        ]
+    },
+    "7d123": {
+        "Command": "Blackjack",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    def pop(self, k, default=None):\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 228, in blackjack\n    await ctx.send(\"content\", view=Blackjack(amount, self.bc, pcards, bcards, ctx, data))\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1378, in send\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ui/view.py\", line 197, in to_components\n",
+            "AttributeError: 'Blackjack' object has no attribute 'children'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    \"\"\"\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    These are not created manually, instead they are created via the\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Blackjack' object has no attribute 'children'\n"
+        ]
+    },
+    "71E12550": {
+        "Command": "Blackjack",
+        "Error Type": "TypeError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    def pop(self, k, default=None):\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 220, in blackjack\n    await ctx.send(embed=em, view=Blackjack(amount, self.bc, pcards, bcards, ctx, data))\n",
+            "TypeError: __init__() takes 1 positional argument but 7 were given\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    \"\"\"\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    These are not created manually, instead they are created via the\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: TypeError: __init__() takes 1 positional argument but 7 were given\n"
+        ]
+    },
+    "EEC90fd": {
+        "Command": "Blackjack",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    def pop(self, k, default=None):\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 223, in blackjack\n    await ctx.send(embed=em, view=Blackjack())\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1378, in send\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ui/view.py\", line 197, in to_components\n",
+            "AttributeError: 'Blackjack' object has no attribute 'children'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    \"\"\"\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    These are not created manually, instead they are created via the\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Blackjack' object has no attribute 'children'\n"
+        ]
     }
 }

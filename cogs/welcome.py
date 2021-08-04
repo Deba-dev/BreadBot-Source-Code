@@ -116,7 +116,7 @@ class Invites(commands.Cog):
                 message = data2["message"].replace("{member}", member.mention).replace("{server}", member.guild.name).replace("{place}", str(len(member.guild.members))).replace("{ending}", ending)
                 if data2["ping"]:
                     pingrole = discord.utils.get(member.guild.roles, id=data2["ping"])
-                avatar = member.avatar_url_as(format=None,static_format='png',size=1024)
+                avatar = member.avatar
                 await avatar.save('images/Avatar.png')
                 im = Image.open('images/Avatar.png').convert("RGB")
                 im = im.resize((680, 680))

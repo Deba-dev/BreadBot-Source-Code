@@ -48,7 +48,7 @@ class Events(commands.Cog):
             snipe[str(message.guild.id)] = {}
             snipe[str(message.guild.id)]["content"] = f'{message.content}'
             snipe[str(message.guild.id)]["author"] = f'{message.author}'
-            snipe[str(message.guild.id)]["avatar"] = f'{message.author.avatar_url}'
+            snipe[str(message.guild.id)]["avatar"] = f'{message.author.avatar}'
             snipe[str(guild.id)]["timedelete"] = f"{datetime.datetime.utcnow()}"
             with open('snipe.json', 'w') as f:
                 json.dump(snipe, f, indent=4)

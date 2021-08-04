@@ -34,6 +34,84 @@ shop = [
     }
 ]
 
+class Blackjack(discord.ui.View):
+    def __init__(self, amount, bc, pcards, bcards, ctx, data):
+        self.amount = amount
+        self.bc = bc
+        self.pcards = pcards
+        self.bcards = bcards
+        self.ctx = ctx
+        self.data = data
+        self.cardsDrawn = 1
+    
+    @discord.ui.button(label='Hit', style=discord.ButtonStyle.green)
+    async def hit(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.cardsDrawn += 1
+        self.pcards += random.randrange(1, 10)
+        if self.pcards > 21:
+            em = discord.Embed(
+                title=f"{self.ctx.author.name}'s blackjack game",
+                description=
+                f'You Busted!\n\nYou now have **{self.data["wallet"]:,d}** coins',
+                color=0xff0000)
+            em.add_field(name=self.ctx.author.name, value=self.pcards)
+            em.add_field(name='BreadBot', value=self.bcards)
+            await self.ctx.send(embed=em)
+            return
+        if self.pcards == 21:
+            em = discord.Embed(
+                title=f"{self.ctx.author.name}'s blackjack game",
+                description=
+                f'You got to 21 before your opponent and won **{self.amount:,d}** coins\n\nYou now have **{self.data["wallet"]+self.amount*2:,d}** coins',
+                color=0x00ff00)
+            em.add_field(name=self.ctx.author.name, value=self.pcards)
+            em.add_field(name='BreadBot', value=self.bcards)
+            await interaction.message.edit(embed=em)
+            self.data["wallet"] += 2 * self.amount
+            await self.bc.economy.upsert(self.data)
+            return
+        if self.cardsDrawn == 5:
+            em = discord.Embed(
+                title=f"{self.ctx.author.name}'s blackjack game",
+                description=
+                f'You managed to draw 5 cards without busting and earned yourself **{self.amount:,d}** coins\n\nYou now have **{self.data["wallet"]+self.amount*2:,d}** coins',
+                color=0x00ff00)
+            em.add_field(name=self.ctx.author.name, value=self.pcards)
+            em.add_field(name='BreadBot', value=self.bcards)
+            await interaction.message.edit(embed=em)
+            self.data["wallet"] += 2 * self.amount
+            await self.bc.economy.upsert(self.data)
+            return
+        em = discord.Embed(
+            title=f"{self.ctx.author.name}'s blackjack game", color=random.choice(self.bc.color_list))
+        em.add_field(name=self.ctx.author.name, value=self.pcards)
+        em.add_field(name='BreadBot', value='N/A')
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(label='Stand', style=discord.ButtonStyle.green)
+    async def stand(self, button: discord.ui.Button, interaction: discord.Interaction):
+        if self.pcards < self.bcards:
+            em = discord.Embed(
+                title=f"{self.ctx.author.name}'s blackjack game",
+                description=
+                f'You Had Less Cards Than Your Opponent!\n\nYou now have **{self.data["wallet"]:,d}** coins',
+                color=0xff0000)
+            em.add_field(name=self.ctx.author.name, value=self.pcards)
+            em.add_field(name='BreadBot', value=self.bcards)
+            await self.bc.economy.upsert(self.data)
+            return
+        else:
+            em = discord.Embed(
+                title=f"{self.ctx.author.name}'s blackjack game",
+                description=
+                f'You Had More Cards Than Your Opponent and won **{self.amount:,d}** coins\n\nYou now have **{self.data["wallet"]+self.amount*2:,d}** coins',
+                color=0x00ff00)
+            em.add_field(name=self.ctx.author.name, value=self.pcards)
+            em.add_field(name='BreadBot', value=self.bcards)
+            self.data["wallet"] += 2 * self.amount
+            await self.bc.economy.upsert(self.data)
+            return
+
 class Economy(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
@@ -145,319 +223,10 @@ class Economy(commands.Cog):
         em.add_field(name=ctx.author.name, value=pcards)
         em.add_field(name='BreadBot', value='N/A')
         await ctx.send(
-            'say `hit` to draw more cards and `stand` to end the game with your stack'
+            'Push `Hit` to draw more cards and push `Stand` to end the game with the amount you have now.'
         )
-        await ctx.send(embed=em)
-
-        def check(z):
-            return z.author == ctx.author and z.content == 'hit' or z.content == 'stand' or z.content == 'Hit' or z.content == 'Stand'
-
-        msg2 = await self.bc.wait_for('message', check=check, timeout=30)
-        if msg2.content == 'hit' or msg2.content == 'Hit':
-            pcards2 = pcards + random.randrange(1, 10)
-            if pcards2 > 21:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Busted!\n\nYou now have **{data["wallet"]:,d}** coins',
-                    color=0xff0000)
-                em.add_field(name=ctx.author.name, value=pcards2)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                return
-            if pcards2 == 21:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You got to 21 before your opponent and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                    color=0x00ff00)
-                em.add_field(name=ctx.author.name, value=pcards2)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                data["wallet"] += 2 * amount
-                await self.bc.economy.upsert(data)
-                return
-            em = discord.Embed(
-                title=f"{ctx.author.name}'s blackjack game", color=random.choice(self.bc.color_list))
-            em.add_field(name=ctx.author.name, value=pcards2)
-            em.add_field(name='BreadBot', value='N/A')
-            await ctx.send(
-                'say `hit` to draw more cards and `stand` to end the game with your stack'
-            )
-            await ctx.send(embed=em)
-        elif msg2.content == 'stand' or msg2.content == 'Stand':
-            if pcards < bcards:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Had Less Cards Than Your Opponent!\n\nYou now have **{data["wallet"]:,d}** coins',
-                    color=0xff0000)
-                em.add_field(name=ctx.author.name, value=pcards)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                await self.bc.economy.upsert(data)
-                return
-            else:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Had More Cards Than Your Opponent and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                    color=0x00ff00)
-                em.add_field(name=ctx.author.name, value=pcards)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                data["wallet"] += 2 * amount
-                await self.bc.economy.upsert(data)
-                return
-
-        def check(z):
-            return z.author == ctx.author and z.content == 'hit' or z.content == 'stand' or z.content == 'Hit' or z.content == 'Stand'
-
-        msg2 = await self.bc.wait_for('message', check=check, timeout=30)
-        if msg2.content == 'hit' or msg2.content == 'Hit':
-            pcards3 = pcards2 + random.randrange(1, 10)
-            if pcards3 > 21:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Busted!\n\nYou now have **{data["wallet"]:,d}** coins',
-                    color=0xff0000)
-                em.add_field(name=ctx.author.name, value=pcards3)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                return
-            if pcards3 == 21:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You got to 21 before your opponent and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                    color=0x00ff00)
-                em.add_field(name=ctx.author.name, value=pcards3)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                data["wallet"] += 2 * amount
-                await self.bc.economy.upsert(data)
-                return
-            em = discord.Embed(
-                title=f"{ctx.author.name}'s blackjack game", color=random.choice(self.bc.color_list))
-            em.add_field(name=ctx.author.name, value=pcards3)
-            em.add_field(name='BreadBot', value='N/A')
-            await ctx.send(
-                'say `hit` to draw more cards and `stand` to end the game with your stack'
-            )
-            await ctx.send(embed=em)
-        elif msg2.content == 'stand' or msg2.content == 'Stand':
-            if pcards2 < bcards:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Had Less Cards Than Your Opponent!\n\nYou now have **{data["wallet"]:,d}** coins',
-                    color=0xff0000)
-                em.add_field(name=ctx.author.name, value=pcards2)
-                em.add_field(name='BreadBot', value=bcards)
-                await self.bc.economy.upsert(data)
-                await ctx.send(embed=em)
-                return
-            else:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Had More Cards Than Your Opponent and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                    color=0x00ff00)
-                em.add_field(name=ctx.author.name, value=pcards2)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                data["wallet"] += 2 * amount
-                await self.bc.economy.upsert(data)
-                return
-
-        def check(z):
-            return z.author == ctx.author and z.content == 'hit' or z.content == 'stand' or z.content == 'Hit' or z.content == 'Stand'
-
-        msg2 = await self.bc.wait_for('message', check=check, timeout=30)
-        if msg2.content == 'hit' or msg2.content == 'Hit':
-            pcards4 = pcards3 + random.randrange(1, 10)
-            if pcards4 > 21:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Busted!\n\nYou now have **{data["wallet"]:,d}** coins',
-                    color=0xff0000)
-                em.add_field(name=ctx.author.name, value=pcards4)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                await self.bc.economy.upsert(data)
-                return
-            if pcards4 == 21:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You got to 21 before your opponent and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                    color=0x00ff00)
-                em.add_field(name=ctx.author.name, value=pcards4)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                data["wallet"] += 2 * amount
-                await self.bc.economy.upsert(data)
-                return
-            em = discord.Embed(
-                title=f"{ctx.author.name}'s blackjack game", color=random.choice(self.bc.color_list))
-            em.add_field(name=ctx.author.name, value=pcards4)
-            em.add_field(name='BreadBot', value='N/A')
-            await ctx.send(
-                'say `hit` to draw more cards and `stand` to end the game with your stack'
-            )
-            await ctx.send(embed=em)
-        elif msg2.content == 'stand' or msg2.content == 'Stand':
-            if pcards3 < bcards:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Had Less Cards Than Your Opponent\n\nYou now have **{data["wallet"]:,d}** coins',
-                    color=0xff0000)
-                em.add_field(name=ctx.author.name, value=pcards3)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                await self.bc.economy.upsert(data)
-                return
-            else:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Had More Cards Than Your Opponent and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                    color=0x00ff00)
-                em.add_field(name=ctx.author.name, value=pcards3)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                data["wallet"] += 2 * amount
-                await self.bc.economy.upsert(data)
-                return
-
-        def check(z):
-            return z.author == ctx.author and z.content == 'hit' or z.content == 'stand' or z.content == 'Hit' or z.content == 'Stand'
-
-        msg2 = await self.bc.wait_for('message', check=check, timeout=30)
-        if msg2.content == 'hit' or msg2.content == 'Hit':
-            pcards5 = pcards4 + random.randrange(1, 10)
-            if pcards5 > 21:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Busted!\n\nYou now have **{data["wallet"]:,d}** coins',
-                    color=0xff0000)
-                em.add_field(name=ctx.author.name, value=pcards5)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                await self.bc.economy.upsert(data)
-                return
-            if pcards5 == 21:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You got to 21 before your opponent and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                    color=0x00ff00)
-                em.add_field(name=ctx.author.name, value=pcards5)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                data["wallet"] += 2 * amount
-                await self.bc.economy.upsert(data)
-                return
-            em = discord.Embed(
-                title=f"{ctx.author.name}'s blackjack game", color=random.choice(self.bc.color_list))
-            em.add_field(name=ctx.author.name, value=pcards5)
-            em.add_field(name='BreadBot', value='N/A')
-            await ctx.send(
-                'say `hit` to draw more cards and `stand` to end the game with your stack'
-            )
-            await ctx.send(embed=em)
-        elif msg2.content == 'stand' or msg2.content == 'Stand':
-            if pcards4 < bcards:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Had Less Cards Than Your Opponent\n\nYou now have **{data["wallet"]:,d}** coins',
-                    color=0xff0000)
-                em.add_field(name=ctx.author.name, value=pcards4)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                await self.bc.economy.upsert(data)
-                return
-            else:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Had More Cards Than Your Opponent and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                    color=0x00ff00)
-                em.add_field(name=ctx.author.name, value=pcards4)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                data["wallet"] += 2 * amount
-                await self.bc.economy.upsert(data)
-                return
-
-        def check(z):
-            return z.author == ctx.author and z.content == 'hit' or z.content == 'stand' or z.content == 'Hit' or z.content == 'Stand'
-
-        msg2 = await self.bc.wait_for('message', check=check, timeout=30)
-        if msg2.content == 'hit' or msg2.content == 'Hit':
-            pcards6 = pcards5 + random.randrange(1, 10)
-            if pcards6 > 21:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Busted!\n\nYou now have **{data["wallet"]-amount:,d}** coins',
-                    color=0xff0000)
-                em.add_field(name=ctx.author.name, value=pcards6)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                await self.bc.economy.upsert(data)
-                return
-            if pcards6 == 21:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You got to 21 before your opponent and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                    color=0x00ff00)
-                em.add_field(name=ctx.author.name, value=pcards6)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                data["wallet"] += 2 * amount
-                await self.bc.economy.upsert(data)
-                return
-            em = discord.Embed(
-                title=f"{ctx.author.name}'s blackjack game",
-                description=
-                f'You drew 5 cards without busting and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                color=0x00ff00)
-            em.add_field(name=ctx.author.name, value=pcards6)
-            em.add_field(name='BreadBot', value=bcards)
-            await ctx.send(embed=em)
-            data["wallet"] += 2 * amount
-            await self.bc.economy.upsert(data)
-        elif msg2.content == 'stand' or msg2.content == 'Stand':
-            if pcards5 < bcards:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Had Less Cards Than Your Opponent!\n\nYou now have **{data["wallet"]:,d}** coins',
-                    color=0xff0000)
-                em.add_field(name=ctx.author.name, value=pcards5)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                await self.bc.economy.upsert(data)
-                return
-            else:
-                em = discord.Embed(
-                    title=f"{ctx.author.name}'s blackjack game",
-                    description=
-                    f'You Had More Cards Than Your Opponent and won **{amount:,d}** coins\n\nYou now have **{data["wallet"]+amount*2:,d}** coins',
-                    color=0x00ff00)
-                em.add_field(name=ctx.author.name, value=pcards5)
-                em.add_field(name='BreadBot', value=bcards)
-                await ctx.send(embed=em)
-                data["wallet"] += 2 * amount
-                await self.bc.economy.upsert(data)
-                return
+        #await ctx.send(embed=em, view=Blackjack(amount, self.bc, pcards, bcards, ctx, data))
+        await ctx.send(embed=em, view=Blackjack())
 
 
     @commands.command(
@@ -527,7 +296,7 @@ class Economy(commands.Cog):
             if res[0][1] == 2:
                 return await ctx.send("You do not have this item!")
         fish = random.randrange(1,3)
-        await self.add_item(ctx.author, "fish", fish)
+        await self.add_item(ctx.author, "fishy", fish)
         await ctx.send("You have caught {} fish".format(fish))
 
     @commands.command()
@@ -774,14 +543,17 @@ class Economy(commands.Cog):
         name_ = None
         item_name = item_name.lower()
         for item in shop:
-            if item_name in item["id"]:
+            if item_name == item["id"]:
                 name_ = item
                 break
+        if not name_:
+            for item in shop:
+                if item_name in item["id"]:
+                    name_ = item
+                    break
         
         if not name_:
             return [False, 1]
-        else:
-            return [True]
         
         iteminbag = False
         for item in data["bag"]:
@@ -799,14 +571,16 @@ class Economy(commands.Cog):
         name_ = None
         item_name = item_name.lower()
         for item in shop:
-            if item_name in item["id"]:
+            if item_name == item["id"]:
                 name_ = item
                 break
-        
+        if not name_:
+            for item in shop:
+                if item_name in item["id"]:
+                    name_ = item
+                    break
         if not name_:
             return [False, 1]
-        else:
-            return [True]
 
         if not name_["canbuy"]:
             return [False, 2]
@@ -826,6 +600,7 @@ class Economy(commands.Cog):
         if not iteminbag:
             data["bag"].append({"name": name_["name"], "id": name_["id"], "amount": amount})
             data["wallet"] -= name_["cost"] * amount
+        print(data["bag"])
         await self.bc.economy.upsert(data)
         return [True]
     

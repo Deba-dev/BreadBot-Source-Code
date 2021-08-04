@@ -24,7 +24,7 @@ def create_embed(content, count,bc):
         color = random.choice(bc.color_list)
     )
     embed.add_field(name="Message:",value=content.content)
-    embed.set_author(name=content.author,icon_url=content.author.avatar_url)
+    embed.set_author(name=content.author,icon_url=content.author.avatar)
     counter = f"⭐ **{count}**"
     return embed, counter
 
@@ -92,7 +92,7 @@ class Config(commands.Cog):
                             await webhook.send(
                                 content=new_message,
                                 username=after.author.nick or after.author.name,
-                                avatar_url=after.author.avatar_url,
+                                avatar=after.author.avatar,
                                 allowed_mentions=discord.AllowedMentions.none()
                             )
             else:
@@ -137,7 +137,7 @@ class Config(commands.Cog):
                             await webhook.send(
                                 content=new_message,
                                 username=message.author.nick or message.author.name,
-                                avatar_url=message.author.avatar_url,
+                                avatar=message.author.avatar,
                                 allowed_mentions=discord.AllowedMentions.none()
                             )
             else:
@@ -170,8 +170,8 @@ class Config(commands.Cog):
                 try:
                     star_mes = await star_channel.send(content=mes, embed=embed)
                 except discord.errors.HTTPException:
-                    embed = discord.Embed(description='[Original Message]({})'.format(message.jump_url), colour=random.choice(self.bc.color_list)).set_author(icon_url=message.author.avatar_url, name=message.author)
-                    embed.set_footer(text='Missing Content, Cannot Load Original Message!', icon_url=self.bc.user.avatar_url)
+                    embed = discord.Embed(description='[Original Message]({})'.format(message.jump_url), colour=random.choice(self.bc.color_list)).set_author(icon_url=message.author.avatar, name=message.author)
+                    embed.set_footer(text='Missing Content, Cannot Load Original Message!', icon_url=self.bc.user.avatar)
                     star_mes = await star_channel.send(embed=embed, content=mes)
                 data["messages"].append({"messageid": payload.message_id,"starchannelid": star_mes.id})
             else:
@@ -181,8 +181,8 @@ class Config(commands.Cog):
                 try:
                     await star_message.edit(content=mes, embed=embed)
                 except discord.errors.HTTPException:
-                    embed = discord.Embed(description='[Original Message]({})'.format(message.jump_url), colour=random.choice(self.bc.color_list)).set_author(icon_url=message.author.avatar_url, name=message.author)
-                    embed.set_footer(text='Missing Content, Cannot Load Original Message!', icon_url=self.bc.user.avatar_url)
+                    embed = discord.Embed(description='[Original Message]({})'.format(message.jump_url), colour=random.choice(self.bc.color_list)).set_author(icon_url=message.author.avatar, name=message.author)
+                    embed.set_footer(text='Missing Content, Cannot Load Original Message!', icon_url=self.bc.user.avatar)
                     await star_message.edit(embed=embed, content=mes)
             await self.bc.starboard.upsert(data)
 
@@ -219,8 +219,8 @@ class Config(commands.Cog):
                 try:
                     await star_message.edit(content=mes, embed=embed)
                 except discord.errors.HTTPException:
-                    embed = discord.Embed(description='[Original Message]({})'.format(message.jump_url), colour=random.choice(self.bc.color_list)).set_author(icon_url=message.author.avatar_url, name=message.author)
-                    embed.set_footer(text='Missing Content, Cannot Load Original Message!', icon_url=self.bc.user.avatar_url)
+                    embed = discord.Embed(description='[Original Message]({})'.format(message.jump_url), colour=random.choice(self.bc.color_list)).set_author(icon_url=message.author.avatar, name=message.author)
+                    embed.set_footer(text='Missing Content, Cannot Load Original Message!', icon_url=self.bc.user.avatar)
                     await star_message.edit(embed=embed, content=mes)
             await self.bc.starboard.upsert(data)
         #"""

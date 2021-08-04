@@ -169,7 +169,7 @@ class Utility(commands.Cog):
                 title = f"Tag owner of {name}",
                 color = random.choice(self.bc.color_list)
             )
-            em.set_thumbnail(url=member.avatar_url)
+            em.set_thumbnail(url=member.avatar)
             em.add_field(name="Owner",value=member.mention)
             await ctx.send(embed=em)
         except:

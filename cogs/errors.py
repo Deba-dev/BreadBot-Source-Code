@@ -123,10 +123,14 @@ class Errors(commands.Cog):
 
             full_invoke = ctx.command.qualified_name.replace(ctx.command.name, "")
             params = ctx.command.usage if ctx.command.usage else ctx.command.signature
+            if "prefix" not in data:
+                prefix = "="
+            else:
+                prefix = data["prefix"]
             em = discord.Embed(
                 title="Missing Required Argument",
                 color = discord.Color.red(),
-                description="```{}{}{} {}```\n\n**{}**".format(data["prefix"],full_invoke,cmd_invoke,params,error.args[0])
+                description="```{}{}{} {}```\n\n**{}**".format(prefix,full_invoke,cmd_invoke,params,error.args[0])
             )
             await ctx.send(embed=em)
         elif isinstance(error, discord.errors.Forbidden):

@@ -62,7 +62,7 @@ class Images(commands.Cog):
     @commands.command(description="Invert the color on ur pfp")
     async def invert(self,ctx,member:discord.Member=None):
         member = ctx.author if not member else member
-        avatar = member.avatar_url_as(format=None,static_format='png',size=1024)
+        avatar = member.avatar
         await avatar.save('images/Avatar.png')
         im = Image.open('images/Avatar.png').convert("RGB")
         inverted = ImageOps.invert(im)
@@ -76,12 +76,12 @@ class Images(commands.Cog):
     async def oil(self,ctx,member:discord.Member=None):
         if not member:
             member = ctx.author
-        avatar = member.avatar_url_as(format=None,static_format='jpg',size=1024)
-        await avatar.save('images/Avatar.jpg')
-        img = cv2.imread('images/Avatar.jpg')
+        avatar = member.avatar(format=None,static_format='jpeg',size=1024)
+        await avatar.save('images/Avatar.jpeg')
+        img = cv2.imread('images/Avatar.jpeg')
         oil = oilPainting(img, 4, 8, 2)
-        cv2.imwrite('images/oil.jpg', oil)
-        await ctx.send(file=discord.File("images/oil.jpg"))
+        cv2.imwrite('images/oil.jpeg', oil)
+        await ctx.send(file=discord.File("images/oil.jpeg"))
 
     @commands.command(
         description="kick someone in the nuts",
@@ -92,8 +92,8 @@ class Images(commands.Cog):
             member = ctx.author
             ctx.author = self.bc.user
         im = Image.open("images/download.jpg")
-        im1 = member.avatar_url_as(size=128)
-        im2 = ctx.author.avatar_url_as(size=128)
+        im1 = member.avatar
+        im2 = ctx.author.avatar
         data = BytesIO(await im1.read())
         pfp = Image.open(data)
         pfp = pfp.resize((40,40))
@@ -111,7 +111,7 @@ class Images(commands.Cog):
     )
     async def gun(self,ctx,member:discord.Member):
         im = Image.open("images/gun.jpg")
-        im1 = member.avatar_url_as(size=128)
+        im1 = member.avatar
         data = BytesIO(await im1.read())
         pfp = Image.open(data)
         pfp = pfp.resize((120,120))
@@ -128,8 +128,8 @@ class Images(commands.Cog):
             member = ctx.author
             ctx.author = self.bc.user
         im = Image.open("images/slap.jpg")
-        im2 = member.avatar_url_as(size=128)
-        im1 = ctx.author.avatar_url_as(size=128)
+        im2 = member.avatar
+        im1 = ctx.author.avatar
         data = BytesIO(await im1.read())
         pfp = Image.open(data)
         pfp = pfp.resize((200,200))
@@ -144,7 +144,7 @@ class Images(commands.Cog):
     @commands.command(hidden=True)
     async def testing(self,ctx, member:discord.Member=None):
         member = member or ctx.author
-        avatar = member.avatar_url_as(format=None,static_format='png',size=1024)
+        avatar = member.avatar
         await avatar.save('images/Avatar.png')
         im = Image.open('images/Avatar.png').convert("RGB")
         im = im.resize((680, 680))

@@ -135,7 +135,7 @@ class ServerEvents(commands.Cog):
                 color=random.choice(self.bc.color_list),
                 description=question
             )
-            em.set_footer(text=f"Poll by {ctx.author}", icon_url=ctx.author.avatar_url)
+            em.set_footer(text=f"Poll by {ctx.author}", icon_url=ctx.author.avatar)
             msg = await ctx.send(embed=em)
             await msg.add_reaction('👍')
             await msg.add_reaction('👎')
@@ -252,7 +252,7 @@ class ServerEvents(commands.Cog):
                 description=suggestion,
                 timestamp=datetime.datetime.utcnow()
             )
-            em.set_footer(text="Suggestion By {}".format(ctx.author), icon_url=ctx.author.avatar_url)
+            em.set_footer(text="Suggestion By {}".format(ctx.author), icon_url=ctx.author.avatar)
             suggest = await channel.send(embed=em)
             await suggest.add_reaction('👍')
             await suggest.add_reaction('👎')
@@ -278,7 +278,7 @@ class ServerEvents(commands.Cog):
                     color=0xff0000,
                     timestamp=datetime.datetime.utcnow()
                 )
-                em.set_footer(text="Denied By {}".format(ctx.author), icon_url=ctx.author.avatar_url)
+                em.set_footer(text="Denied By {}".format(ctx.author), icon_url=ctx.author.avatar)
                 await msg.edit(embed=em)
                 await ctx.send("Suggestion {} has been denied with the reason: {}".format(suggestion,reason))
                 break
@@ -302,7 +302,7 @@ class ServerEvents(commands.Cog):
                     color=0x00ff00,
                     timestamp=datetime.datetime.utcnow()
                 )
-                em.set_footer(text="Approved By {}".format(ctx.author), icon_url=ctx.author.avatar_url)
+                em.set_footer(text="Approved By {}".format(ctx.author), icon_url=ctx.author.avatar)
                 await msg.edit(embed=em)
                 await ctx.send("Suggestion {} has been approved with the reason: {}".format(suggestion,reason))
                 break
@@ -326,7 +326,7 @@ class ServerEvents(commands.Cog):
                     color=0xffff00,
                     timestamp=datetime.datetime.utcnow()
                 )
-                em.set_footer(text="Considered By {}".format(ctx.author), icon_url=ctx.author.avatar_url)
+                em.set_footer(text="Considered By {}".format(ctx.author), icon_url=ctx.author.avatar)
                 await msg.edit(embed=em)
                 await ctx.send("Suggestion {} has been considered with the reason: {}".format(suggestion,reason))
                 break

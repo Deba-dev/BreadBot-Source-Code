@@ -116,7 +116,7 @@ class Support(commands.Cog):
                 color=random.choice(self.bc.color_list),
                 timestamp=datetime.datetime.utcnow()
             )
-            em.set_thumbnail(url=ctx.guild.icon_url)
+            em.set_thumbnail(url=ctx.guild.icon)
             em.add_field(name="Config | Page 1", value=f"`{prefix}help 1`")
             em.add_field(name="Economy | Page 2", value=f"`{prefix}help 2`")
             em.add_field(name="Fun | Page 3", value=f"`{prefix}help 3`")
@@ -128,7 +128,7 @@ class Support(commands.Cog):
             em.add_field(name="Music (beta) | Page 9", value=f"`{prefix}help 9`")
             em.add_field(name="Server Events | Page 10", value=f"`{prefix}help 10`")    
             em.add_field(name="How to get help for a command", value=f"`{prefix}help <command>`")
-            em.set_footer(text=f"Want more help? try out my {prefix}info command", icon_url=ctx.author.avatar_url)
+            em.set_footer(text=f"Want more help? try out my {prefix}info command", icon_url=ctx.author.avatar)
             await ctx.send(embed=em)
         elif entity == "1":
             cog = self.bc.get_cog("Config")
