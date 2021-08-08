@@ -14,7 +14,7 @@ time_regex = re.compile("(?:(\d{1,5})(h|s|m|d||))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400,"":1}
 
 async def gawedit(msg,data,bc,edit = None):
-    author = bc.get_user(data["authorid"])
+    author = await bc.fetch_user(data["authorid"])
     started = data['startedat']
     whendone = data['startedat'] + relativedelta(seconds=data['duration'])
     timeleft = whendone - datetime.datetime.now()
@@ -213,7 +213,7 @@ class ServerEvents(commands.Cog):
             users = await new_msg.reactions[0].users().flatten()
             users.pop(users.index(self.bc.user))
             if len(users) == 0:
-                await self.bc.giveaways.delete(new_msg)
+                await self.bc.giveaways.delete(new_msg.id)
                 try:
                     self.bc.GAWdata.pop(new_msg)
                 except KeyError:

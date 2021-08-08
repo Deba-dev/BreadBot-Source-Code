@@ -42,6 +42,7 @@ class Errors(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        ctx.command.reset_cooldown(ctx)
         #Ignore these errors
         ignored = (commands.CommandNotFound)
         if isinstance(error, ignored):

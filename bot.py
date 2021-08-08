@@ -27,7 +27,8 @@ import datetime
 import tools.errors
 from tools import commands2
 import discordmongo
-
+import googletrans
+import sys
 
 async def get_prefix(bc, message):
     # If dm's
@@ -120,10 +121,19 @@ class BreadBot(commands.AutoShardedBot):
         self.economy = discordmongo.Mongo(connection_url=self.db, dbname="economy")
         self.rickroll = discordmongo.Mongo(connection_url=self.db, dbname="rickroll")
         self.afk = discordmongo.Mongo(connection_url=self.db, dbname="afk")
+        update = False
+        if googletrans.__version__ != "3.1.0-alpha":
+            os.system("pip install googletrans==3.1.0a")
+            update = True
+        if discord.__version__ != "2.0.0a":
+            os.system("pip install git+https://github.com/Rapptz/discord.py")
+            update = True
+        if update:
+            os.execv(sys.executable, ['python'] + sys.argv)
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py') and not filename.startswith("_"):
                 self.load_extension(f'cogs.{filename[:-3]}')
-                
+
         @self.before_invoke
         async def before_any_command(ctx):
             data = read_json("blacklist")
@@ -143,6 +153,7 @@ class BreadBot(commands.AutoShardedBot):
                 pass
 
     async def on_ready(self):
+        await self.change_presence(activity=discord.Game(name=f"in {len(self.guilds)} guilds | {self.DEFAULTPREFIX}help"))
         data = read_json("blacklist")
         self.blacklisted_users = data["blacklistedUsers"]
         currentMutes = await self.mutes.get_all()

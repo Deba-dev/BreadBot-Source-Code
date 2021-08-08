@@ -1,206 +1,402 @@
 {
-    "EeA222": {
-        "Command": "Oil",
-        "Error Type": "IndexError",
-        "Error": [
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
-            "  File \"/home/runner/Bot/cogs/image.py\", line 82, in oil\n    oil = oilPainting(img, 4, 8, 2)\n",
-            "  File \"/home/runner/Bot/cogs/image.py\", line 55, in oilPainting\n    oilImg[m + i, n + j] = (bucketsMean[0], bucketsMean[1], bucketsMean[2])\n",
-            "IndexError: index 221 is out of bounds for axis 1 with size 221\n",
-            "\nThe above exception was the direct cause of the following exception:\n\n",
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 939, in invoke\n    await ctx.command.invoke(ctx)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 863, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: index 221 is out of bounds for axis 1 with size 221\n"
-        ]
-    },
-    "69553205": {
-        "Command": "Oil",
-        "Error Type": "IndexError",
-        "Error": [
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
-            "  File \"/home/runner/Bot/cogs/image.py\", line 82, in oil\n    oil = oilPainting(img, 4, 8, 2)\n",
-            "  File \"/home/runner/Bot/cogs/image.py\", line 55, in oilPainting\n    oilImg[m + i, n + j] = (bucketsMean[0], bucketsMean[1], bucketsMean[2])\n",
-            "IndexError: index 221 is out of bounds for axis 1 with size 221\n",
-            "\nThe above exception was the direct cause of the following exception:\n\n",
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 939, in invoke\n    await ctx.command.invoke(ctx)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 863, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: index 221 is out of bounds for axis 1 with size 221\n"
-        ]
-    },
-    "29E7C2": {
-        "Command": "Oil",
-        "Error Type": "IndexError",
-        "Error": [
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
-            "  File \"/home/runner/Bot/cogs/image.py\", line 82, in oil\n    oil = oilPainting(img, 4, 8, 2)\n",
-            "  File \"/home/runner/Bot/cogs/image.py\", line 55, in oilPainting\n    oilImg[m + i, n + j] = (bucketsMean[0], bucketsMean[1], bucketsMean[2])\n",
-            "IndexError: index 461 is out of bounds for axis 1 with size 461\n",
-            "\nThe above exception was the direct cause of the following exception:\n\n",
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 939, in invoke\n    await ctx.command.invoke(ctx)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 863, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: index 461 is out of bounds for axis 1 with size 461\n"
-        ]
-    },
-    "d462122": {
-        "Command": "Oil",
-        "Error Type": "IndexError",
-        "Error": [
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 85, in wrapped\n    ret = await coro(*args, **kwargs)\n",
-            "  File \"/home/runner/Bot/cogs/image.py\", line 82, in oil\n    oil = oilPainting(img, 4, 8, 2)\n",
-            "  File \"/home/runner/Bot/cogs/image.py\", line 55, in oilPainting\n    oilImg[m + i, n + j] = (bucketsMean[0], bucketsMean[1], bucketsMean[2])\n",
-            "IndexError: index 221 is out of bounds for axis 1 with size 221\n",
-            "\nThe above exception was the direct cause of the following exception:\n\n",
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 939, in invoke\n    await ctx.command.invoke(ctx)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 863, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 94, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: IndexError: index 221 is out of bounds for axis 1 with size 221\n"
-        ]
-    },
-    "55FE49": {
-        "Command": "Re",
-        "Error Type": "Unspecified",
+    "60c6122D": {
+        "Command": "Postmeme",
+        "Error Type": "TypeError",
         "Error": [
             "Traceback (most recent call last):\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
-            "  File \"/home/runner/Bot/cogs/util.py\", line 72, in re\n    await self.bc.process_commands(ctx.message.reference.cached_message)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 993, in process_commands\n    if message.author.bot:\n",
-            "AttributeError: 'NoneType' object has no attribute 'author'\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 287, in postmeme\n    if res[0][1] == 2:\n",
+            "TypeError: 'bool' object is not subscriptable\n",
             "\nThe above exception was the direct cause of the following exception:\n\n",
             "Traceback (most recent call last):\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'author'\n"
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: TypeError: 'bool' object is not subscriptable\n"
         ]
     },
-    "05044C9": {
-        "Command": "Re",
-        "Error Type": "Unspecified",
-        "Error": [
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
-            "  File \"/home/runner/Bot/cogs/util.py\", line 72, in re\n    await self.bc.process_commands(ctx.message.reference.cached_message)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 993, in process_commands\n    if message.author.bot:\n",
-            "AttributeError: 'NoneType' object has no attribute 'author'\n",
-            "\nThe above exception was the direct cause of the following exception:\n\n",
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'author'\n"
-        ]
-    },
-    "e5252b": {
+    "50859": {
         "Command": "Help",
         "Error Type": "Unspecified",
         "Error": [
             "Traceback (most recent call last):\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
-            "  File \"/home/runner/Bot/cogs/help.py\", line 119, in help_command\n    em.set_thumbnail(url=ctx.guild.icon_url)\n",
-            "AttributeError: 'Guild' object has no attribute 'icon_url'\n",
+            "  File \"/home/runner/Bot/cogs/help.py\", line 145, in help_command\n    await ctx.send(embed=em, view=Items())\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1430, in send\n    data = await state.http.send_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 338, in request\n    raise HTTPException(response, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.thumbnail.url: Scheme \"none\" is not supported. Scheme must be one of ('http', 'https').\n",
             "\nThe above exception was the direct cause of the following exception:\n\n",
             "Traceback (most recent call last):\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Guild' object has no attribute 'icon_url'\n"
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.thumbnail.url: Scheme \"none\" is not supported. Scheme must be one of ('http', 'https').\n"
         ]
     },
-    "CE3d401": {
-        "Command": "Av",
+    "282a05": {
+        "Command": "Help",
         "Error Type": "Unspecified",
         "Error": [
             "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    def pop(self, k, default=None):\n",
-            "  File \"/home/runner/Bot/cogs/checking.py\", line 292, in av\n    embed.set_image(url=member.avatar_url)\n",
-            "AttributeError: 'Member' object has no attribute 'avatar_url'\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/help.py\", line 145, in help_command\n    await ctx.send(embed=em, view=Items())\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1430, in send\n    data = await state.http.send_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 338, in request\n    raise HTTPException(response, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.thumbnail.url: Scheme \"none\" is not supported. Scheme must be one of ('http', 'https').\n",
             "\nThe above exception was the direct cause of the following exception:\n\n",
             "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    \"\"\"\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    These are not created manually, instead they are created via the\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Member' object has no attribute 'avatar_url'\n"
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.thumbnail.url: Scheme \"none\" is not supported. Scheme must be one of ('http', 'https').\n"
         ]
     },
-    "0fA9900": {
-        "Command": "Blackjack",
+    "7b61Ec": {
+        "Command": "Hypixel",
         "Error Type": "Unspecified",
         "Error": [
             "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    def pop(self, k, default=None):\n",
-            "  File \"/home/runner/Bot/cogs/economy.py\", line 228, in blackjack\n    await ctx.send(embed=em, view=Blackjack(amount, self.bc, pcards, bcards, ctx, data))\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1378, in send\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ui/view.py\", line 197, in to_components\n",
-            "AttributeError: 'Blackjack' object has no attribute 'children'\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 38, in hypixel\n    player = hypixel.Player(user)\n",
+            "  File \"/home/runner/Bot/tools/hypixel.py\", line 18, in __init__\n    self.uuid = self.getuuid(self.playername)\n",
+            "  File \"/home/runner/Bot/tools/hypixel.py\", line 26, in getuuid\n    res = requests.get(f\"https://api.mojang.com/users/profiles/minecraft/{name}\").json()\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/requests/models.py\", line 910, in json\n    return complexjson.loads(self.text, **kwargs)\n",
+            "  File \"/usr/lib/python3.8/json/__init__.py\", line 357, in loads\n    return _default_decoder.decode(s)\n",
+            "  File \"/usr/lib/python3.8/json/decoder.py\", line 337, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n",
+            "  File \"/usr/lib/python3.8/json/decoder.py\", line 355, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\n",
+            "json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n",
             "\nThe above exception was the direct cause of the following exception:\n\n",
             "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    \"\"\"\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    These are not created manually, instead they are created via the\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Blackjack' object has no attribute 'children'\n"
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n"
         ]
     },
-    "7d123": {
-        "Command": "Blackjack",
+    "27B7e": {
+        "Command": "Giveaway End",
         "Error Type": "Unspecified",
         "Error": [
             "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    def pop(self, k, default=None):\n",
-            "  File \"/home/runner/Bot/cogs/economy.py\", line 228, in blackjack\n    await ctx.send(\"content\", view=Blackjack(amount, self.bc, pcards, bcards, ctx, data))\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1378, in send\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ui/view.py\", line 197, in to_components\n",
-            "AttributeError: 'Blackjack' object has no attribute 'children'\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/serverevents.py\", line 216, in gaw_end\n    await self.bc.giveaways.delete(new_msg)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 37, in delete\n    await self.delete_by_id(id)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 68, in delete_by_id\n    if not await self.find_by_id(id):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 56, in find_by_id\n    return await self.db.find_one({\"_id\": id})\n",
+            "  File \"/usr/lib/python3.8/concurrent/futures/thread.py\", line 57, in run\n    result = self.fn(*self.args, **self.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/collection.py\", line 1328, in find_one\n    for result in cursor.limit(-1):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1238, in next\n    if len(self.__data) or self._refresh():\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1155, in _refresh\n    self.__send_message(q)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1044, in __send_message\n    response = client._run_operation(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1424, in _run_operation\n    return self._retryable_read(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1525, in _retryable_read\n    return func(session, server, sock_info, secondary_ok)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1420, in _cmd\n    return server.run_operation(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/server.py\", line 98, in run_operation\n    message = operation.get_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/message.py\", line 350, in get_message\n    request_id, msg, size, _ = _op_msg(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/message.py\", line 742, in _op_msg\n    return _op_msg_uncompressed(\n",
+            "bson.errors.InvalidDocument: cannot encode object: <Message id=873192648545013790 channel=<TextChannel id=865414467361046552 name='main-chat' position=0 nsfw=False news=False category_id=865414467361046550> type=<MessageType.default: 0> author=<Member id=760871722718855169 name='BreadBot' discriminator='9831' bot=True nick=None guild=<Guild id=865414467361046548 name='test server' shard_id=0 chunked=True member_count=26>> flags=<MessageFlags value=0>>, of type: <class 'discord.message.Message'>\n",
             "\nThe above exception was the direct cause of the following exception:\n\n",
             "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    \"\"\"\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    These are not created manually, instead they are created via the\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Blackjack' object has no attribute 'children'\n"
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 1316, in invoke\n    await ctx.invoked_subcommand.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: InvalidDocument: cannot encode object: <Message id=873192648545013790 channel=<TextChannel id=865414467361046552 name='main-chat' position=0 nsfw=False news=False category_id=865414467361046550> type=<MessageType.default: 0> author=<Member id=760871722718855169 name='BreadBot' discriminator='9831' bot=True nick=None guild=<Guild id=865414467361046548 name='test server' shard_id=0 chunked=True member_count=26>> flags=<MessageFlags value=0>>, of type: <class 'discord.message.Message'>\n"
         ]
     },
-    "71E12550": {
+    "36120F56": {
+        "Command": "Giveaway End",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/serverevents.py\", line 216, in gaw_end\n    await self.bc.giveaways.delete(new_msg)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 37, in delete\n    await self.delete_by_id(id)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 68, in delete_by_id\n    if not await self.find_by_id(id):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 56, in find_by_id\n    return await self.db.find_one({\"_id\": id})\n",
+            "  File \"/usr/lib/python3.8/concurrent/futures/thread.py\", line 57, in run\n    result = self.fn(*self.args, **self.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/collection.py\", line 1328, in find_one\n    for result in cursor.limit(-1):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1238, in next\n    if len(self.__data) or self._refresh():\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1155, in _refresh\n    self.__send_message(q)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1044, in __send_message\n    response = client._run_operation(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1424, in _run_operation\n    return self._retryable_read(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1525, in _retryable_read\n    return func(session, server, sock_info, secondary_ok)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1420, in _cmd\n    return server.run_operation(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/server.py\", line 98, in run_operation\n    message = operation.get_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/message.py\", line 350, in get_message\n    request_id, msg, size, _ = _op_msg(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/message.py\", line 742, in _op_msg\n    return _op_msg_uncompressed(\n",
+            "bson.errors.InvalidDocument: cannot encode object: <Message id=873192648545013790 channel=<TextChannel id=865414467361046552 name='main-chat' position=0 nsfw=False news=False category_id=865414467361046550> type=<MessageType.default: 0> author=<Member id=760871722718855169 name='BreadBot' discriminator='9831' bot=True nick=None guild=<Guild id=865414467361046548 name='test server' shard_id=0 chunked=True member_count=26>> flags=<MessageFlags value=0>>, of type: <class 'discord.message.Message'>\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 1316, in invoke\n    await ctx.invoked_subcommand.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: InvalidDocument: cannot encode object: <Message id=873192648545013790 channel=<TextChannel id=865414467361046552 name='main-chat' position=0 nsfw=False news=False category_id=865414467361046550> type=<MessageType.default: 0> author=<Member id=760871722718855169 name='BreadBot' discriminator='9831' bot=True nick=None guild=<Guild id=865414467361046548 name='test server' shard_id=0 chunked=True member_count=26>> flags=<MessageFlags value=0>>, of type: <class 'discord.message.Message'>\n"
+        ]
+    },
+    "5cfc0": {
+        "Command": "Giveaway End",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/serverevents.py\", line 216, in gaw_end\n    await self.bc.giveaways.delete(new_msg)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 37, in delete\n    await self.delete_by_id(id)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 68, in delete_by_id\n    if not await self.find_by_id(id):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 56, in find_by_id\n    return await self.db.find_one({\"_id\": id})\n",
+            "  File \"/usr/lib/python3.8/concurrent/futures/thread.py\", line 57, in run\n    result = self.fn(*self.args, **self.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/collection.py\", line 1328, in find_one\n    for result in cursor.limit(-1):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1238, in next\n    if len(self.__data) or self._refresh():\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1155, in _refresh\n    self.__send_message(q)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1044, in __send_message\n    response = client._run_operation(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1424, in _run_operation\n    return self._retryable_read(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1525, in _retryable_read\n    return func(session, server, sock_info, secondary_ok)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1420, in _cmd\n    return server.run_operation(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/server.py\", line 98, in run_operation\n    message = operation.get_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/message.py\", line 350, in get_message\n    request_id, msg, size, _ = _op_msg(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/message.py\", line 742, in _op_msg\n    return _op_msg_uncompressed(\n",
+            "bson.errors.InvalidDocument: cannot encode object: <Message id=873192648545013790 channel=<TextChannel id=865414467361046552 name='main-chat' position=0 nsfw=False news=False category_id=865414467361046550> type=<MessageType.default: 0> author=<Member id=760871722718855169 name='BreadBot' discriminator='9831' bot=True nick=None guild=<Guild id=865414467361046548 name='test server' shard_id=0 chunked=True member_count=26>> flags=<MessageFlags value=0>>, of type: <class 'discord.message.Message'>\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 1316, in invoke\n    await ctx.invoked_subcommand.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: InvalidDocument: cannot encode object: <Message id=873192648545013790 channel=<TextChannel id=865414467361046552 name='main-chat' position=0 nsfw=False news=False category_id=865414467361046550> type=<MessageType.default: 0> author=<Member id=760871722718855169 name='BreadBot' discriminator='9831' bot=True nick=None guild=<Guild id=865414467361046548 name='test server' shard_id=0 chunked=True member_count=26>> flags=<MessageFlags value=0>>, of type: <class 'discord.message.Message'>\n"
+        ]
+    },
+    "66fEC": {
+        "Command": "Giveaway End",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/serverevents.py\", line 216, in gaw_end\n    await self.bc.giveaways.delete(new_msg)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 37, in delete\n    await self.delete_by_id(id)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 68, in delete_by_id\n    if not await self.find_by_id(id):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 56, in find_by_id\n    return await self.db.find_one({\"_id\": id})\n",
+            "  File \"/usr/lib/python3.8/concurrent/futures/thread.py\", line 57, in run\n    result = self.fn(*self.args, **self.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/collection.py\", line 1328, in find_one\n    for result in cursor.limit(-1):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1238, in next\n    if len(self.__data) or self._refresh():\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1155, in _refresh\n    self.__send_message(q)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1044, in __send_message\n    response = client._run_operation(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1424, in _run_operation\n    return self._retryable_read(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1525, in _retryable_read\n    return func(session, server, sock_info, secondary_ok)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1420, in _cmd\n    return server.run_operation(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/server.py\", line 98, in run_operation\n    message = operation.get_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/message.py\", line 350, in get_message\n    request_id, msg, size, _ = _op_msg(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/message.py\", line 742, in _op_msg\n    return _op_msg_uncompressed(\n",
+            "bson.errors.InvalidDocument: cannot encode object: <Message id=873192648545013790 channel=<TextChannel id=865414467361046552 name='main-chat' position=0 nsfw=False news=False category_id=865414467361046550> type=<MessageType.default: 0> author=<Member id=760871722718855169 name='BreadBot' discriminator='9831' bot=True nick=None guild=<Guild id=865414467361046548 name='test server' shard_id=0 chunked=True member_count=26>> flags=<MessageFlags value=0>>, of type: <class 'discord.message.Message'>\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 1316, in invoke\n    await ctx.invoked_subcommand.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: InvalidDocument: cannot encode object: <Message id=873192648545013790 channel=<TextChannel id=865414467361046552 name='main-chat' position=0 nsfw=False news=False category_id=865414467361046550> type=<MessageType.default: 0> author=<Member id=760871722718855169 name='BreadBot' discriminator='9831' bot=True nick=None guild=<Guild id=865414467361046548 name='test server' shard_id=0 chunked=True member_count=26>> flags=<MessageFlags value=0>>, of type: <class 'discord.message.Message'>\n"
+        ]
+    },
+    "5Cf352": {
+        "Command": "Giveaway End",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/serverevents.py\", line 216, in gaw_end\n    await self.bc.giveaways.delete(new_msg)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 37, in delete\n    await self.delete_by_id(id)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 68, in delete_by_id\n    if not await self.find_by_id(id):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discordmongo/mongo.py\", line 56, in find_by_id\n    return await self.db.find_one({\"_id\": id})\n",
+            "  File \"/usr/lib/python3.8/concurrent/futures/thread.py\", line 57, in run\n    result = self.fn(*self.args, **self.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/collection.py\", line 1328, in find_one\n    for result in cursor.limit(-1):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1238, in next\n    if len(self.__data) or self._refresh():\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1155, in _refresh\n    self.__send_message(q)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/cursor.py\", line 1044, in __send_message\n    response = client._run_operation(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1424, in _run_operation\n    return self._retryable_read(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1525, in _retryable_read\n    return func(session, server, sock_info, secondary_ok)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/mongo_client.py\", line 1420, in _cmd\n    return server.run_operation(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/server.py\", line 98, in run_operation\n    message = operation.get_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/message.py\", line 350, in get_message\n    request_id, msg, size, _ = _op_msg(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/pymongo/message.py\", line 742, in _op_msg\n    return _op_msg_uncompressed(\n",
+            "bson.errors.InvalidDocument: cannot encode object: <Message id=873192648545013790 channel=<TextChannel id=865414467361046552 name='main-chat' position=0 nsfw=False news=False category_id=865414467361046550> type=<MessageType.default: 0> author=<Member id=760871722718855169 name='BreadBot' discriminator='9831' bot=True nick=None guild=<Guild id=865414467361046548 name='test server' shard_id=0 chunked=True member_count=26>> flags=<MessageFlags value=0>>, of type: <class 'discord.message.Message'>\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 1316, in invoke\n    await ctx.invoked_subcommand.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: InvalidDocument: cannot encode object: <Message id=873192648545013790 channel=<TextChannel id=865414467361046552 name='main-chat' position=0 nsfw=False news=False category_id=865414467361046550> type=<MessageType.default: 0> author=<Member id=760871722718855169 name='BreadBot' discriminator='9831' bot=True nick=None guild=<Guild id=865414467361046548 name='test server' shard_id=0 chunked=True member_count=26>> flags=<MessageFlags value=0>>, of type: <class 'discord.message.Message'>\n"
+        ]
+    },
+    "3F17AE4": {
+        "Command": "Rank",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 168, in rank\n    avatar = member.avatar_as(format=None,static_format='png',size=1024)\n",
+            "AttributeError: 'User' object has no attribute 'avatar_as'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'User' object has no attribute 'avatar_as'\n"
+        ]
+    },
+    "bEeF94": {
+        "Command": "Channels",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 466, in channels\n    await ctx.send(embed=em)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1430, in send\n    data = await state.http.send_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 338, in request\n    raise HTTPException(response, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.description: Must be 4096 or fewer in length.\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.description: Must be 4096 or fewer in length.\n"
+        ]
+    },
+    "37bDe0E": {
+        "Command": "Channels",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 466, in channels\n    await ctx.send(embed=em)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1430, in send\n    data = await state.http.send_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 338, in request\n    raise HTTPException(response, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.description: Must be 4096 or fewer in length.\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.description: Must be 4096 or fewer in length.\n"
+        ]
+    },
+    "3767ae": {
+        "Command": "Channels",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 466, in channels\n    await ctx.send(embed=em)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1430, in send\n    data = await state.http.send_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 338, in request\n    raise HTTPException(response, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.description: Must be 4096 or fewer in length.\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.description: Must be 4096 or fewer in length.\n"
+        ]
+    },
+    "26Be2": {
+        "Command": "Search",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 570, in _search\n    source = await YTDLSource.search_source(ctx, search, loop=self.bot.loop)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 137, in search_source\n    lst.append(f'`{info[\"entries\"].index(e) + 1}.` [{e.get(\"title\")}]({VUrl})\\n')\n",
+            "AttributeError: 'generator' object has no attribute 'index'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'generator' object has no attribute 'index'\n"
+        ]
+    },
+    "BBFDd": {
+        "Command": "Search",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 570, in _search\n    source = await YTDLSource.search_source(ctx, search, loop=self.bot.loop)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 137, in search_source\n    lst.append(f'`{info[\"entries\"].index(e) + 1}.` [{e.get(\"title\")}]({VUrl})\\n')\n",
+            "AttributeError: 'generator' object has no attribute 'index'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'generator' object has no attribute 'index'\n"
+        ]
+    },
+    "099A337": {
+        "Command": "Search",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 570, in _search\n    source = await YTDLSource.search_source(ctx, search, loop=self.bot.loop)\n",
+            "  File \"/home/runner/Bot/cogs/music.py\", line 137, in search_source\n    lst.append(f'`{info[\"entries\"].index(e) + 1}.` [{e.get(\"title\")}]({VUrl})\\n')\n",
+            "AttributeError: 'generator' object has no attribute 'index'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'generator' object has no attribute 'index'\n"
+        ]
+    },
+    "d0173": {
         "Command": "Blackjack",
+        "Error Type": "ValueError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 234, in blackjack\n    amount = int(amount)\n",
+            "ValueError: invalid literal for int() with base 10: 'bill'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: ValueError: invalid literal for int() with base 10: 'bill'\n"
+        ]
+    },
+    "7C803651": {
+        "Command": "Reload",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/owner.py\", line 452, in reload\n    await ctx.send(embed=embed)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1430, in send\n    data = await state.http.send_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 338, in request\n    raise HTTPException(response, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.fields.0.value: Must be 1024 or fewer in length.\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body\nIn embeds.0.fields.0.value: Must be 1024 or fewer in length.\n"
+        ]
+    },
+    "40716766": {
+        "Command": "Fish",
         "Error Type": "TypeError",
         "Error": [
             "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    def pop(self, k, default=None):\n",
-            "  File \"/home/runner/Bot/cogs/economy.py\", line 220, in blackjack\n    await ctx.send(embed=em, view=Blackjack(amount, self.bc, pcards, bcards, ctx, data))\n",
-            "TypeError: __init__() takes 1 positional argument but 7 were given\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 320, in fish\n    if res[0][1] == 2:\n",
+            "TypeError: 'bool' object is not subscriptable\n",
             "\nThe above exception was the direct cause of the following exception:\n\n",
             "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    \"\"\"\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    These are not created manually, instead they are created via the\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: TypeError: __init__() takes 1 positional argument but 7 were given\n"
-        ]
-    },
-    "EEC90fd": {
-        "Command": "Blackjack",
-        "Error Type": "Unspecified",
-        "Error": [
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    def pop(self, k, default=None):\n",
-            "  File \"/home/runner/Bot/cogs/economy.py\", line 223, in blackjack\n    await ctx.send(embed=em, view=Blackjack())\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1378, in send\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ui/view.py\", line 197, in to_components\n",
-            "AttributeError: 'Blackjack' object has no attribute 'children'\n",
-            "\nThe above exception was the direct cause of the following exception:\n\n",
-            "Traceback (most recent call last):\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    \"\"\"\n",
-            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    These are not created manually, instead they are created via the\n",
-            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Blackjack' object has no attribute 'children'\n"
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: TypeError: 'bool' object is not subscriptable\n"
         ]
     }
 }

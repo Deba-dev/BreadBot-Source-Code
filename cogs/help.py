@@ -20,6 +20,19 @@ def write_json(data, filename):
     with open(f"{filename}.json", "w") as file:
         json.dump(data, file, indent=4)
 
+invite = discord.ui.Button(label='Invite', style=discord.ButtonStyle.link, url="https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=2146958839")
+
+support = discord.ui.Button(label='Support Server', style=discord.ButtonStyle.link, url="https://discord.gg/zuv2XW6tzb")
+
+dashboard = discord.ui.Button(label='Dashboard', style=discord.ButtonStyle.link, url="https://breadbotdash.tk")
+
+class Items(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+
+        self.add_item(invite)
+        self.add_item(support)
+        self.add_item(dashboard)
 
 class Support(commands.Cog):
     def __init__(self, bc):
@@ -116,7 +129,8 @@ class Support(commands.Cog):
                 color=random.choice(self.bc.color_list),
                 timestamp=datetime.datetime.utcnow()
             )
-            em.set_thumbnail(url=ctx.guild.icon)
+            if ctx.guild.icon:
+                em.set_thumbnail(url=ctx.guild.icon)
             em.add_field(name="Config | Page 1", value=f"`{prefix}help 1`")
             em.add_field(name="Economy | Page 2", value=f"`{prefix}help 2`")
             em.add_field(name="Fun | Page 3", value=f"`{prefix}help 3`")
@@ -129,7 +143,7 @@ class Support(commands.Cog):
             em.add_field(name="Server Events | Page 10", value=f"`{prefix}help 10`")    
             em.add_field(name="How to get help for a command", value=f"`{prefix}help <command>`")
             em.set_footer(text=f"Want more help? try out my {prefix}info command", icon_url=ctx.author.avatar)
-            await ctx.send(embed=em)
+            await ctx.send(embed=em, view=Items())
         elif entity == "1":
             cog = self.bc.get_cog("Config")
             await self.setup_help_pag(ctx, cog, f"Page {entity} | {cog.qualified_name}")

@@ -165,7 +165,7 @@ Map: {}
             data["members"].append({"userid": member.id, "level":1, "xp": 0, "maxXp": 35})
         user = next((user for user in data["members"] if user['userid'] == member.id), None)
         member = self.bc.get_user(user["userid"])    
-        avatar = member.avatar_as(format=None,static_format='png',size=1024)
+        avatar = member.avatar
         await avatar.save('images/Avatar.png')
         im = Image.open('images/Avatar.png').convert("RGB")
         im = im.resize((120, 120))
@@ -388,7 +388,7 @@ Joined: {}
             embed.add_field(name='Filesize Limit?', value=f'{convert_size(ctx.guild.filesize_limit)}')
             embed.add_field(name='Large?', value=f'{ctx.guild.large}')
             embed.add_field(name='Server Level!', value=f'{level}', inline=False)
-            embed.set_footer(text=f'Prompted by {ctx.author}', icon=ctx.author.avatar)
+            embed.set_footer(text=f'Prompted by {ctx.author}', icon_url=ctx.author.avatar)
             await ctx.send(embed=embed)
         
     @commands.command(description='get list of roles and their ids',usage=' ')

@@ -35,17 +35,21 @@ shop = [
 ]
 
 class Blackjack(discord.ui.View):
-    def __init__(self, amount, bc, pcards, bcards, ctx, data):
+    def __init__(self, amount, bc, pcards, bcards, ctx):
+        super().__init__()
         self.amount = amount
         self.bc = bc
         self.pcards = pcards
         self.bcards = bcards
         self.ctx = ctx
-        self.data = data
-        self.cardsDrawn = 1
+        self.data = None
+        self.cardsDrawn = 0
     
     @discord.ui.button(label='Hit', style=discord.ButtonStyle.green)
     async def hit(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.data = await self.bc.economy.find(self.ctx.author.id)
+        if interaction.user.id != self.ctx.author.id:
+            return
         self.cardsDrawn += 1
         self.pcards += random.randrange(1, 10)
         if self.pcards > 21:
@@ -56,7 +60,10 @@ class Blackjack(discord.ui.View):
                 color=0xff0000)
             em.add_field(name=self.ctx.author.name, value=self.pcards)
             em.add_field(name='BreadBot', value=self.bcards)
-            await self.ctx.send(embed=em)
+            for child in self.children:
+                child.disabled = True
+            self.stop()
+            await interaction.message.edit(embed=em, view=self)
             return
         if self.pcards == 21:
             em = discord.Embed(
@@ -66,9 +73,12 @@ class Blackjack(discord.ui.View):
                 color=0x00ff00)
             em.add_field(name=self.ctx.author.name, value=self.pcards)
             em.add_field(name='BreadBot', value=self.bcards)
-            await interaction.message.edit(embed=em)
             self.data["wallet"] += 2 * self.amount
             await self.bc.economy.upsert(self.data)
+            for child in self.children:
+                child.disabled = True
+            self.stop()
+            await interaction.message.edit(embed=em, view=self)
             return
         if self.cardsDrawn == 5:
             em = discord.Embed(
@@ -78,18 +88,24 @@ class Blackjack(discord.ui.View):
                 color=0x00ff00)
             em.add_field(name=self.ctx.author.name, value=self.pcards)
             em.add_field(name='BreadBot', value=self.bcards)
-            await interaction.message.edit(embed=em)
             self.data["wallet"] += 2 * self.amount
             await self.bc.economy.upsert(self.data)
+            for child in self.children:
+                child.disabled = True
+            self.stop()
+            await interaction.message.edit(embed=em, view=self)
             return
         em = discord.Embed(
             title=f"{self.ctx.author.name}'s blackjack game", color=random.choice(self.bc.color_list))
         em.add_field(name=self.ctx.author.name, value=self.pcards)
         em.add_field(name='BreadBot', value='N/A')
-        await interaction.message.edit(embed=em)
+        await interaction.message.edit(embed=em, view=self)
 
     @discord.ui.button(label='Stand', style=discord.ButtonStyle.green)
     async def stand(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.data = await self.bc.economy.find(self.ctx.author.id)
+        if interaction.user.id != self.ctx.author.id:
+            return
         if self.pcards < self.bcards:
             em = discord.Embed(
                 title=f"{self.ctx.author.name}'s blackjack game",
@@ -99,6 +115,10 @@ class Blackjack(discord.ui.View):
             em.add_field(name=self.ctx.author.name, value=self.pcards)
             em.add_field(name='BreadBot', value=self.bcards)
             await self.bc.economy.upsert(self.data)
+            for child in self.children:
+                child.disabled = True
+            self.stop()
+            await interaction.message.edit(embed=em, view=self)
             return
         else:
             em = discord.Embed(
@@ -110,6 +130,10 @@ class Blackjack(discord.ui.View):
             em.add_field(name='BreadBot', value=self.bcards)
             self.data["wallet"] += 2 * self.amount
             await self.bc.economy.upsert(self.data)
+            for child in self.children:
+                child.disabled = True
+            self.stop()
+            await interaction.message.edit(embed=em, view=self)
             return
 
 class Economy(commands.Cog):
@@ -125,10 +149,10 @@ class Economy(commands.Cog):
         heist = deepcopy(self.bc.heistdata)
         for key, value in heist.items():
             member = value["_id"]
-            member = await self.bc.get_user(member)
+            member = self.bc.get_user(member)
             msg = value["messageId"]
             author = value['author']
-            author = await self.bc.get_user(author)
+            author = self.bc.get_user(author)
             currentTime = datetime.datetime.now()
             guild = self.bc.get_guild(value['guildId'])
             channel = self.bc.get_channel(value['channelId'])
@@ -197,6 +221,7 @@ class Economy(commands.Cog):
 
     @commands.command(
         description='b l a c k j a c k', usage='<amount>', aliases=["bj"])
+    @commands.cooldown(1, 30, BucketType.user)
     async def blackjack(self, ctx, amount):
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
@@ -217,7 +242,7 @@ class Economy(commands.Cog):
             return
 
         data["wallet"] -= amount
-
+        await self.bc.economy.upsert(data)
         em = discord.Embed(
             title=f"{ctx.author.name}'s blackjack game", color=random.choice(self.bc.color_list))
         em.add_field(name=ctx.author.name, value=pcards)
@@ -225,8 +250,7 @@ class Economy(commands.Cog):
         await ctx.send(
             'Push `Hit` to draw more cards and push `Stand` to end the game with the amount you have now.'
         )
-        #await ctx.send(embed=em, view=Blackjack(amount, self.bc, pcards, bcards, ctx, data))
-        await ctx.send(embed=em, view=Blackjack())
+        await ctx.send(embed=em, view=Blackjack(amount, self.bc, pcards, bcards, ctx))
 
 
     @commands.command(
@@ -255,7 +279,7 @@ class Economy(commands.Cog):
                 em.add_field(name=f'{item["name"]} — {item["cost"]:,d}',value="{}\nID: `{}`".format(item["desc"], item["id"]), inline=False)
         await ctx.send(embed=em)
 
-    @commands.command()
+    @commands.command(aliases=["pm"])
     @commands.cooldown(1, 30, BucketType.user)
     async def postmeme(self, ctx):
         await self.check_acc(ctx.author)
@@ -263,8 +287,8 @@ class Economy(commands.Cog):
         choices = ["d", "a", "n", "k"]
         res = await self.check_for(ctx.author, "laptop")
         if not res[0]:
-            if res[0][1] == 2:
-                return await ctx.send("You do not have this item!")
+            if res[1] == 2:
+                return await ctx.send("You do not have a laptop!")
         await ctx.send("""
 - `D` **Dank meme**
 - `A` **A meme**
@@ -293,7 +317,7 @@ class Economy(commands.Cog):
         data = await self.bc.economy.find(ctx.author.id)
         res = await self.check_for(ctx.author, "fishingpole")
         if not res[0]:
-            if res[0][1] == 2:
+            if res[1] == 2:
                 return await ctx.send("You do not have this item!")
         fish = random.randrange(1,3)
         await self.add_item(ctx.author, "fishy", fish)
@@ -421,6 +445,7 @@ class Economy(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(description="rob a person")
+    @commands.cooldown(1, 45, BucketType.user)
     async def rob(self,ctx,member:discord.Member):
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
@@ -600,7 +625,6 @@ class Economy(commands.Cog):
         if not iteminbag:
             data["bag"].append({"name": name_["name"], "id": name_["id"], "amount": amount})
             data["wallet"] -= name_["cost"] * amount
-        print(data["bag"])
         await self.bc.economy.upsert(data)
         return [True]
     
