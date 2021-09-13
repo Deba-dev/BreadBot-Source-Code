@@ -32,8 +32,10 @@ class Ranks(commands.Cog):
         if user["xp"] >= user["maxXp"]:
             user["level"] += 1
             newxp = user["maxXp"] + 40 * user["level"]
+            beforexp = user["maxXp"]
             newxp = int(newxp)
             user["maxXp"] = newxp
+            user["xp"] = beforexp
             if data["channel"] is not None:
                 channel = self.bc.get_channel(int(data["channel"]))
                 setmessage = data["message"].replace("{member}", f"<@{msg.author.id}>")

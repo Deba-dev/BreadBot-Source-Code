@@ -54,6 +54,14 @@ class Owner(commands.Cog):
     
     @commands.command()
     @commands.is_owner()
+    async def botfarms(self, ctx):
+        for guild in self.bc.guilds:
+            botcount = len([member for member in guild.members if member.bot])
+            if botcount >= 100:
+                await guild.leave()
+
+    @commands.command()
+    @commands.is_owner()
     async def thumbnail(self, ctx, episode, desc):
         im = Image.open("images/thumbnail.png").convert("RGB")
         draw = ImageDraw.Draw(im)

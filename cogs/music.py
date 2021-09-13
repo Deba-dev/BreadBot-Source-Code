@@ -556,34 +556,6 @@ class Music(commands.Cog):
                 song = Song(source)
                 await ctx.voice_state.songs.put(song)
                 await ctx.send('Enqueued {}'.format(str(source)))
-
-    @commands.command(name='search')
-    async def _search(self, ctx: commands.Context, *, search: str):
-        """Searches youtube.
-        It returns an imbed of the first 10 results collected from youtube.
-        Then the user can choose one of the titles by typing a number
-        in chat or they can cancel by typing "cancel" in chat.
-        Each title in the list can be clicked as a link.
-        """
-        async with ctx.typing():
-            try:
-                source = await YTDLSource.search_source(ctx, search, loop=self.bot.loop)
-            except YTDLError as e:
-                await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
-            else:
-                if source == 'sel_invalid':
-                    await ctx.send('Invalid selection')
-                elif source == 'cancel':
-                    await ctx.send(':white_check_mark:')
-                elif source == 'timeout':
-                    await ctx.send(':alarm_clock: **Time\'s up bud**')
-                else:
-                    if not ctx.voice_state.voice:
-                        await ctx.invoke(self._join)
-
-                    song = Song(source)
-                    await ctx.voice_state.songs.put(song)
-                    await ctx.send('Enqueued {}'.format(str(source)))
             
 
 def setup(bot):

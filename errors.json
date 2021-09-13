@@ -398,5 +398,56 @@
             "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
             "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: TypeError: 'bool' object is not subscriptable\n"
         ]
+    },
+    "01F37e2": {
+        "Command": "Search",
+        "Error Type": "KeyError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 430, in search\n    await ctx.send(\"**Where do you want to search?**\\nPick one of the options below to search\", view=Search(self.bc, ctx))\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 134, in __init__\n    self.add_item(PlaceButton(self.bc, self.ctx, place[\"name\"], place[\"minimum\"], place[\"maximum\"], place[\"deadly\"], place[\"deathmessage\"]))\n",
+            "KeyError: 'deathmessage'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: KeyError: 'deathmessage'\n"
+        ]
+    },
+    "37017E": {
+        "Command": "Search",
+        "Error Type": "KeyError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 434, in search\n    await ctx.send(\"**Where do you want to search?**\\nPick one of the options below to search\", view=Search(self.bc, ctx))\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 137, in __init__\n    self.add_item(PlaceButton(self.bc, self.ctx, place[\"name\"], place[\"minimum\"], place[\"maximum\"], place[\"deadly\"], place[\"deathmessage\"]))\n",
+            "KeyError: 'deathmessage'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: KeyError: 'deathmessage'\n"
+        ]
+    },
+    "611dEb": {
+        "Command": "Search",
+        "Error Type": "KeyError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 125, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 434, in search\n    await ctx.send(\"**Where do you want to search?**\\nPick one of the options below to search\", view=Search(self.bc, ctx))\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 137, in __init__\n    self.add_item(PlaceButton(self.bc, self.ctx, place[\"name\"], place[\"minimum\"], place[\"maximum\"], place[\"deadly\"], place[\"deathmessage\"]))\n",
+            "KeyError: 'deathmessage'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 960, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 825, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 134, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: KeyError: 'deathmessage'\n"
+        ]
     }
 }

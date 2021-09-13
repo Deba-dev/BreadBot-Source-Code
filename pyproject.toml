@@ -22,6 +22,7 @@ PyDictionary = "^2.0.1"
 googletrans = "^3.0.0"
 asyncpraw = "^7.2.0"
 opencv-python = "^4.5.3"
+goo = "^0.8"
 
 [tool.poetry.dev-dependencies]
 

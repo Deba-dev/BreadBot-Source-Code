@@ -18,7 +18,6 @@ import discord
 import random
 import os
 import json
-import keep_alive
 import time
 from random import choice
 from discord.ext import commands
@@ -121,15 +120,6 @@ class BreadBot(commands.AutoShardedBot):
         self.economy = discordmongo.Mongo(connection_url=self.db, dbname="economy")
         self.rickroll = discordmongo.Mongo(connection_url=self.db, dbname="rickroll")
         self.afk = discordmongo.Mongo(connection_url=self.db, dbname="afk")
-        update = False
-        if googletrans.__version__ != "3.1.0-alpha":
-            os.system("pip install googletrans==3.1.0a")
-            update = True
-        if discord.__version__ != "2.0.0a":
-            os.system("pip install git+https://github.com/Rapptz/discord.py")
-            update = True
-        if update:
-            os.execv(sys.executable, ['python'] + sys.argv)
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py') and not filename.startswith("_"):
                 self.load_extension(f'cogs.{filename[:-3]}')
@@ -196,9 +186,8 @@ class BreadBot(commands.AutoShardedBot):
 
 
     
-    def run(self, a):
+    def run(self):
         token = os.environ.get("token")
-        keep_alive.keep_alive()
         
         super().run(token, reconnect=True)
 

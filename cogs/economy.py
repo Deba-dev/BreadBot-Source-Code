@@ -34,6 +34,154 @@ shop = [
     }
 ]
 
+places = [
+    {
+        "name": "Pantry",
+        "minimum": 600,
+        "maximum": 1200,
+        "deadly": False
+    },
+    {
+        "name": "Bed",
+        "minimum": 800,
+        "maximum": 1100,
+        "deadly": True,
+        "deathmessage": "The monster under your bed ate you"
+    },
+    {
+        "name": "Attic",
+        "minimum": 700,
+        "maximum": 1000,
+        "deadly": False
+    },
+    {
+        "name": "Dog",
+        "minimum": 600,
+        "maximum": 1000,
+        "deadly": False
+    },
+    {
+        "name": "Pocket",
+        "minimum": 600,
+        "maximum": 1000,
+        "deadly": False
+    },
+    {
+        "name": "Shoe",
+        "minimum": 600,
+        "maximum": 1000,
+        "deadly": False
+    },
+    {
+        "name": "Wardrobe",
+        "minimum": 600,
+        "maximum": 1000,
+        "deadly": False
+    },
+    {
+        "name": "Air",
+        "minimum": 1000,
+        "maximum": 1400,
+        "deadly": True,
+        "deathmessage": "You somehow died from the thing that you breath."
+    },
+    {
+        "name": "Mailbox",
+        "minimum": 600,
+        "maximum": 800,
+        "deadly": True,
+        "deathmessage": "Your crazy neighbor caught you in his mailbox so he smashed your head with a bat."
+    },
+    {
+        "name": "Dumpster",
+        "minimum": 800,
+        "maximum": 1200,
+        "deadly": True,
+        "deathmessage": "The mutant racoons in the dumpster ate you alive."
+    },
+    {
+        "name": "Car",
+        "minimum": 600,
+        "maximum": 900,
+        "deadly": True,
+        "deathmessage": "You got caught by the police for breaking into someone's car and resisted so you got shot to death."
+    }
+]
+
+class PlaceButton(discord.ui.Button):
+    def __init__(self, bc, ctx, name, min, max, deadly, deathmessage=None):
+        super().__init__(style=discord.ButtonStyle.primary, label=name)
+        self.bc = bc
+        self.name = name
+        self.min = min
+        self.max = max
+        self.deadly = deadly
+        self.deathmessage = deathmessage
+        self.ctx = ctx
+
+    async def callback(self, interaction: discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return
+        view = self.view
+        data = await self.bc.economy.find(self.ctx.author.id)
+        if self.deadly:
+            chance = random.randrange(1, 100)
+            if chance in range(1,31):
+                data["wallet"] = 0
+                for child in view.children:
+                    if child.label != self.label:
+                        child.style = discord.ButtonStyle.secondary
+                    child.disabled = True
+                await interaction.message.edit(self.deathmessage, view=view)
+                await self.bc.economy.upsert(data)
+            else:
+                earnings = random.randrange(self.min, self.max)
+                data["wallet"] += earnings
+                for child in view.children:
+                    if child.label != self.label:
+                        child.style = discord.ButtonStyle.secondary
+                    child.disabled = True
+                await interaction.message.edit("You searched the **{}** and earned **{}** coins".format(self.name, earnings), view=view)
+                await self.bc.economy.upsert(data)
+        else:
+            earnings = random.randrange(self.min, self.max)
+            data["wallet"] += earnings
+            for child in view.children:
+                if child.label != self.label:
+                    child.style = discord.ButtonStyle.secondary
+                child.disabled = True
+            await interaction.message.edit("You searched the **{}** and earned **{}** coins".format(self.name, earnings), view=view)
+            await self.bc.economy.upsert(data)
+
+
+
+class Search(discord.ui.View):
+    def __init__(self, bc, ctx):
+        super().__init__()
+        self.bc = bc
+        self.ctx = ctx
+        buttons = []
+        for x in range(3):
+            place = random.choice(places)
+            if place in buttons:
+                place = random.choice(places)
+                if place in buttons:
+                    place = random.choice(places)
+                    if place in buttons:
+                        place = random.choice(places)
+                        if place in buttons:
+                            place = random.choice(places)
+                            if place in buttons:
+                                place = random.choice(places)
+                
+            
+            if not "deathmessage" in place:
+                self.add_item(PlaceButton(self.bc, self.ctx, place["name"], place["minimum"], place["maximum"], place["deadly"]))
+                buttons.append(place)
+            else:
+                self.add_item(PlaceButton(self.bc, self.ctx, place["name"], place["minimum"], place["maximum"], place["deadly"], place["deathmessage"]))
+                buttons.append(place)
+                
 class Blackjack(discord.ui.View):
     def __init__(self, amount, bc, pcards, bcards, ctx):
         super().__init__()
@@ -322,6 +470,13 @@ class Economy(commands.Cog):
         fish = random.randrange(1,3)
         await self.add_item(ctx.author, "fishy", fish)
         await ctx.send("You have caught {} fish".format(fish))
+
+    @commands.command(aliases=["scout"])
+    @commands.cooldown(1, 30, BucketType.user)
+    async def search(self,ctx):
+        await self.check_acc(ctx.author)
+        data = await self.bc.economy.find(ctx.author.id)
+        await ctx.send("**Where do you want to search?**\nPick one of the options below to search", view=Search(self.bc, ctx))
 
     @commands.command()
     @commands.cooldown(1, 30, BucketType.user)

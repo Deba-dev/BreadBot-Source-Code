@@ -92,7 +92,7 @@ class Config(commands.Cog):
                             await webhook.send(
                                 content=new_message,
                                 username=after.author.nick or after.author.name,
-                                avatar=after.author.avatar,
+                                avatar_url=after.author.avatar,
                                 allowed_mentions=discord.AllowedMentions.none()
                             )
             else:
@@ -137,7 +137,7 @@ class Config(commands.Cog):
                             await webhook.send(
                                 content=new_message,
                                 username=message.author.nick or message.author.name,
-                                avatar=message.author.avatar,
+                                avatar_url=message.author.avatar,
                                 allowed_mentions=discord.AllowedMentions.none()
                             )
             else:
