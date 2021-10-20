@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands import cooldown, BucketType
 import json
 import datetime
@@ -8,6 +8,7 @@ import sys
 import random
 import traceback
 import io
+import re
 import contextlib
 import textwrap
 from traceback import format_exception
@@ -16,8 +17,8 @@ from random import choice
 from captcha.image import ImageCaptcha
 import asyncio
 from googletrans import Translator
-from PyDictionary import PyDictionary
-dictionary=PyDictionary()
+from copy import deepcopy
+from dateutil.relativedelta import relativedelta
 image = ImageCaptcha()
 translator = Translator()
 
@@ -36,10 +37,86 @@ def clean_code(content):
     else:
         return content
 
-class Utility(commands.Cog):
+time_regex = re.compile("(?:(\d{1,5})(h|s|m|d||))+?")
+time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400,"":1}
 
+class TimeConverter(commands.Converter):
+    async def convert(self, ctx, argument):
+        args = argument.lower()
+        matches = re.findall(time_regex, args)
+        time = 0
+        for key, value in matches:
+            try:
+                time += time_dict[value] * float(key)
+            except KeyError:
+                raise commands.BadArgument(
+                    f"{value} is an invalid time key! h|m|s|d are valid arguments"
+                )
+            except ValueError:
+                raise commands.BadArgument(f"{key} is not a number!")
+        return round(time)
+
+class Utility(commands.Cog):
     def __init__(self, bc):
-      self.bc = bc
+        self.bc = bc
+        self.RemindTask = self.checkReminders.start()
+
+    def cog_unload(self):
+        self.RemindTask.cancel()
+
+    @tasks.loop(seconds=1)
+    async def checkReminders(self):
+        heist = deepcopy(self.bc.remindData)
+        for key, value in heist.items():
+            try:
+                member = value["_id"]
+                member = self.bc.get_user(member)
+                message = value["reminder"]
+                remindTime = value['startedat'] + relativedelta(seconds=value['duration'])
+                currentTime = datetime.datetime.now()
+                if currentTime >= remindTime:
+                    try:
+                        await member.send("I am reminding you: **{}**".format(message))
+                    except:
+                        await self.bc.reminders.delete(member.id)
+                        try:
+                            self.bc.remindData.pop(member.id)
+                        except KeyError:
+                            pass
+                    else:
+                        await self.bc.reminders.delete(member.id)
+                        try:
+                            self.bc.remindData.pop(member.id)
+                        except KeyError:
+                            pass
+            except:
+                continue
+
+    @commands.command()
+    async def remind(self,ctx,time: TimeConverter, *, reminder):
+        m, s = divmod(time, 60)
+        h, m = divmod(m, 60)
+        d, h = divmod(h, 24)
+        if int(d) == 0 and int(h) == 0 and int(m) == 0:
+            duration = f"{int(s)} seconds"
+        elif int(d) == 0 and int(h) == 0 and int(m) != 0:
+            duration = f"{int(m)} minutes {int(s)} seconds"
+        elif int(d) == 0 and int(h) != 0 and int(m) != 0:
+            duration = f"{int(h)} hours, {int(m)} minutes and {int(s)} seconds"
+        elif int(d) != 0 and int(h) != 0 and int(m) != 0:
+            duration = f"{int(d)} days, {int(h)} hours, {int(m)} minutes and {int(s)} seconds"
+        else:
+            duration = f"{int(d)} days, {int(h)} hours, {int(m)} minutes and {int(s)} seconds"
+        data = {
+            "_id": ctx.author.id,
+            'duration': time,
+            'startedat': datetime.datetime.now(),
+            'reminder': reminder
+        }
+        await self.bc.reminders.upsert(data)
+        remindTime = data['startedat'] + relativedelta(seconds=data['duration'])
+        await ctx.send("Ok! I shall remind you <t:{}:R>".format(int(remindTime.timestamp())))
+        self.bc.remindData[ctx.author.id] = data
 
     @commands.command(description="Translate words")
     async def translate(self, ctx, *, word):
@@ -49,23 +126,6 @@ class Utility(commands.Cog):
             description="**Result:** {}\n**Source Language:** {}".format(result.text, result.src)
         )
         await ctx.send(embed=em)
-
-    @commands.command(description="Get info on a word")
-    async def dictionary(self,ctx,word):
-        meanings = dictionary.meaning(word)
-        msg = ""
-        for type, meanings in meanings.items():
-            msg += f"**{type}**\n\n"
-            for meaning in meanings:
-                msg += f"{meanings.index(meaning) + 1}. {meaning}\n"
-            msg += "\n"
-        embed = discord.Embed(
-            title=f"Word Definition For: {word.capitalize()}",
-            description = msg
-        )
-        embed.add_field(name="Synonyms", value=", ".join([synonym for synonym in dictionary.synonym(word)]))
-        embed.add_field(name="Antonyms", value=", ".join([synonym for synonym in dictionary.antonym(word)]))
-        await ctx.send(embed=embed)
 
     @commands.command(description="Redo a command instead of typing it out again by replying to the message you want to redo")
     async def re(self,ctx):
@@ -255,6 +315,8 @@ class Utility(commands.Cog):
     
     @commands.Cog.listener()
     async def on_message(self,msg):
+        if not msg.guild:
+            return
         data = await self.bc.afk.find(msg.guild.id)
         if not data:
             return
@@ -293,16 +355,12 @@ class Utility(commands.Cog):
         await ctx.author.send(embed=em)
         await ctx.send("I have dmed you your generated password")
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print(f"\n{self.__class__.__name__} Cog has been loaded\n-----")
-
     @commands.command(
         description="get the last deleted message in your server",
         usage=""
     )
     async def snipe(self,ctx):
-        with open('snipe.json', 'r') as f:
+        with open('utility/storage/json/snipe.json', 'r') as f:
             snipe = json.load(f)
         message = snipe[str(ctx.guild.id)]["content"]
         author = snipe[str(ctx.guild.id)]["author"]

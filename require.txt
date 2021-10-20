@@ -1,0 +1,11 @@
+goo
+https://github.com/Pycord-Development/pycord
+flask
+six
+googletrans==3.1.0a
+asyncpraw
+discordmongopy
+aiohttp
+pillow
+glitchart
+motor

@@ -1,19 +1,8 @@
 from flask import Flask, request, abort, jsonify
-import googletrans
-import discord
 import os
+import googletrans
 import sys
-
-update = False
-if googletrans.__version__ != "3.1.0-alpha":
-    os.system("pip install googletrans==3.1.0a")
-    update = True
-if discord.__version__ != "2.0.0a":
-    os.system("pip install git+https://github.com/Rapptz/discord.py")
-    update = True
-if update:
-    os.execv(sys.executable, ['python'] + sys.argv)
-
+import discord
 from discord import SyncWebhook, Embed, Color
 from threading import Thread
 import random
@@ -33,7 +22,7 @@ webhook_token = re.search(r"(?!.*\/)+(.*)", discord_webhook).group()
 
 @app.route('/')
 def home():
-    return 'Bot is now connected to discord'
+    return 'BreadBot is now connected to discord'
 
 @app.route('/dblwebhook', methods=['POST'])
 def webhook():
@@ -57,16 +46,15 @@ def run():
     app.run(host='0.0.0.0', port=random.randint(2000,9000))
 
 def stay_alive():
-	while True:
-		start = time.time()
-		
-		while True:
-			end = time.time()
-
-			# This 15 is for the amount of minutes you change it and take it upto 30 minutes at most
-			if ((end - start) >= (20 * 60)):
-				urllib.requests.urlopen("https://Bot.breadbotsucks.repl.co")
-				break
+    while True:
+        start = time.time()
+        
+        while True:
+            end = time.time()
+            
+            if ((end - start) >= (15 * 60)):
+                urllib.request.urlopen("https://Bot.breadbotsucks.repl.co")
+                break
 
 site_thread = Thread(target=run)
 ping_thread = Thread(target=stay_alive)

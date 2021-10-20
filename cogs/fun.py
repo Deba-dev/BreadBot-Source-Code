@@ -51,7 +51,7 @@ class Fun(commands.Cog):
         usage='[time]'
     )
     async def selfmute(self, ctx,*, time: TimeConverter=None):
-        with open('muteroles.json', 'r') as f:
+        with open('utility/storage/json/muteroles.json', 'r') as f:
             channel = json.load(f)
         member = ctx.author
         try:
@@ -116,10 +116,6 @@ class Fun(commands.Cog):
     @refresh_memes.before_loop
     async def before_refresh_memes(self):
         await self.bc.wait_until_ready()
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print(f"\n{self.__class__.__name__} Cog has been loaded\n-----")
 
     @commands.command(hidden=True)
     async def mock(self,ctx,*,words):

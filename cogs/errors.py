@@ -42,7 +42,6 @@ class Errors(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        ctx.command.reset_cooldown(ctx)
         #Ignore these errors
         ignored = (commands.CommandNotFound)
         if isinstance(error, ignored):
@@ -60,7 +59,7 @@ class Errors(commands.Cog):
             await asyncio.sleep(3)
             await msg.delete()
         elif isinstance(error, commands.MissingPermissions):
-            msg = await ctx.message.reply('You need **{}** perms to complete this action.'.format(error.missing_perms[0]))
+            msg = await ctx.message.reply('You need **{}** perms to complete this action.'.format(error.missing_permissions[0]))
             await asyncio.sleep(3)
             await msg.delete()
         elif isinstance(error, commands.errors.NoPrivateMessage):
@@ -110,10 +109,6 @@ class Errors(commands.Cog):
             msg = await ctx.message.reply('I am missing permissions.')
             await asyncio.sleep(3)
             await msg.delete()
-        elif isinstance(error, commands.ExtensionAlreadyLoaded):
-            msg = await ctx.message.reply('The cog {} is already loaded.'.format(error.args[0]))
-            await asyncio.sleep(3)
-            await msg.delete()
         elif isinstance(error, commands.MissingRequiredArgument):
             data = await self.bc.prefixes.find(ctx.guild.id)
             if data is None:
@@ -134,10 +129,6 @@ class Errors(commands.Cog):
                 description="```{}{}{} {}```\n\n**{}**".format(prefix,full_invoke,cmd_invoke,params,error.args[0])
             )
             await ctx.send(embed=em)
-        elif isinstance(error, discord.errors.Forbidden):
-            msg = await ctx.message.reply('I do not have permissions for this command!')
-            await asyncio.sleep(3)
-            await msg.delete()
         else:
             code = gen_code()
             error = traceback.format_exception(etype=type(error), value=error, tb=error.__traceback__)
@@ -147,17 +138,14 @@ class Errors(commands.Cog):
                     if j in error[i]:
                         error_type = j
                         break
-            with open("errors.json", "r") as f:
+            with open("utility/storage/json/errors.json", "r") as f:
                 data = json.load(f)
             data[str(code)] = {}
             data[str(code)]['Command'] = ctx.command.qualified_name.title()
             data[str(code)]['Error Type'] = error_type
             data[str(code)]['Error'] = error
-            with open("errors.json", "w") as f:
+            with open("utility/storage/json/errors.json", "w") as f:
                 json.dump(data,f,indent=4)
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print(f"\n{self.__class__.__name__} Cog has been loaded\n-----")
         
     
 def setup(bc):

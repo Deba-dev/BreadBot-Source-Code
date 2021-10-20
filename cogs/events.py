@@ -34,23 +34,19 @@ class Events(commands.Cog):
         self.bc = bc
 
     @commands.Cog.listener()
-    async def on_ready(self):
-        print(f"\n{self.__class__.__name__} Cog has been loaded\n-----")
-
-    @commands.Cog.listener()
     async def on_message_delete(self, message):
         if message.author.bot == True:
             pass
         else:
             guild = message.guild
-            with open('snipe.json', 'r') as f:
+            with open('utility/storage/json/snipe.json', 'r') as f:
                 snipe = json.load(f)
             snipe[str(message.guild.id)] = {}
             snipe[str(message.guild.id)]["content"] = f'{message.content}'
             snipe[str(message.guild.id)]["author"] = f'{message.author}'
             snipe[str(message.guild.id)]["avatar"] = f'{message.author.avatar}'
             snipe[str(guild.id)]["timedelete"] = f"{datetime.datetime.utcnow()}"
-            with open('snipe.json', 'w') as f:
+            with open('utility/storage/json/snipe.json', 'w') as f:
                 json.dump(snipe, f, indent=4)
 
     @commands.Cog.listener()
@@ -62,7 +58,7 @@ class Events(commands.Cog):
             else:
                 pass
         data = await self.bc.leaves.find(member.guild.id)
-        if not data["channel"]:
+        if not data:
             pass
         else:
             try:
@@ -98,51 +94,6 @@ class Events(commands.Cog):
                     continue
         else:
             pass
-
-    @commands.command()
-    async def dat(self, ctx):
-        year = int(datetime.datetime.now().strftime("%Y")) - int(
-            ctx.author.created_at.strftime("%Y"))
-
-        month = int(datetime.datetime.now().strftime("%m")) - int(
-            ctx.author.created_at.strftime("%m"))
-        if month < 0:
-            month = month + 12
-        day = int(datetime.datetime.now().strftime("%d")) - int(
-            ctx.author.created_at.strftime("%d"))
-        if day < 0:
-            day = day + 30
-        hour = int(datetime.datetime.utcnow().strftime("%H")) - int(
-            ctx.author.created_at.strftime("%H"))
-        if hour < 0:
-            hour = hour + 24
-        minute = int(datetime.datetime.now().strftime("%M")) - int(
-            ctx.author.created_at.strftime("%M"))
-        if minute < 0:
-            minute = minute + 60
-        await ctx.send(
-            "{} years, {} months, {} days {} hours {} minutes ago".format(
-                year, month, day, hour, minute))
-
-    async def open_wel(self, guild):
-        welcome = self.get_channels()
-
-        if str(guild.id) in welcome:
-            return False
-        else:
-            welcome[str(guild.id)] = {}
-            welcome[str(guild.id)]["channel"] = "Not Set"
-
-        with open("welcomes.json", "w") as f:
-            json.dump(welcome, f, indent=4)
-        return True
-
-    async def get_channels(self):
-        with open("welcomes.json", "r") as f:
-            welcome = json.load(f)
-
-        return welcome
-
 
 def read_json(filename):
     with open(f"{filename}.json", "r") as file:

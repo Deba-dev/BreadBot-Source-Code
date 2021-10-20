@@ -1,3 +1,20 @@
 {
-  "files": {}
+  "files": {
+    "cogs/moderation.py": [
+      {
+        "id": "d5618f57-9be9-41bd-8e32-be7b5974e957",
+        "line": 365,
+        "version": 1856,
+        "index": 15477
+      }
+    ],
+    "utility/words.py": [
+      {
+        "id": "aaac3aa0-c900-4401-a8c7-c6a8cb65a93e",
+        "line": 1,
+        "version": 410,
+        "index": 0
+      }
+    ]
+  }
 }

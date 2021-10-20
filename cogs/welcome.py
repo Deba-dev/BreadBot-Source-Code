@@ -1,5 +1,4 @@
 import discord
-import DiscordUtils
 from discord.ext import commands
 from PIL import Image, ImageDraw, ImageOps, ImageFont
 import io
@@ -9,66 +8,15 @@ import random
 from captcha.image import ImageCaptcha
 import asyncio
 image = ImageCaptcha()
-# Requires: pip install DiscordUtils
 
 
 class Invites(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
-        bc.tracker = DiscordUtils.InviteTracker(bc)
-    
-    @commands.Cog.listener()
-    async def on_ready(self):
-        await self.bc.tracker.cache_invites()
-    
-    @commands.Cog.listener()
-    async def on_invite_create(self, invite):
-        await self.bc.tracker.update_invite_cache(invite)
-
-    @commands.Cog.listener()
-    async def on_guild_join(self, guild):
-        botcount = len([member for member in guild.members if member.bot])
-        if botcount >= 100:
-            await guild.leave()
-            return
-        await self.bc.tracker.update_guild_cache(guild)
-
-    @commands.Cog.listener()
-    async def on_invite_delete(self, invite):
-        await self.bc.tracker.remove_invite_cache(invite)
-
-    @commands.Cog.listener()
-    async def on_guild_remove(self, guild):
-        await self.bc.tracker.remove_guild_cache(guild)
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
         print(f'{member} has joined a server')
-        try:
-            inviter = await self.bc.tracker.fetch_inviter(member)
-            if inviter is None:
-                class NotFoundInvite:
-                    def something(self):
-                        return None
-                inviter = NotFoundInvite
-                inviter.mention = "I could not find who invited!"
-            data = await self.bc.invites.find(inviter.id)
-            if data is None:
-                data = {"_id": inviter.id, "count": 0, "usersInvited": []}
-        except Exception as e:
-            #print(e)
-            class NotFoundInvite:
-                def something(self):
-                    return None
-            inviter = NotFoundInvite
-            inviter.mention = "I could not find who invited!"
-        if inviter.mention != "I could not find who invited!":
-            data["count"] += 1
-            data["usersInvited"].append(member.id)
-            await self.bc.invites.upsert(data)
-        else:
-            data = {}
-            data["count"] = None
         year = int(datetime.datetime.now().strftime("%Y")) - int(
             member.created_at.strftime("%Y"))
 
@@ -117,8 +65,8 @@ class Invites(commands.Cog):
                 if data2["ping"]:
                     pingrole = discord.utils.get(member.guild.roles, id=data2["ping"])
                 avatar = member.avatar
-                await avatar.save('images/Avatar.png')
-                im = Image.open('images/Avatar.png').convert("RGB")
+                await avatar.save('utility/storage/images/Avatar.png')
+                im = Image.open('utility/storage/images/Avatar.png').convert("RGB")
                 im = im.resize((680, 680))
                 bigsize = (im.size[0] * 3, im.size[1] * 3)
                 mask = Image.new('L', bigsize, 0)
@@ -128,9 +76,9 @@ class Invites(commands.Cog):
                 im.putalpha(mask)
                 output = ImageOps.fit(im, mask.size, centering=(10, 10))
                 output.putalpha(mask)
-                output.save('images/output.png')
+                output.save('utility/storage/images/output.png')
 
-                background = Image.open('images/welcome.png').convert("RGB")
+                background = Image.open('utility/storage/images/welcome.png').convert("RGB")
                 background.paste(im, (149, 0), im)
                 draw2 = ImageDraw.Draw(background)
                 txt = f"Welcome {member.name}"
@@ -146,7 +94,7 @@ class Invites(commands.Cog):
 
                     # optionally de-increment to be sure it is less than criteria
                     fontsize -= 1
-                    return ImageFont.truetype("abel-regular.ttf", fontsize)
+                    return ImageFont.truetype("utility/fonts/abel-regular.ttf", fontsize)
 
                 draw2.text((50, 780), txt, fill=(0,0,0,255), font=fittext(f"Welcome {member.name}", 0.60))
 
@@ -158,10 +106,8 @@ class Invites(commands.Cog):
                 draw.text((1325, 120), txt, fill=(255,255,255,255), font=fittext(f"ID: {member.id}",0.30))
                 txt = f"Place in server: {place}"
                 draw.text((1325, 200), txt, fill=(255,255,255,255), font=fittext(f"Place in server: {place}",0.30))
-                txt = f"Invited By: {inviter}"
-                draw.text((1325, 320), txt, fill=(255,255,255,255), font=fittext(txt,0.30))
                 background.paste(sidebar,(0,0),sidebar)
-                background.save('images/overlap.png')
+                background.save('utility/storage/images/overlap.png')
                 if data2["ping"]:
                     await channel.send(pingrole.mention)
                 if int(year) != 0 and int(month) == 0:
@@ -170,8 +116,8 @@ class Invites(commands.Cog):
                         description=message
                     )
                     em.add_field(name="Suspicious? No",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
-                    em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
-                    file = discord.File('images/overlap.png')
+                    
+                    file = discord.File('utility/storage/images/overlap.png')
                     await channel.send(file=file,embed=em)
                     sus = False
                 elif int(year) != 0 and int(month) != 0:
@@ -180,8 +126,8 @@ class Invites(commands.Cog):
                         description=message
                     )
                     em.add_field(name="Suspicious? No",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
-                    em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
-                    file = discord.File('images/overlap.png')
+                    
+                    file = discord.File('utility/storage/images/overlap.png')
                     await channel.send(file=file,embed=em)
                     sus = False
                 elif int(year) == 0 and int(month) > 3:
@@ -190,8 +136,8 @@ class Invites(commands.Cog):
                         description=message
                     )
                     em.add_field(name="Suspicious? No",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
-                    em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
-                    file = discord.File('images/overlap.png')
+                    
+                    file = discord.File('utility/storage/images/overlap.png')
                     await channel.send(file=file,embed=em)
                     sus = False
                 elif int(year) == 0 and int(month) not in range(0, 2):
@@ -200,8 +146,8 @@ class Invites(commands.Cog):
                         description=message
                     )
                     em.add_field(name="Suspicious? A bit sus if you ask me",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
-                    em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
-                    file = discord.File('images/overlap.png')
+                    
+                    file = discord.File('utility/storage/images/overlap.png')
                     await channel.send(file=file,embed=em)
                     sus = False
                 elif int(year) == 0 and int(month) < 1:
@@ -210,8 +156,8 @@ class Invites(commands.Cog):
                         description=message
                     )
                     em.add_field(name="Suspicious? VERY SUS CALL EMERGENCY MEETING",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
-                    em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
-                    file = discord.File('images/overlap.png')
+                    
+                    file = discord.File('utility/storage/images/overlap.png')
                     await channel.send(file=file,embed=em)
                     sus = True
                 else:
@@ -220,8 +166,8 @@ class Invites(commands.Cog):
                         description=message
                     )
                     em.add_field(name="Suspicious? VERY SUS CALL EMERGENCY MEETING",value="Account made {} years, {} months, {} days {} hours {} minutes ago".format(int(year), int(month), int(day), int(hour),int(minute)))
-                    em.add_field(name="Who Invited?",value=f"Invited by: {inviter.mention}\nTotal Invites in some servers: {data['count']}")
-                    file = discord.File('images/overlap.png')
+                    
+                    file = discord.File('utility/storage/images/overlap.png')
                     await channel.send(file=file,embed=em)
                     sus = True
                 if sus == True and data2["auth"]:
@@ -239,8 +185,8 @@ class Invites(commands.Cog):
                         for z in final:
                             real += str(z)
                         data = image.generate(real)
-                        image.write(real,"captcha.png")
-                        await member.send(file=discord.File('captcha.png'), content="Complete the captcha below. The reason you have to complete the captcha is to avoid bots from raiding.")
+                        image.write(real,"utility/storage/images/captcha.png")
+                        await member.send(file=discord.File('utility/storage/images/captcha.png'), content="Complete the captcha below. This server uses Breadbot's captchas to make sure you are not a bot.")
                         def check(z):
                             return z.author == member and z.channel == member.dm_channel
                         try:

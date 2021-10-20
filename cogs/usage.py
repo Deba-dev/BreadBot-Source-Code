@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import cooldown, BucketType
-from tools.util import Pag
+from utility import Pag
 
 class Usage(commands.Cog):
     def __init__(self,bc):

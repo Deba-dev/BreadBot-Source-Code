@@ -12,10 +12,10 @@
         "timedelete": "2021-06-30 14:00:21.038716"
     },
     "760950684849537124": {
-        "content": "```py\n\n    @commands.command()\n    @commands.has_permissions(administrator =True)\n    async def changeprefix(self, ctx, prefix = None):\n        if prefix is None:\n            return await ctx.send('Please enter a prefix')\n\n        data  = await self.client.prefixes.find(ctx.guild.id)\n        if data is None or 'prefix' not in data:\n            data ={\"_id\": ctx.guild.id, \"prefix\" : prefix}\n        data['prefix'] =prefix\n        await self.client.prefixes.upsert(data)\n        await ctx.send('Server prefix changed')\n\n```",
-        "author": "BongoPlayzYT#1646",
-        "avatar": "https://cdn.discordapp.com/avatars/485513915548041239/7ba37da19c0b66f1bdf9f87687c2780e.webp?size=1024",
-        "timedelete": "2021-07-13 13:07:00.679451"
+        "content": "Just dm me your advert and i will gladly post it",
+        "author": "BungoChungo#1646",
+        "avatar": "https://cdn.discordapp.com/avatars/485513915548041239/26861c8b9fef9f17c8c9a6647d4114ec.png?size=1024",
+        "timedelete": "2021-10-09 11:57:16.533085"
     },
     "758210618800341002": {
         "content": "2",
@@ -24,10 +24,10 @@
         "timedelete": "2021-07-13 04:05:24.453397"
     },
     "825072426937090079": {
-        "content": "",
-        "author": "dank BongoPlayzYT#1646",
-        "avatar": "https://cdn.discordapp.com/avatars/485513915548041239/e584319fb34a76a159902d0fa80b7ef7.webp?size=1024",
-        "timedelete": "2021-04-14 16:04:36.427682"
+        "content": "a!clear 10",
+        "author": "Wir#5539",
+        "avatar": "https://cdn.discordapp.com/avatars/731542193403199529/4f50b3b2a871cfc217b4ef363aae7f31.png?size=1024",
+        "timedelete": "2021-10-09 10:43:44.405439"
     },
     "820362458396753971": {
         "content": "W",
@@ -174,16 +174,16 @@
         "timedelete": "2021-06-30 08:55:57.076663"
     },
     "807915411848953867": {
-        "content": "v",
-        "author": "Night Witches#3163",
-        "avatar": "https://cdn.discordapp.com/avatars/616400964160847882/3200db9e4039a6e3dbaad7e75b2fe7fc.webp?size=1024",
-        "timedelete": "2021-06-30 06:16:22.539374"
+        "content": "ITS A. NATIVE LOOKING  PIKACHU SMOKING SOMETHING",
+        "author": "RiaStfu#6649",
+        "avatar": "https://cdn.discordapp.com/avatars/519011981319995423/8374e93a1918cb59478ca9ba4ace70f9.png?size=1024",
+        "timedelete": "2021-10-16 21:46:28.458781"
     },
     "837359403275517962": {
-        "content": "-play we are number one oppesite version",
-        "author": "Stif#4892",
-        "avatar": "https://cdn.discordapp.com/avatars/727425233547558923/66b511e6e36a6c0937da03e39f78b20b.webp?size=1024",
-        "timedelete": "2021-06-08 13:03:52.112470"
+        "content": "Seggs*",
+        "author": "Lt.Pirate#4892",
+        "avatar": "https://cdn.discordapp.com/avatars/727425233547558923/66b511e6e36a6c0937da03e39f78b20b.png?size=1024",
+        "timedelete": "2021-10-17 15:07:33.360293"
     },
     "838596652256067614": {
         "content": "\u256d \u02da\u208a \ua4b0 \u0b68\u0b67 \ua4b1\u30fb\u2500\u2500\u2500 \u30fb \ua4b0\u2727\ud83e\uddc2\ud83e\uddc2\u2727\ua4b1 \u30fb\u2500\u2500\u2500\u30fb\u02da\u208a\ua4b7\ua4a5 \n.  \ufe35\ufe35  ( \u00b9 ) __ \ud835\udde1\ud835\uddd8\ud835\uddea \ud835\udde0\ud835\uddd4\ud835\udddc\ud835\udddf \ud835\udddb\ud835\uddd4\ud835\udde6 \ud835\uddd4\ud835\udde5\ud835\udde5\ud835\udddc\ud835\udde9\ud835\uddd8\ud835\uddd7__\n \u0b68\u0d12 \u208a\u02da\ua4b7\ua4a6`\u2602\ufe0f\ud83d\udc9c\ud83c\udf02`\ufe30\u0aee\ua4b0\u02d9- \u02d5 -\u02d9\ua4b1\u10d0 \u208a\u02da\u0aee\ua4b0\u30fb\u1d55\u30fb\ua4b1\u10d0 \ufe36\ua4b7\ua4a6                                            \n\u250a\u274f \u0295\u30ce\u2022\u1d25\u2022\u0294\u30ce \ufe35 \u253b\u2501\u253b **The membercount channel will not always be correct, we change it everyday at 7pm gmt+8 !!** \u208a\u02da\uabba\n\u2570 \ud83d\udc11\ud83d\udc11\u0b13\u0b13  <@&838603585117224971>     \u25de\u2661",
@@ -210,10 +210,10 @@
         "timedelete": "2021-05-27 17:55:34.103003"
     },
     "833616657951621160": {
-        "content": "F",
-        "author": "FlushyFish#7743",
-        "avatar": "https://cdn.discordapp.com/avatars/802205050335789107/722355a7480bc710e26763d390a7034c.webp?size=1024",
-        "timedelete": "2021-07-16 18:17:46.707523"
+        "content": "",
+        "author": "voj.#9017",
+        "avatar": "https://cdn.discordapp.com/avatars/592948676754669580/7c0139f6a609fdc60d2c8567dad1baf9.png?size=1024",
+        "timedelete": "2021-10-14 18:17:00.436690"
     },
     "680221497197068308": {
         "content": "a",
@@ -222,10 +222,10 @@
         "timedelete": "2021-07-27 20:18:55.205097"
     },
     "681882711945641997": {
-        "content": "\ud83d\udc4bHey, free discord gifted nitro for 1 month: https://discordgift.ru.com/gift/EfUbyTav78bh",
-        "author": "Ayushman#4749",
-        "avatar": "https://cdn.discordapp.com/avatars/664784623372337152/f44cbe8056e3c87bb7b09c619f2ccd1b.png?size=1024",
-        "timedelete": "2021-08-21 22:31:46.037796"
+        "content": "@everyone, fuck this trash called CS:GO, deleted, add the remaining skins and take away while there is something left https://stearncornminuty.com/id/Av0cadoMan",
+        "author": "Muadzx#4717",
+        "avatar": "https://cdn.discordapp.com/avatars/726269119674056716/9bedb278cf122ff3e5440cc11c7091c7.png?size=1024",
+        "timedelete": "2021-10-17 11:27:41.537024"
     },
     "837538891590008832": {
         "content": "<:babyfacejaun:842905633987756053>",
@@ -312,22 +312,22 @@
         "timedelete": "2021-06-30 12:34:10.947133"
     },
     "835245435639169054": {
-        "content": "How often do you have yellow pee",
-        "author": "\u2763 \ud835\udc51\ud835\udc4e\ud835\udc51\ud835\udc51\ud835\udc66  \ud835\udc5d\u210e\ud835\udc5c\ud835\udc52\ud835\udc5b\ud835\udc56\ud835\udc65 \u2763#9548",
-        "avatar": "https://cdn.discordapp.com/avatars/720882897854398475/7a1fbc8bbc78cb02d7f24437ab4bae4a.png?size=1024",
-        "timedelete": "2021-08-09 00:07:47.966238"
+        "content": "Queen \ud83d\udc9e",
+        "author": "\u2661\ud835\udc07\u2661#9548",
+        "avatar": "https://cdn.discordapp.com/avatars/720882897854398475/ceb478df09103e874a1e35eeea15e5c4.png?size=1024",
+        "timedelete": "2021-09-15 01:41:44.122807"
     },
     "847546026939252737": {
-        "content": "Zavory: *Zavory wanders to his room in the hotel and goes over to his desk to write in his journal with VERY messy handwriting.\n\nSo, I was walking through the forest, minding my own business and just walking around. I was relaxing and going on a walk because, I dunno, I was bored, and I found two people that came out of nowhere. One was really fucking tall, and Jesus shit she was tall. This bitch could play basketball with a blimp if she wished it. Anyways, she bitchslapped me for calling her an angsty talking tree. The other dude there ran up to me and checked on me. He was pretty nice. We fought the tree with rocks together because she slapped me again. How rude! I mean I did ask her to but it was only a joke.. :c Anyways, we went to his house and we became friends. We built a book fort and his dad came over to drop off a cat. Then he left. Weird, shouldn\u2019t fathers live with their children???? Oh well. There was nothing else to it besides the fact I hunted down a rat with a knife and offered it to the cat. I think the cat likes me too :D Hmm.. I guess that\u2019s all.. The guy\u2019s name is Alex.\n\nZavory yawned, closed his journal and went to his bed and threw himself on it, deciding to take a nap.*",
-        "author": "!\u0441\u044b\u0440!#0617",
-        "avatar": "https://cdn.discordapp.com/avatars/721148457665953822/899888c766db5df2dc13ab0abb2ac8e0.png?size=1024",
-        "timedelete": "2021-08-07 23:09:36.679173"
+        "content": "Ethan/*Ethan then tossed himself onto his comfortable bed and drifted off to sleep*",
+        "author": "ColaClodReverse#9922",
+        "avatar": "https://cdn.discordapp.com/avatars/723355255483662376/e326413e88406dea0d7d8a7568410ef9.png?size=1024",
+        "timedelete": "2021-10-07 05:08:46.062585"
     },
     "851445458512511076": {
-        "content": "<@!871357414400737340> h",
+        "content": "",
         "author": "Scxred#8967",
-        "avatar": "https://cdn.discordapp.com/avatars/851344098597797948/3d1619ffd55c0e9f79e67d28a8bc2f0a.webp?size=1024",
-        "timedelete": "2021-08-03 19:36:46.833503"
+        "avatar": "https://cdn.discordapp.com/avatars/851344098597797948/a_156c5d82fc20dd616e0dacf0dc16e981.gif?size=1024",
+        "timedelete": "2021-10-20 07:59:10.306565"
     },
     "790715236151328808": {
         "content": "",
@@ -358,5 +358,89 @@
         "author": "Bug Lord#0378",
         "avatar": "https://cdn.discordapp.com/avatars/721650418379128832/3e765d2970ad1a162b5415b5db08942c.png?size=1024",
         "timedelete": "2021-08-27 22:20:54.151142"
+    },
+    "852441054988992512": {
+        "content": "",
+        "author": "\u0425\u0430\u043e\u0442\u0438\u0447\u043d\u044b\u0439\u0430\u0437\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d_\u041f\u043b\u0437\u043a\u0438#0527",
+        "avatar": "https://cdn.discordapp.com/avatars/816220415235981353/747feec0ceda269f48d7d2bb13dc68ef.png?size=1024",
+        "timedelete": "2021-10-20 04:45:29.090626"
+    },
+    "761589380225433650": {
+        "content": "Inktober Day 6: Spirit (What happened here?)",
+        "author": "A_Random_Mint#7329",
+        "avatar": "https://cdn.discordapp.com/avatars/549345541964693528/a676dfcba362b4b83158db4a216b5fb6.png?size=1024",
+        "timedelete": "2021-10-07 01:56:56.564140"
+    },
+    "864051158296166410": {
+        "content": "!rank",
+        "author": "DeepMeep#9186",
+        "avatar": "https://cdn.discordapp.com/avatars/765403459389227030/5f5c47db7f5b52bbd1fe64112963c34b.png?size=1024",
+        "timedelete": "2021-10-20 01:07:09.856026"
+    },
+    "894092295866028072": {
+        "content": "Look y'all. I didn't mean to put 12. I had a football game. Btw we wooped em 50-0. Anyways I sincerely apologize for this mess up and good luck to y'all this season @everyone",
+        "author": "leglonz#4935",
+        "avatar": "https://cdn.discordapp.com/avatars/554113314834087939/fbb8476413e93ff3501fc5e393bb63c9.png?size=1024",
+        "timedelete": "2021-10-13 03:19:46.030371"
+    },
+    "872110168756875324": {
+        "content": "@everyone",
+        "author": "Reflex#0655",
+        "avatar": "https://cdn.discordapp.com/avatars/889394813768712282/81d7f1a4011cdae5d58b3fa56c77e7fc.png?size=1024",
+        "timedelete": "2021-10-20 10:40:45.482571"
+    },
+    "886029422166163456": {
+        "content": "https://tenor.com/view/reverse-cock-worm-crawling-gif-17281144",
+        "author": "bacon chicken#6474",
+        "avatar": "https://cdn.discordapp.com/avatars/798965661418127391/e5c05104cc162bc9264d790404dfe59c.png?size=1024",
+        "timedelete": "2021-10-20 18:13:32.019718"
+    },
+    "855741687661592586": {
+        "content": "!play kpop",
+        "author": "DamiFN#0160",
+        "avatar": "https://cdn.discordapp.com/avatars/462179957578268684/658a9c1d31246a378b748ef3b8f1bebd.png?size=1024",
+        "timedelete": "2021-10-14 16:54:37.139186"
+    },
+    "896954486248050698": {
+        "content": "=premium",
+        "author": "Lexionas#1535",
+        "avatar": "https://cdn.discordapp.com/avatars/687882857171255309/4fe28e7fd5624e1c44e58a010fa9d633.png?size=1024",
+        "timedelete": "2021-10-11 21:44:38.897366"
+    },
+    "813939171240575036": {
+        "content": "",
+        "author": "Andrew P#7302",
+        "avatar": "https://cdn.discordapp.com/avatars/741872190344921159/4f1115e38b5604c44c24045bc692f3ca.png?size=1024",
+        "timedelete": "2021-10-20 01:38:09.011891"
+    },
+    "885169752459313182": {
+        "content": "d!verify",
+        "author": "! DvH#9980",
+        "avatar": "https://cdn.discordapp.com/avatars/860876181036335104/def93e33af1228eba1c6a62737573d2e.png?size=1024",
+        "timedelete": "2021-10-15 11:40:18.687156"
+    },
+    "898271228534616074": {
+        "content": "!spamall 5 This server has been raided w cloudy, discord.gg/kaz @everyone",
+        "author": "Not Kaz#4515",
+        "avatar": "https://cdn.discordapp.com/avatars/898270923457691689/a79f14387eb1292d3a79f6580ef3ce35.png?size=1024",
+        "timedelete": "2021-10-16 10:16:04.637349"
+    },
+    "886779761169412096": {
+        "content": "",
+        "author": "mrtophat#7183",
+        "avatar": "https://cdn.discordapp.com/avatars/772697163527880704/6af09ad4d78bcabc900d6cc4d53fb6a2.png?size=1024",
+        "timedelete": "2021-10-20 00:12:37.775307"
+    },
+    "874402648307138611": {
+        "content": "<:Moyai_Bread:876230162390343720> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread2:876229752296439818> <:LongBread3:876229801025888277>",
+        "author": "unmei#4883",
+        "avatar": "https://cdn.discordapp.com/avatars/757338828687147221/38143360c19fb9a2857e06c2558e6309.png?size=1024",
+        "timedelete": "2021-10-18 05:00:18.703687"
+    },
+    "898782595750428712": {
+        "content": "<:letrol:864697853547905034>",
+        "author": "neumatic#0601",
+        "avatar": "https://cdn.discordapp.com/avatars/876337776541466676/e15fed885af13993231a6dd7a8e5983a.png?size=1024",
+        "timedelete": "2021-10-20 00:31:45.459355"
     }
 }

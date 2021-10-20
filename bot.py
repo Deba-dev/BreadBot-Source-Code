@@ -23,8 +23,7 @@ from random import choice
 from discord.ext import commands
 import motor.motor_asyncio
 import datetime
-import tools.errors
-from tools import commands2
+import utility
 import discordmongo
 import googletrans
 import sys
@@ -46,28 +45,39 @@ async def get_prefix(bc, message):
 
 class BreadBot(commands.AutoShardedBot):
     def __init__(self):
+
+        # Important things
         owner=485513915548041239
         DEFAULTPREFIX = "="
         intents=discord.Intents.all()
+        self.owner = owner
+        self.DEFAULTPREFIX = DEFAULTPREFIX
+        self.premiums = []
 
+        # Initialize the bot
         super().__init__(
             command_prefix=get_prefix,
             case_insensitive=True, 
             owner_id=owner,
             intents=intents)
-        
-        self.owner = owner
-        self.remove_command("help")
+
+        # Task data
         self.muted_users = {}
         self.heistdata = {}
         self.GAWdata = {}
-        self.connection_url = os.environ.get("mongo")
-        with open("changelogs.txt", "r") as f:
+        self.remindData = {}
+
+        # Get version from changelogs
+        with open("utility/storage/changelogs.txt", "r") as f:
             lines = f.readlines()
         self.version = lines[1].replace("**Version:** ", "")
-        self.DEFAULTPREFIX = DEFAULTPREFIX
+
+        # Random shit
+        self.remove_command("help")
         self.dbltoken = os.environ.get("DBLTOKEN")
         self.gettingmemes = True
+
+        # Colors and main permissions
         self.colors = {
             "WHITE": 0xFFFFFF,
             "AQUA": 0x1Abc9C,
@@ -90,8 +100,10 @@ class BreadBot(commands.AutoShardedBot):
             "DARK_NAVY": 0x2C3E50,
         }
         self.color_list = [c for c in self.colors.values()]
-        self.main_perms = ["administrator", "manage_channels", "manage_guild", "kick_members", "ban_members","view_audit_log", "send_messages", "read_messages", "send_tts_messages", "attach_files", "embed_links", "mention_everyone", "connect", "speak", "mute_members", "deafen_members", "change_nicknames", "manage_roles", ""]
+        self.main_perms = ["administrator", "manage_channels", "manage_guild", "kick_members", "ban_members","view_audit_log", "send_messages", "read_messages", "send_tts_messages", "attach_files", "embed_links", "mention_everyone", "connect", "speak", "mute_members", "deafen_members", "change_nicknames", "manage_roles", "manage_messages"]
 
+        # Define the db
+        self.connection_url = os.environ.get("mongo")
         self.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(self.connection_url))
         self.db = self.mongo["bread"]
         self.prefixes = discordmongo.Mongo(connection_url=self.db, dbname="prefixes")
@@ -101,6 +113,7 @@ class BreadBot(commands.AutoShardedBot):
         self.cmd_usage = discordmongo.Mongo(connection_url=self.db, dbname="usage")
         self.linksonly = discordmongo.Mongo(connection_url=self.db, dbname="linkonly")
         self.premium = discordmongo.Mongo(connection_url=self.db, dbname="premium")
+        self.packs = discordmongo.Mongo(connection_url=self.db, dbname="packs")
         self.warns = discordmongo.Mongo(connection_url=self.db, dbname="warnings")
         self.invites = discordmongo.Mongo(connection_url=self.db, dbname="invites")
         self.config = discordmongo.Mongo(connection_url=self.db, dbname="config")
@@ -120,21 +133,25 @@ class BreadBot(commands.AutoShardedBot):
         self.economy = discordmongo.Mongo(connection_url=self.db, dbname="economy")
         self.rickroll = discordmongo.Mongo(connection_url=self.db, dbname="rickroll")
         self.afk = discordmongo.Mongo(connection_url=self.db, dbname="afk")
+        self.reminders = discordmongo.Mongo(connection_url=self.db, dbname="reminders")
+
+        # Load cogs
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py') and not filename.startswith("_"):
                 self.load_extension(f'cogs.{filename[:-3]}')
+                print(filename[:-3].capitalize() + " Cog has been loaded\n" + "-"*len(filename[:-3] + " Cog has been loaded") + "\n")
 
         @self.before_invoke
         async def before_any_command(ctx):
-            data = read_json("blacklist")
+            data = read_json("utility/storage/json/blacklist")
             self.blacklisted_users = data["blacklistedUsers"]
             if ctx.author.id in self.blacklisted_users:
-                error = tools.errors.Blacklisted(ctx)
+                error = utility.Blacklisted(ctx)
                 raise await error.send()
             
             data = await self.premium.find(ctx.guild.id)
-            if data is None and ctx.command.qualified_name.lower() in commands2.premium:
-                error = tools.errors.Premium(ctx)
+            if data is None and ctx.command.qualified_name.lower() in utility.commands2.premium:
+                error = utility.Premium(ctx)
                 raise await error.send()
 
             try:
@@ -143,12 +160,14 @@ class BreadBot(commands.AutoShardedBot):
                 pass
 
     async def on_ready(self):
-        await self.change_presence(activity=discord.Game(name=f"in {len(self.guilds)} guilds | {self.DEFAULTPREFIX}help"))
-        data = read_json("blacklist")
+
+        await self.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{self.DEFAULTPREFIX}help | https://dashboard.breadbot.me"))
+        data = read_json("utility/storage/json/blacklist")
         self.blacklisted_users = data["blacklistedUsers"]
         currentMutes = await self.mutes.get_all()
         currentHeists = await self.heists.get_all()
         currentGAWs = await self.giveaways.get_all()
+        currentReminders = await self.reminders.get_all()
         
         for mute in currentMutes:
             self.muted_users[mute["_id"]] = mute
@@ -156,10 +175,20 @@ class BreadBot(commands.AutoShardedBot):
             self.heistdata[heist["_id"]] = heist
         for GAW in currentGAWs:
             self.GAWdata[GAW["_id"]] = GAW
-        print(self.user.id)
+        for reminder in currentReminders:
+            self.remindData[reminder["_id"]] = reminder
+
+        users = await self.packs.get_all()
+        guilds = await self.premium.get_all()
+        for data in users:
+            self.premiums.append(data["_id"])
+        for data in guilds:
+            self.premiums.append(data["_id"])
         self.launch_time = datetime.datetime.utcnow()
 
     async def on_message(self,message):
+        if not message.guild:
+            return
         data = await self.prefixes.get_by_id(message.guild.id)
         if not data or "prefix" not in data:
             prefix = self.DEFAULTPREFIX

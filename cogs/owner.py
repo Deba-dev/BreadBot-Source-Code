@@ -16,7 +16,6 @@ import requests
 from io import BytesIO
 import time
 import datetime
-from tools import commands2
 
 def format_num(num):
     magnitude = 0
@@ -35,6 +34,13 @@ class Owner(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
 
+    @staticmethod
+    def _overwrites_to_json(overwrites):
+        try:
+            return {str(target.id): overwrite._values for target, overwrite in overwrites.items()}
+        except Exception:
+            return {}
+
     def insert_returns(self,body):
         if isinstance(body[-1], ast.Expr):
             body[-1] = ast.Return(body[-1].value)
@@ -51,7 +57,7 @@ class Owner(commands.Cog):
         for members in guild.members:
             member.append(members.name + "#" + members.discriminator)
         return member
-    
+
     @commands.command()
     @commands.is_owner()
     async def botfarms(self, ctx):
@@ -199,7 +205,7 @@ class Owner(commands.Cog):
             'ctx': ctx,
             '__import__': __import__,
             'py': None,
-            'assprogram': "ass "*69,
+            'assprogram': ctx.send("ass "*69),
             'getmembers': await self.get_members(ctx.guild.id),
             'format_num': format_num
         }
@@ -235,43 +241,18 @@ class Owner(commands.Cog):
                         reason='No Reason Specified'):
 
         self.bc.blacklisted_users.append(user.id)
-        data = read_json("blacklist")
+        data = read_json("utility/storage/json/blacklist")
         data["blacklistedUsers"].append(user.id)
-        write_json(data, "blacklist")
+        write_json(data, "utility/storage/json/blacklist")
         await ctx.send(f"{user.name} is now blacklisted")
-
-    @commands.command(aliases=["pr"])
-    @commands.is_owner()
-    async def premium(self,ctx):
-        data = await self.bc.premium.find(ctx.guild.id)
-        if not data:
-            data = {"_id": ctx.guild.id}
-            await self.bc.premium.upsert(data)
-            await ctx.send("server is now premium")
-        else:
-            await ctx.send("this server is already premium")
-            return
-
-    @commands.command(aliases=["unpr"])
-    @commands.is_owner()
-    async def unpremium(self,ctx):
-        data = await self.bc.premium.find(ctx.guild.id)
-        if not data:
-            await ctx.send("this server was never premium lol")
-            return
-        else:
-            await self.bc.premium.delete_by_id(ctx.guild.id)
-            await ctx.send("took premium from server")
-
-
 
     @commands.command(aliases=["unbl"])
     async def unblacklist(self,ctx, user: discord.Member):
 
         self.bc.blacklisted_users.remove(user.id)
-        data = read_json("blacklist")
+        data = read_json("utility/storage/json/blacklist")
         data["blacklistedUsers"].remove(user.id)
-        write_json(data, "blacklist")
+        write_json(data, "utility/storage/json/blacklist")
         await ctx.send(f"{user.name} is now unblacklisted")
 
 
@@ -282,13 +263,13 @@ class Owner(commands.Cog):
         for user in self.bc.get_all_members():
             try:
                 self.bc.blacklisted_users.append(user.id)
-                data = read_json("blacklist")
+                data = read_json("utility/storage/json/blacklist")
                 data["blacklistedUsers"].append(user.id)
-                write_json(data, "blacklist")
+                write_json(data, "utility/storage/json/blacklist")
                 self.bc.blacklisted_users.remove(ctx.author.id)
-                data = read_json("blacklist")
+                data = read_json("utility/storage/json/blacklist")
                 data["blacklistedUsers"].remove(ctx.author.id)
-                write_json(data, "blacklist")
+                write_json(data, "utility/storage/json/blacklist")
             except:
                 print("yes")
         await ctx.send("stuffed everyone in blacklist")
@@ -301,9 +282,9 @@ class Owner(commands.Cog):
         for user in self.bc.get_all_members():
             try:
                 self.bc.blacklisted_users.remove(user.id)
-                data = read_json("blacklist")
+                data = read_json("utility/storage/json/blacklist")
                 data["blacklistedUsers"].remove(user.id)
-                write_json(data, "blacklist")
+                write_json(data, "utility/storage/json/blacklist")
             except:
                 print("a")
         await ctx.send("removed all ppl from blacklist get ready for crime")
@@ -312,7 +293,7 @@ class Owner(commands.Cog):
 
     @commands.command()
     async def bls(self, ctx, x=10):
-        data = read_json("blacklist")
+        data = read_json("utility/storage/json/blacklist")
         leader_board = {}
         total = []
         for user in data["blacklistedUsers"]:
@@ -506,19 +487,67 @@ class Owner(commands.Cog):
             pass
         await member.ban(reason=reason)  
 
-    @commands.command(description='lock the channel (manage channel perms needed)', usage=' ')
+    @commands.command(description='lock the channel ', usage=' ')
     @commands.is_owner()
-    async def overridelock(self,ctx):
+    async def overridelock(self,ctx,channel:discord.TextChannel=None):
+        channel = channel or ctx.channel
         data = await self.bc.modroles.find(ctx.guild.id)
-        for role in ctx.guild.roles:
-            await ctx.channel.set_permissions(role, send_messages=False)
+        data2 = await self.bc.locked.find(channel.id)
+        if data2:
+            return await ctx.send("This channel is already locked!")
+        else:
+            data2 = {"_id": channel.id, "name": channel.name, "perms": {}}
+        #Before channel locks the perms are saved into db
+        data2["perms"] = self._overwrites_to_json(channel.overwrites)
+        for role in channel.overwrites:
+            if role.name == self.bc.user.name:
+                continue
+            perms = channel.overwrites_for(role)
+            perms.send_messages = False
+            perms.add_reactions = False
+            await channel.set_permissions(role, overwrite=perms)
+            await asyncio.sleep(0.5)
         try:
             for role in data["roles"]:
                 role = discord.utils.get(ctx.guild.roles, id=role)
-                await ctx.channel.set_permissions(role, send_messages=True)
+                perms = channel.overwrites_for(role)
+                perms.send_messages = True
+                perms.add_reactions = True
+                await channel.set_permissions(role, overwrite=perms)
+                await asyncio.sleep(0.5)
         except Exception as e:
             print(e)
-        await ctx.send(f"Locked {ctx.channel.mention}. Eveyone that doesnt have a modrole set with me cant chat here.")
+        
+        await self.bc.locked.upsert(data2)
+        await ctx.send(f"Locked {channel.mention}. Everyone that doesnt have a modrole set with me cant chat here.")
+        await channel.edit(name="🔒 " + channel.name)
+        await self.postmodlog(ctx.guild,"Channel Lock",ctx.author,channel)
+
+    @commands.command(description='unlock a channel you locked', usage='unlock')
+    @commands.is_owner()
+    async def overrideunlock(self,ctx,channel:discord.TextChannel=None):
+        channel = channel or ctx.channel
+        with open('muteroles.json', 'r') as f:
+            role = json.load(f)
+        try:
+            muterole = discord.utils.get(ctx.guild.roles, id=int(role[str(ctx.guild.id)]))
+        except:
+            muterole = None
+        data = await self.bc.locked.find(channel.id)
+        if data is None:
+            return await ctx.send("This channel is not locked!")
+        for role, permissions in data["perms"].items():
+            if muterole:
+                if role == muterole.id:
+                    continue
+            guildrole = discord.utils.get(ctx.guild.roles, id=int(role))
+            await ctx.channel.set_permissions(guildrole, overwrite=discord.PermissionOverwrite(**permissions))
+            await asyncio.sleep(0.5)
+        await ctx.send(f"Unlocked {channel.mention} all roles can talk here now")
+        await channel.edit(name=data["name"])
+        await self.bc.locked.delete(channel.id)
+        await self.postmodlog(ctx.guild,"Channel Unlock",ctx.author,channel)
+
 
     @commands.command(
         description=
@@ -553,7 +582,28 @@ class Owner(commands.Cog):
         except Exception as e:
             await ctx.send("Failed to load {}:\n{}".format(cog,e))
         await ctx.send("Cog {} loaded".format(cog))
-                
+    
+    async def postmodlog(self,guild,action,moderator,channelexec,member=None,reason=None,case=None,duration=None):
+        data = await self.bc.modlogs.find(guild.id)
+        if not data or "channel" not in data:
+            return
+        channel = discord.utils.get(guild.text_channels,id=data["channel"])
+        em = discord.Embed(
+            title="Moderation Command Action",
+            color=random.choice(self.bc.color_list)
+        )
+        em.add_field(name="Action:",value=action,inline=False)
+        em.add_field(name="Responsible Moderator:",value=moderator.name,inline=False)
+        em.add_field(name="Channel Executed:",value=channelexec.mention,inline=False)
+        if reason is not None:
+            em.add_field(name="Reason:",value=reason,inline=False)
+        if case is not None:
+            em.add_field(name="Case:",value=case,inline=False)
+        if duration is not None:
+            em.add_field(name="Duration:",value=duration)
+        if member is not None:
+            em.add_field(name="User affected:",value=member,inline=False)
+        await channel.send(embed=em)
 
 
 def read_json(filename):

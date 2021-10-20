@@ -9,9 +9,24 @@ from random import choice
 class Ranks(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
+        self.cleaner = self.clean_leaderboard.start()
+
+    def cog_unload(self):
+        self.cleaner.cancel()
+
+    @tasks.loop(minutes=30)
+    async def clean_leaderboard(self):
+        lbs = await self.bc.ranks.get_all()
+        for data in lbs:
+            for member in data["members"]:
+                rank = data["members"].index(member)
+                member["rank"] = rank + 1
+            await self.bc.ranks.upsert(data)
 
     @commands.Cog.listener()
     async def on_message(self,msg):
+        if not msg.guild:
+            return
         data = await self.bc.ranks.find(msg.guild.id)
         if isinstance(msg.channel, discord.DMChannel):
             return

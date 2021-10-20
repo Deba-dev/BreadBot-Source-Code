@@ -8,23 +8,13 @@ from discord.ext import commands
 import time
 import datetime
 import sys
-from tools.util import Pag
-
-def read_json(filename):
-    with open(f"{filename}.json", "r") as file:
-        data = json.load(file)
-    return data
-
-
-def write_json(data, filename):
-    with open(f"{filename}.json", "w") as file:
-        json.dump(data, file, indent=4)
+from utility import Pag
 
 invite = discord.ui.Button(label='Invite', style=discord.ButtonStyle.link, url="https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=2146958839")
 
 support = discord.ui.Button(label='Support Server', style=discord.ButtonStyle.link, url="https://discord.gg/zuv2XW6tzb")
 
-dashboard = discord.ui.Button(label='Dashboard', style=discord.ButtonStyle.link, url="https://breadbotdash.tk")
+dashboard = discord.ui.Button(label='Dashboard', style=discord.ButtonStyle.link, url="https://dashboard.breadbot.me")
 
 class Items(discord.ui.View):
     def __init__(self):
@@ -109,9 +99,51 @@ class Support(commands.Cog):
 
         await Pag(title=title, color=random.choice(self.bc.color_list), entries=pages, length=1).start(ctx)
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print(f"\n{self.__class__.__name__} cog has been loaded\n-----")
+    @commands.command()
+    @commands.has_any_role(897145238806749184, 897145301893283920)
+    async def redeem(self,ctx,pack):
+        data = await self.bc.packs.find(ctx.author.id)
+        if not data:
+            data = {
+                "_id": ctx.author.id,
+                "1ServerRedeemed": False,
+                "2ServersRedeemed": False,
+                "Supporter": False,
+                "RemainingServers": 0,
+                "GuildsPaid": []
+            }
+        if pack.lower() == "supporter":
+            role = discord.utils.get(ctx.guild.roles, id=897145301893283920)
+            if role in ctx.author.roles:
+                data["RemainingServers"] = 0
+                data["1ServerRedeemed"] = False
+                data["2ServersRedeemed"] = False
+                data["Supporter"] = True
+                for guild in data["GuildsPaid"]:
+                    self.bc.premium.delete(guild)
+                data["GuildsPaid"] = []
+                await ctx.send("You have been granted the perks stated under the supporter tier on patron!")
+        if pack.lower() == "basic":
+            role = discord.utils.get(ctx.guild.roles, id=897145301893283920)
+            if role in ctx.author.roles:
+                data["RemainingServers"] = 1
+                data["1ServerRedeemed"] = True
+                data["2ServersRedeemed"] = False
+                for guild in data["GuildsPaid"]:
+                    self.bc.premium.delete(guild)
+                data["GuildsPaid"] = []
+                await ctx.send("I have granted you 1 server to give premium!\n\nIf you have downgraded from value pack you must give a server premium again.")
+        if pack.lower() == "value":
+            role = discord.utils.get(ctx.guild.roles, id=897145238806749184)
+            if role in ctx.author.roles:
+                data["RemainingServers"] = 2
+                data["1ServerRedeemed"] = False
+                data["2ServersRedeemed"] = True
+                for guild in data["GuildsPaid"]:
+                    self.bc.premium.delete(guild)
+                data["GuildsPaid"] = []
+                await ctx.send("I have granted you 2 servers to give premium!\n\nIf you have upgraded from basic pack you must give a server premium again.")
+        await self.bc.packs.upsert(data)
 
     @commands.command(
         name="help", aliases=["h", "commands"], description="The help command!"
@@ -138,9 +170,8 @@ class Support(commands.Cog):
             em.add_field(name="Utility | Page 5", value=f"`{prefix}help 5`")
             em.add_field(name="Checking | Page 6", value=f"`{prefix}help 6`")
             em.add_field(name="Images | Page 7", value=f"`{prefix}help 7`")
-            em.add_field(name="Reaction Roles | Page 8", value=f"`{prefix}help 8`")
-            em.add_field(name="Music (beta) | Page 9", value=f"`{prefix}help 9`")
-            em.add_field(name="Server Events | Page 10", value=f"`{prefix}help 10`")    
+            em.add_field(name="Music (SHUT DOWN) | Page 8", value=f"`{prefix}help 8`")
+            em.add_field(name="Server Events | Page 9", value=f"`{prefix}help 9`")    
             em.add_field(name="How to get help for a command", value=f"`{prefix}help <command>`")
             em.set_footer(text=f"Want more help? try out my {prefix}info command", icon_url=ctx.author.avatar)
             await ctx.send(embed=em, view=Items())
@@ -166,12 +197,9 @@ class Support(commands.Cog):
             cog = self.bc.get_cog("Images")
             await self.setup_help_pag(ctx, cog, f"Page {entity} | {cog.qualified_name}")
         elif entity == "8":
-            cog = self.bc.get_cog("ReactionRoles")
-            await self.setup_help_pag(ctx, cog, f"Page {entity} | {cog.qualified_name}")
-        elif entity == "9":
             cog = self.bc.get_cog("Music")
             await self.setup_help_pag(ctx, cog, f"Page {entity} | {cog.qualified_name}")
-        elif entity == "10":
+        elif entity == "9":
             cog = self.bc.get_cog("ServerEvents")
             await self.setup_help_pag(ctx, cog, f"Page {entity} | {cog.qualified_name}")
         else:
@@ -199,6 +227,7 @@ class Support(commands.Cog):
         em.add_field(name='Python Version', value=pythonVersion)
         em.add_field(name='Guilds im in', value=len(self.bc.guilds))
         em.add_field(name='People in the guilds im in', value=len(set(self.bc.get_all_members())))
+        em.add_field(name="All the channels I have access to:", value=len(set(self.bc.get_all_channels())))
         em.add_field(name="Shards",value=self.bc.shards[0].shard_count)
         em.add_field(name='Number of Commands', value=x)
         await ctx.send(embed=em)
@@ -215,9 +244,8 @@ class Support(commands.Cog):
         )
         em.add_field(name="About",value="I am a bot that provides economy, moderation, configuration, and more!",inline=False)
         em.add_field(name="What do I provide?", value="**- Economy\n- Welcome system\n- Leave system\n- Moderation\n- Suspicious account detector\n- And More!**")
-        em.add_field(name="<a:tick:763428030320214036>| Important links",value="**[Support Server](https://discord.gg/zuv2XW6tzb) | [Invite Me!](https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=2146958839) | [Vote For Me!](https://top.gg/bot/760871722718855169/vote) | [Very cool discord!](https://discord.gg/fz5EYUfEFp) | [Dashboard](https://breadbotdash.tk)**",inline=False)
+        em.add_field(name="<a:tick:763428030320214036>| Important links",value="**[Support Server](https://discord.gg/zuv2XW6tzb) | [Invite Me!](https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=2146958839) | [Vote For Me!](https://top.gg/bot/760871722718855169/vote) | [Very cool discord!](https://discord.gg/fz5EYUfEFp) | [Dashboard](https://dashboard.breadbot.me)**",inline=False)
         em.add_field(name="❓| Informative Links",value="**[discord.py docs](https://discordpy.readthedocs.io/en/latest/) | [Bot Page](https://top.gg/bot/760871722718855169) | [My Own Discord Server](https://discord.gg/awy35MJ5pc) | Contact: BongoPlayzYT#1646**")
-        em.add_field(name="Easy Way to contact me", value="Just dm me (the bot) if you have an issue, suggestion, or someone u want to report abusing the bot.", inline=False)
         await ctx.send(embed=em)
 
 def setup(bc):

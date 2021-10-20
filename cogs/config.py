@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import json
 import re
 import random
@@ -30,7 +30,95 @@ def create_embed(content, count,bc):
 
 class Config(commands.Cog):
     def __init__(self, bc):
-      self.bc = bc
+        self.bc = bc
+        self.payment = self.check_if_paid.start()
+
+    def cog_unload(self):
+        self.payment.cancel()
+
+    @tasks.loop(seconds=15)
+    async def check_if_paid(self):
+        guild = await self.bc.fetch_guild(760950684849537124)
+        all = await self.bc.packs.get_all()
+        for data in all:
+            try:
+                payer = await guild.fetch_member(data["_id"])
+            except:
+                await self.bc.packs.delete(data["_id"])
+            else:
+                payer = await guild.fetch_member(data["_id"])
+            role = discord.utils.get(guild.roles, id=897215523861958707)
+            if role not in payer.roles:
+                for guild in data["GuildsPaid"]:
+                    await self.bc.premium.delete(guild)
+                await self.bc.packs.delete(data["_id"])
+            if data["Supporter"]:
+                role = discord.utils.get(guild.roles, name="Supporter Pack")
+                if role not in payer.roles:
+                    for guild in data["GuildsPaid"]:
+                        await self.bc.premium.delete(guild)
+                    await self.bc.packs.delete(data["_id"])
+            if data["1ServerRedeemed"]:
+                role = discord.utils.get(guild.roles, name="1 Premium Pack")
+                if role not in payer.roles:
+                    for guild in data["GuildsPaid"]:
+                        await self.bc.premium.delete(guild)
+                    await self.bc.packs.delete(data["_id"])
+            if data["2ServersRedeemed"]:
+                role = discord.utils.get(guild.roles, name="2 Premium Pack")
+                if role not in payer.roles:
+                    for guild in data["GuildsPaid"]:
+                        await self.bc.premium.delete(guild)
+                    await self.bc.packs.delete(data["_id"])
+
+    @commands.command()
+    async def premium(self,ctx):
+        data = await self.bc.packs.find(ctx.author.id)
+        premium = await self.bc.premium.find(ctx.guild.id)
+        if premium:
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="This server is already premium")
+            return await ctx.send(embed=em)
+        if not data:
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="Bro you aren't even a patreon")
+            return await ctx.send(embed=em)
+        if data["RemainingServers"] == 0:
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="You do not have anymore premium tokens to give...")
+            return await ctx.send(embed=em)
+        data["RemainingServers"] -= 1
+        data["GuildsPaid"].append(ctx.guild.id)
+        premium = {"_id": ctx.guild.id}
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="This server now has premium privilages")
+        await ctx.send(embed=em)
+        await self.bc.packs.upsert(data)
+        await self.bc.premium.upsert(premium)
+
+    @commands.command()
+    async def unpremium(self,ctx):
+        data = await self.bc.packs.find(ctx.author.id)
+        premium = await self.bc.premium.find(ctx.guild.id)
+        if not premium:
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="This server was never premium")
+            return await ctx.send(embed=em)
+        if not data:
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="Bro you aren't even a patreon")
+            return await ctx.send(embed=em)
+        if ctx.guild.id not in data["GuildsPaid"]:
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="You are not paying for this server")
+            return await ctx.send(embed=em)
+        data["RemainingServers"] += 1
+        data["GuildsPaid"].remove(ctx.guild.id)
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="I have removed this server's premium privilages")
+        await ctx.send(embed=em)
+        await self.bc.packs.upsert(data)
+        await self.bc.premium.delete(ctx.guild.id)
 
     @commands.command()
     @commands.has_permissions(manage_guild=True)
@@ -41,11 +129,9 @@ class Config(commands.Cog):
         data["enabled"] = not data["enabled"]
         await self.bc.rickroll.upsert(data)
         ternary = "enabled" if data["enabled"] else "disabled"
-        await ctx.send("The rickroll detector is now {}".format(ternary))
- 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print(f"\n{self.__class__.__name__} Cog has been loaded\n-----")
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="The rickroll detector is now {}".format(ternary))
+        await ctx.send(embed=em)
 
     @commands.command()
     @commands.has_permissions(manage_guild=True)
@@ -256,7 +342,9 @@ class Config(commands.Cog):
     async def chatbot_toggle(self,ctx):
         data = await self.bc.chatbot.find(ctx.guild.id)
         if not data:
-            return await ctx.send("You didn't set up the chatbot yet!")
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="This server does not have a chatbot system set up")
+            return await ctx.send(embed=em)
         data["isenabled"] = not data["isenabled"]
         ternary = "enabled" if data["isenabled"] else "disabled"
         await self.bc.chatbot.upsert(data)
@@ -272,7 +360,9 @@ class Config(commands.Cog):
     async def chatbot_delete(self,ctx):
         data = await self.bc.chatbot.find(ctx.guild.id)
         if not data:
-            return await ctx.send("You didn't set up the chatbot yet!")
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="This server does not have a chatbot system set!")
+            return await ctx.send(embed=em)
         await self.bc.chatbot.delete(ctx.guild.id)
         em = discord.Embed(color=discord.Color.green())
         em.set_author(name="I have deleted the settings for the chatbot")
@@ -316,12 +406,10 @@ class Config(commands.Cog):
     
     @blchannels.command(name="add")
     @commands.has_permissions(manage_guild=True)
-    async def blchannels_add(self,ctx,channel:discord.TextChannel=None):
+    async def blchannels_add(self,ctx,channel:discord.TextChannel):
         data = await self.bc.ranks.find(ctx.guild.id)
         if data is None:
             return
-        if not channel:
-            return await ctx.send("Please specify a channel!")
         data["blacklisted"].append(channel.id)
         em = discord.Embed(color=discord.Color.green())
         em.set_author(name="Added #{} to the blacklisted channels.".format(channel.name))
@@ -330,16 +418,16 @@ class Config(commands.Cog):
         
     @blchannels.command(name="remove")
     @commands.has_permissions(manage_guild=True)
-    async def blchannels_remove(self,ctx,channel:discord.TextChannel=None):
+    async def blchannels_remove(self,ctx,channel:discord.TextChannel):
         data = await self.bc.ranks.find(ctx.guild.id)
         if data is None:
             return
-        if not channel:
-            return await ctx.send("Please specify a channel!")
         try:
             data["blacklisted"].remove(channel.id)
         except:
-            return await ctx.send("That channel isnt blacklisted!")
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="That chanel isnt blaclisted!")
+            return await ctx.send(embed=em)
         em = discord.Embed(color=discord.Color.green())
         em.set_author(name="Removed #{} from the blacklisted channels.".format(channel.name))
         await ctx.send(embed=em)
@@ -373,7 +461,9 @@ class Config(commands.Cog):
             try:
                 test = int(level)
             except:
-                return await ctx.send("The level must be an integer!")
+                em = discord.Embed(color=discord.Color.red())
+                em.set_author(name="You must pass an integer as the level!")
+                return await ctx.send(embed=em)
             data["rewards"][str(level)] = role.id
             em = discord.Embed(color=discord.Color.green())
             em.set_author(name="Added `{}` to the rewards.".format(role.name))
@@ -391,7 +481,9 @@ class Config(commands.Cog):
         try:
             test = int(level)
         except:
-            return await ctx.send("The level must be an integer!")
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="The level must be an integer")
+            return await ctx.send(embed=em)
         data["rewards"].pop(str(level))
         em = discord.Embed(color=discord.Color.green())
         em.set_author(name="Removed all role rewards for that level to the rewards.")
@@ -403,7 +495,9 @@ class Config(commands.Cog):
     async def xp_multi(self,ctx,multi):
         data = await self.bc.ranks.find(ctx.guild.id)
         if data is None:
-            return await ctx.send("There is no db for this server! Try again")
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="This server does not have a system set!")
+            return await ctx.send(embed=em)
         data["multi"] = int(multi)
         await self.bc.ranks.upsert(data)
         em = discord.Embed(color=discord.Color.green())
@@ -415,16 +509,22 @@ class Config(commands.Cog):
     async def lvl_channel(self,ctx,channel:discord.TextChannel=None):
         data = await self.bc.ranks.find(ctx.guild.id)
         if data is None:
-            return await ctx.send("There is no db for this server! Try again")
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="This server does not have a system set!")
+            return await ctx.send(embed=em)
         if channel:
             data["channel"] = channel.id
         else:
             data["channel"] = channel
         await self.bc.ranks.upsert(data)
         if channel:
-            await ctx.send(f"I have updated the level up channel to {channel.mention}!")
+            em = discord.Embed(color=discord.Color.green())
+            em.set_author(name="I have set the announce channel to {}".format(channel.mention))
+            return await ctx.send(embed=em)
         else:
-            await ctx.send("The level channel is now unset")
+            em = discord.Embed(color=discord.Color.green())
+            em.set_author(name="I have unset the channel")
+            return await ctx.send(embed=em)
     
     @lvlsettings.command(name="message", description="Change the level up message")
     @commands.has_permissions(manage_guild=True)
@@ -440,7 +540,9 @@ class Config(commands.Cog):
 {rank} - the place on the leaderboard they are on
         """)
         if data is None:
-            await ctx.send("Something went wrong! Try again later")
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="Something went wrong! Try again later")
+            return await ctx.send(embed=em)
         data["message"] = message
         await self.bc.ranks.upsert(data)
         em = discord.Embed(color=discord.Color.green())
@@ -460,15 +562,15 @@ class Config(commands.Cog):
         usage="<channel>"
     )
     @commands.is_owner()
-    async def starboard_channel(self,ctx,channel:discord.TextChannel=None):
+    async def starboard_channel(self,ctx,channel:discord.TextChannel):
         data = await self.bc.starboard.find(ctx.guild.id)
-        if not channel:
-            return await ctx.send("Specify a channel!")
-        elif not data or "channel" not in data:
+        if not data or "channel" not in data:
             data = {"_id": ctx.guild.id, "channel": None, "limit": 5, "toggled": True, "messages": []}
         data["channel"] = channel.id
         await self.bc.starboard.upsert(data)
-        await ctx.send(f"The starboard channel is now {channel.mention}")
+        em = discord.Embed(color=discord.Color.red())
+        em.set_author(name="Successfully set the starboard channel to {}".format(channel.mention))
+        await ctx.send(embed=em)
 
     @starboard.command(
         name="delchannel",
@@ -478,9 +580,13 @@ class Config(commands.Cog):
     async def starboard_delchannel(self,ctx):
         data = await self.bc.starboard.find(ctx.guild.id)
         if not data or "channel" not in data:
-            return await ctx.send("You dont have a channel set up!")
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="You do not have a channel set!")
+            return await ctx.send(embed=em)
         await self.bc.starboard.delete(ctx.guild.id)
-        await ctx.send("The starboard channel is now deleted")
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="I have deleted the channel set for the starboard")
+        return await ctx.send(embed=em)
     
     @starboard.command(
         name="toggle",
@@ -490,11 +596,15 @@ class Config(commands.Cog):
     async def starboard_toggle(self,ctx):
         data = await self.bc.starboard.find(ctx.guild.id)
         if not data or "channel" not in data:
-            return await ctx.send("You dont have a channel set up!")
+            em = discord.Embed(color=discord.Color.red())
+            em.set_author(name="You don't have a channel set up")
+            return await ctx.send(embed=em)
         data["toggled"] = not data["toggled"]
         ternary = "enabled" if data["toggled"] else "disabled"
         await self.bc.starboard.upsert(data)
-        await ctx.send(f"The starboard channel is now {ternary}")
+        em = discord.Embed(color=discord.Color.green())
+        em.set_author(name="I have set the starboard to {}".format(ternary))
+        return await ctx.send(embed=em)
 
     @starboard.command(
         name="limit",

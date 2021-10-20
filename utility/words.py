@@ -1,3 +1,5 @@
+import random
+
 easy = [
     'rain',
     'ran'
@@ -57,3 +59,46 @@ easy = [
     'oil',
     'duke',
 ]
+
+coding = [
+    "python",
+    "javascript",
+    "coding",
+    "developer",
+    "IDE",
+    "html",
+    "github"
+]
+
+animals = [
+    "dog",
+    "bone",
+    "woof",
+    "ball",
+    "cat",
+    "frog",
+    "chew toy"
+]
+
+tools = [
+    "hammer",
+    "mallet",
+    "ratchet",
+    "nail",
+    "bolt",
+    "wrench",
+    "screwdriver"
+]
+
+nature = [
+    "grass",
+    "tree",
+    "sap",
+    "leaves",
+    "rocks",
+    "cave",
+    "water",
+    "volcano"
+]
+
+randtopic = random.choice([nature, tools, animals, coding])

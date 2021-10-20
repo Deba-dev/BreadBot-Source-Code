@@ -1,0 +1,275 @@
+{
+    "c9323b4": {
+        "Command": "Rank",
+        "Error Type": "FileNotFoundError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 167, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 125, in rank\n    await avatar.save('images/Avatar.png')\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/asset.py\", line 115, in save\n    with open(fp, 'wb') as f:\n",
+            "FileNotFoundError: [Errno 2] No such file or directory: 'images/Avatar.png'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 994, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 894, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 176, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'images/Avatar.png'\n"
+        ]
+    },
+    "16DEd3": {
+        "Command": "Rank",
+        "Error Type": "FileNotFoundError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 167, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 166, in rank\n    await ctx.send(file=discord.File(\"images/result.png\"))\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/file.py\", line 88, in __init__\n    self.fp = open(fp, 'rb')\n",
+            "FileNotFoundError: [Errno 2] No such file or directory: 'images/result.png'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 994, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 894, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 176, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'images/result.png'\n"
+        ]
+    },
+    "b7B136": {
+        "Command": "Rank",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 167, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 125, in rank\n    await avatar.save('utility/storage/images/Avatar.png')\n",
+            "AttributeError: 'NoneType' object has no attribute 'save'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 994, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 894, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 176, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'save'\n"
+        ]
+    },
+    "A7ef45b": {
+        "Command": "Rank",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 167, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 125, in rank\n    await avatar.save('utility/storage/images/Avatar.png')\n",
+            "AttributeError: 'NoneType' object has no attribute 'save'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 994, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 894, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 176, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'save'\n"
+        ]
+    },
+    "661dC": {
+        "Command": "Rank",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 167, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 125, in rank\n    await avatar.save('utility/storage/images/Avatar.png')\n",
+            "AttributeError: 'NoneType' object has no attribute 'save'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 994, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 894, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 176, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'save'\n"
+        ]
+    },
+    "4dbF2": {
+        "Command": "Rank",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 167, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/checking.py\", line 125, in rank\n    await avatar.save('utility/storage/images/Avatar.png')\n",
+            "AttributeError: 'NoneType' object has no attribute 'save'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 994, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 894, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 176, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'save'\n"
+        ]
+    },
+    "F7686": {
+        "Command": "Re",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 167, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/util.py\", line 132, in re\n    await self.bc.process_commands(ctx.message.reference.cached_message)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 1027, in process_commands\n    if message.author.bot:\n",
+            "AttributeError: 'NoneType' object has no attribute 'author'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 994, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 894, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 176, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'author'\n"
+        ]
+    },
+    "3cfD6": {
+        "Command": "Memberinfo",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 994, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 886, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 820, in prepare\n    await self._parse_arguments(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 726, in _parse_arguments\n    transformed = await self.transform(ctx, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 578, in transform\n    return await run_converters(ctx, converter, argument, param)  # type: ignore\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/converter.py\", line 1182, in run_converters\n    return await _actual_conversion(ctx, converter, argument, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/converter.py\", line 1076, in _actual_conversion\n    return await converter().convert(ctx, argument)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/converter.py\", line 253, in convert\n    raise MemberNotFound(argument)\n",
+            "discord.ext.commands.errors.MemberNotFound: Member \"curls\" not found.\n"
+        ]
+    },
+    "723a2": {
+        "Command": "Work",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 173, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 434, in work\n    msg = await ctx.send(\"\\n\".join([f\"`{word}`\" for word in buttons]))\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/abc.py\", line 1425, in send\n    data = await state.http.send_message(\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/http.py\", line 336, in request\n    raise HTTPException(response, data)\n",
+            "discord.errors.HTTPException: 400 Bad Request (error code: 50006): Cannot send an empty message\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 980, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 910, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 182, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50006): Cannot send an empty message\n"
+        ]
+    },
+    "eC365B": {
+        "Command": "Work",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 173, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 437, in work\n    await msg.edit(\"Choose the items in order\", view=working.Choose(buttons, self.bc, ctx))\n",
+            "AttributeError: module 'utility.working' has no attribute 'Choose'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 980, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 910, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 182, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: module 'utility.working' has no attribute 'Choose'\n"
+        ]
+    },
+    "75467": {
+        "Command": "Memberinfo",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 980, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 902, in invoke\n    await self.prepare(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 832, in prepare\n    await self._parse_arguments(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 738, in _parse_arguments\n    transformed = await self.transform(ctx, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 590, in transform\n    return await run_converters(ctx, converter, argument, param)  # type: ignore\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/converter.py\", line 1183, in run_converters\n    return await _actual_conversion(ctx, converter, argument, param)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/converter.py\", line 1077, in _actual_conversion\n    return await converter().convert(ctx, argument)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/converter.py\", line 254, in convert\n    raise MemberNotFound(argument)\n",
+            "discord.ext.commands.errors.MemberNotFound: Member \"751929729099104358\" not found.\n"
+        ]
+    },
+    "1CD22b": {
+        "Command": "Work",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 173, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 437, in work\n    await msg.edit(\"Choose the items in order\", view=working.Order(buttons, self.bc, ctx))\n",
+            "  File \"/home/runner/Bot/utility/working.py\", line 41, in __init__\n    self.add_item(OrderButton(item, topic, bc, ctx))\n",
+            "  File \"/home/runner/Bot/utility/working.py\", line 7, in __init__\n    self.label = label\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ui/button.py\", line 180, in label\n    self._underlying.label = str(value) if value is not None else value\n",
+            "AttributeError: 'OrderButton' object has no attribute '_underlying'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 980, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 910, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 182, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'OrderButton' object has no attribute '_underlying'\n"
+        ]
+    },
+    "9dAb7D1c": {
+        "Command": "Work",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 173, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 437, in work\n    await msg.edit(\"Choose the items in order\", view=working.Order(buttons, self.bc, ctx))\n",
+            "  File \"/home/runner/Bot/utility/working.py\", line 41, in __init__\n    self.add_item(OrderButton(item, topic, bc, ctx))\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ui/view.py\", line 269, in add_item\n    if len(self.children) > 25:\n",
+            "AttributeError: 'Order' object has no attribute 'children'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 980, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 910, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 182, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'Order' object has no attribute 'children'\n"
+        ]
+    },
+    "A3715c05": {
+        "Command": "Work",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 173, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 437, in work\n    await msg.edit(\"Choose the items in order\", view=working.Order(buttons, self.bc, ctx))\n",
+            "  File \"/home/runner/Bot/utility/working.py\", line 42, in __init__\n    self.add_item(OrderButton(item, topic, bc, ctx))\n",
+            "  File \"/home/runner/Bot/utility/working.py\", line 7, in __init__\n    self.label = label\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ui/button.py\", line 180, in label\n    self._underlying.label = str(value) if value is not None else value\n",
+            "AttributeError: 'OrderButton' object has no attribute '_underlying'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 980, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 910, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 182, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'OrderButton' object has no attribute '_underlying'\n"
+        ]
+    },
+    "1AcF8FE0": {
+        "Command": "Work",
+        "Error Type": "Unspecified",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 173, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 437, in work\n    await msg.edit(\"Choose the items in order\", view=working.Order(buttons, self.bc, ctx))\n",
+            "  File \"/home/runner/Bot/utility/working.py\", line 42, in __init__\n    self.add_item(OrderButton(item, topic, bc, ctx))\n",
+            "  File \"/home/runner/Bot/utility/working.py\", line 7, in __init__\n    self.label = label\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ui/button.py\", line 180, in label\n    self._underlying.label = str(value) if value is not None else value\n",
+            "AttributeError: 'OrderButton' object has no attribute '_underlying'\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 980, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 910, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 182, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'OrderButton' object has no attribute '_underlying'\n"
+        ]
+    },
+    "F647E5": {
+        "Command": "Work",
+        "Error Type": "TypeError",
+        "Error": [
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 173, in wrapped\n    ret = await coro(*args, **kwargs)\n",
+            "  File \"/home/runner/Bot/cogs/economy.py\", line 437, in work\n    await msg.edit(\"Choose the items in order\", view=working.Order(buttons, self.bc, ctx))\n",
+            "  File \"/home/runner/Bot/utility/working.py\", line 41, in __init__\n    for item in randomized:\n",
+            "TypeError: 'NoneType' object is not iterable\n",
+            "\nThe above exception was the direct cause of the following exception:\n\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py\", line 980, in invoke\n    await ctx.command.invoke(ctx)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 910, in invoke\n    await injected(*ctx.args, **ctx.kwargs)\n",
+            "  File \"/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py\", line 182, in wrapped\n    raise CommandInvokeError(exc) from exc\n",
+            "discord.ext.commands.errors.CommandInvokeError: Command raised an exception: TypeError: 'NoneType' object is not iterable\n"
+        ]
+    }
+}

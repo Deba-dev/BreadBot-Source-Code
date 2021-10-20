@@ -7,10 +7,9 @@ from PIL import *
 import inspect,os
 import math
 import datetime
-from tools import hypixel
-from tools.hypixel import Player, Skyblock,SkyblockPlayer
+import utility
 
-hypixel.setkey("e411c189-0633-4ad0-9493-f4f902353bd3")
+utility.hypixel.setkey("e411c189-0633-4ad0-9493-f4f902353bd3")
 
 def convert_size(bytes):
     if bytes == 0:
@@ -35,7 +34,7 @@ class Checking(commands.Cog):
 
     @commands.command()
     async def hypixel(self,ctx,user):
-        player = hypixel.Player(user)
+        player = utility.hypixel.Player(user)
         data = player.getdata()
         if data:
             em = discord.Embed(
@@ -69,7 +68,7 @@ Map: {}
         
     @skyblock.command(name="player")
     async def skyblock_player(self,ctx,user):
-        player = SkyblockPlayer(user)
+        player = utility.SkyblockPlayer(user)
         stats1 = player.getprofile()
         if stats1 is None:
             return await ctx.send("This player does not exist!")
@@ -85,14 +84,6 @@ Map: {}
         em.add_field(name="Highest Auction Bid", value=stats["auctions_highest_bid"])
         em.add_field(name="Complete Objectives",value=len({key: value for key, value in objectives.items() if value["status"] == "COMPLETE"}))
         await ctx.send(embed=em)
-    
-    @skyblock.command(name="banking")
-    async def skyblock_banking(self,ctx,user):
-        player = SkyblockPlayer(user)
-        stats1 = player.getprofile()
-        if stats1 is None:
-            return await ctx.send("This player does not exist!")
-        print(stats1.keys())
 
     @skyblock.group(invoke_without_command=True)
     async def bazaar(self,ctx):
@@ -100,7 +91,7 @@ Map: {}
     
     @bazaar.command(name="item")
     async def bazaar_item(self,ctx,*,item):
-        sb = Skyblock()
+        sb = utility.Skyblock()
         item = sb.getbazaar(item)
         if item is None:
             return await ctx.send("That item doesn't exist or it is not sold on the bazaar!")
@@ -113,41 +104,6 @@ Map: {}
         em.add_field(name="Buy Orders",value=item["buyOrders"])
         em.add_field(name="Sell Orders", value = item["sellOrders"])
         await ctx.send(embed=em)
-
-    @commands.command(name="source",aliases=["github","spoonfeedme"])
-    @commands.cooldown(1, 1, commands.BucketType.channel)
-    async def source(self, ctx, *, command: str = None):
-        source_url = 'https://github.com/RealBongoChongo/BreadBot-Source-Code'
-        branch = 'master'
-        if command is None:
-            return await ctx.send(source_url)
-
-        if command == 'master':
-            src = type(self.bc.help_command)
-            module = src.__module__
-            filename = inspect.getsourcefile(src)
-        else:
-            obj = self.bc.get_command(command.replace('.', ' '))
-            if obj is None:
-                return await ctx.send('Could not find command.')
-
-            # since we found the command we're looking for, presumably anyway, let's
-            # try to access the code itself
-            src = obj.callback.__code__
-            module = obj.callback.__module__
-            filename = src.co_filename
-
-        lines, firstlineno = inspect.getsourcelines(src)
-        if not module.startswith('discord'):
-            # not a built-in command
-            location = os.path.relpath(filename).replace('\\', '/')
-        else:
-            location = module.replace('.', '/') + '.py'
-            source_url = 'https://github.com/Rapptz/discord.py'
-            branch = 'master'
-
-        final_url = f'<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>'
-        await ctx.send(final_url)
 
     @commands.command(
         description="Check your level in your server!"
@@ -166,8 +122,10 @@ Map: {}
         user = next((user for user in data["members"] if user['userid'] == member.id), None)
         member = self.bc.get_user(user["userid"])    
         avatar = member.avatar
-        await avatar.save('images/Avatar.png')
-        im = Image.open('images/Avatar.png').convert("RGB")
+        if not avatar:
+            avatar = member.default_avatar
+        await avatar.save('utility/storage/images/Avatar.png')
+        im = Image.open('utility/storage/images/Avatar.png').convert("RGB")
         im = im.resize((120, 120))
         bigsize = (im.size[0] * 3, im.size[1] * 3)
         mask = Image.new('L', bigsize, 0)
@@ -177,9 +135,9 @@ Map: {}
         im.putalpha(mask)
         output = ImageOps.fit(im, mask.size, centering=(10, 10))
         output.putalpha(mask)
-        output.save('images/output.png')
+        output.save('utility/storage/images/output.png')
 
-        im2 = Image.open('images/level.png').convert('RGBA')
+        im2 = Image.open('utility/storage/images/level.png').convert('RGBA')
         im2.paste(im, (5, 5), im)
         draw = ImageDraw.Draw(im2)
         incriments = 416 / user["maxXp"]
@@ -195,7 +153,7 @@ Map: {}
         else:
             pass
         rank = data["members"].index(user)
-        font = ImageFont.truetype("abel-regular.ttf", 20)
+        font = ImageFont.truetype("utility/fonts/abel-regular.ttf", 20)
         draw.text((35, 145), "Level: {}".format(user["level"]), fill=(255, 255, 255),font=font)
         draw.text((125, 145), "XP: {}/{}".format(format_num(user["xp"]),format_num(user["maxXp"])), fill=(255, 255, 255),font=font)
         draw.text((330, 145), "Rank: #{}".format(rank+1), fill=(255, 255, 255),font=font)
@@ -206,8 +164,8 @@ Map: {}
         
         
         # Save result
-        im2.save('images/result.png')
-        await ctx.send(file=discord.File("images/result.png"))
+        im2.save('utility/storage/images/result.png')
+        await ctx.send(file=discord.File("utility/storage/images/result.png"))
         await self.bc.ranks.upsert(data)
 
     @commands.command(
@@ -314,93 +272,21 @@ Joined: {}
     )
     @commands.cooldown(1, 5, BucketType.guild)
     async def serverinfo(self, ctx):
-            roles = [role for role in ctx.guild.roles]
-            roles.remove(ctx.guild.default_role)
-            embed = discord.Embed(
-                title=f'{ctx.guild.name}',
-                color=random.choice(self.bc.color_list),
-                timestamp=datetime.datetime.utcnow()
-            )
-            embed.set_thumbnail(url=ctx.guild.icon)
-            embed.add_field(name='Owner?', value=f'{ctx.guild.owner}')
-            embed.add_field(name='Owner ID?', value=f'`{ctx.guild.owner.id}`')
-            embed.add_field(name='Owner Created at?', value=f"{ctx.guild.owner.created_at.strftime('%a, %#d %B %Y, %I:%M %p')}", inline=False)
-            embed.add_field(name='Server Name?', value=f'{ctx.guild.name}')
-            embed.add_field(name='Server ID?', value=f'`{ctx.guild.id}`')
-            banner = ctx.guild.region[0]
-            banner = list(banner)
-            x = banner[0].upper()
-            banner.pop(0)
-            banner.insert(0, x)
-            banner = ''.join(map(str, banner))
-            embed.add_field(name='Region', value=f'{banner}')
-            embed.add_field(name=f'Created at', value=f"{ctx.guild.created_at.strftime('%a, %#d %B %Y, %I:%M %p')}", inline=False)
-            embed.add_field(name="Emoji's", value=f'{len(ctx.guild.emojis)}')
-            embed.add_field(name=f'Members', value=f'{len(ctx.guild.members)}')
-            verif = ctx.guild.verification_level[0]
-            verif = list(verif)
-            x = verif[0].upper()
-            verif.pop(0)
-            verif.insert(0, x)
-            verif = ''.join(map(str, verif))
-            embed.add_field(name=f'Verification Level', value=f'{verif}')
-            if ctx.guild.afk_channel == True:
-                embed.add_field(name='AFK Channel', value=f'{ctx.guild.afk_channel.name}', inline=False)
-                embed.add_field(name='AFK Timeout', value=f'{ctx.guild.afk_timeout}')
-            else:
-                pass
-            true = ctx.guild.mfa_level
-            if true == 1:
-                true = 'Yes!'
-            else:
-                true = 'No!'
-            embed.add_field(name='Admin 2FA?', value=f'{true}')
-            boost = ctx.guild.premium_subscription_count
-            if boost == 0:
-                boost = 'None 😭'
-            else:
-                pass
-            embed.add_field(name='Boosts!', value=f'{boost}')
-            level = ctx.guild.premium_tier
-            if level == 0:
-                count = 2 - ctx.guild.premium_subscription_count
-                level = 'Level 0. You need {} more boosts for level 1!'.format(count)
-            elif level == 1:
-                count = 15 - ctx.guild.premium_subscription_count
-                level = 'Level 1. You need {} more boosts for level 2'.format(count)
-            elif level == 2:
-                count = 30 - ctx.guild.premium_subscription_count
-                level = 'Level 2. You need {} more boosts for level 3'.format(count)
-            elif level == 3:
-                count = ctx.guild.premium_subscription_count
-                level = 'Level 3. Max level with a whopping {} boosts!!!'.format(count)
-            embed.add_field(name='Channels?', value=f'{len(ctx.guild.channels)}')
-            bots = 0
-            for member in ctx.guild.members:
-                if member.bot == True:
-                    bots += 1
-                else:
-                    pass
-            embed.add_field(name=f'Bots?', value=f'{bots}')
-            embed.add_field(name=f'Main Lang?', value=f'{ctx.guild.preferred_locale}')
-            embed.add_field(name=f'Emoji Limit?', value=f'{ctx.guild.emoji_limit}')
-            embed.add_field(name=f'Bitrate Limit?', value=f'{convert_size(ctx.guild.bitrate_limit)}')
-            embed.add_field(name='Filesize Limit?', value=f'{convert_size(ctx.guild.filesize_limit)}')
-            embed.add_field(name='Large?', value=f'{ctx.guild.large}')
-            embed.add_field(name='Server Level!', value=f'{level}', inline=False)
-            embed.set_footer(text=f'Prompted by {ctx.author}', icon_url=ctx.author.avatar)
-            await ctx.send(embed=embed)
-        
-    @commands.command(description='get list of roles and their ids',usage=' ')
-    async def roles(self,ctx):
-        rolelist = ""
-        for role in ctx.guild.roles:
-            rolelist += f"{role.mention}: {role.id}\n"
-        em =discord.Embed(
-            title='Roles',
-            color=0x0000ff,
-            description=rolelist)
-        await ctx.send(embed=em)
+        embed = discord.Embed(
+            title="Server Overview",
+            color = random.choice(self.bc.color_list)
+        )
+        embed.add_field(name="General", value="Server Region: {}\nName: {}\nOwner: {}\nOwner ID: {}\nMembers: {}\nBots: {}".format(ctx.guild.region[0].title(), ctx.guild.name, ctx.guild.owner, ctx.guild.owner.id, len(ctx.guild.members), len([bot for bot in ctx.guild.members if bot.bot])))
+        embed.add_field(name="Channels/Roles/Categories", value="Categories: {}\nVoice Channels: {}\nText Channels: {}\nRoles: {}".format(len(ctx.guild.categories), len(ctx.guild.voice_channels), len(ctx.guild.text_channels), len(ctx.guild.roles)))
+        embed.add_field(name="Boost Info", value="Boosts: {}\nServer Level: {}".format(ctx.guild.premium_subscription_count, ctx.guild.premium_tier))
+        true = ctx.guild.mfa_level
+        if true == 1:
+            true = '<a:tick:816709602384937031>'
+        else:
+            true = '<a:no:816709772342591498>'
+        embed.add_field(name="Misc", value="Admin 2FA: {}\nVerification Level: {}".format(true, ctx.guild.verification_level[0].title()))
+        embed.set_footer(text=f'Prompted by {ctx.author}', icon_url=ctx.author.avatar)
+        await ctx.send(embed=embed)
 
     @commands.command(
         name="channelstats",
@@ -440,30 +326,6 @@ Joined: {}
         embed.add_field(name="Channel Hash", value=hash(channel))
 
         await ctx.send(embed=embed)
-
-    @commands.command()
-    async def membercount(self,ctx):
-        count = 0
-        botcount = 0
-        for member in ctx.guild.members:
-            count += 1
-            if member.bot == True:
-                botcount += 1
-        await ctx.send("There are {} members and {} bots in your server".format(count,botcount))
-
-    @commands.command(
-        description='Get all the channels you have and all of the ids',
-        usage=' '
-    )
-    async def channels(self,ctx):
-        channellist = ""
-        for channel in ctx.guild.text_channels:
-            channellist += f"{channel.mention}: {channel.id}\n"
-        em =discord.Embed(
-            title='Roles',
-            color=0x0000ff,
-            description=channellist)
-        await ctx.send(embed=em)        
 
 def setup(bc):
     bc.add_cog(Checking(bc))

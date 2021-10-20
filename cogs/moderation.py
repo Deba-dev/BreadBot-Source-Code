@@ -58,29 +58,34 @@ class Moderation(commands.Cog):
             unmuteTime = value['mutedAt'] + relativedelta(seconds=value['muteDuration'])
 
             if currentTime >= unmuteTime:
-                with open('muteroles.json', 'r') as f:
+                with open('utility/storage/json/muteroles.json', 'r') as f:
                     channel = json.load(f)
                 guild = self.bc.get_guild(value['guildId'])
                 member = guild.get_member(value["_id"])
-
-                role = discord.utils.get(guild.roles, id=int(channel[str(guild.id)]))
-                if role in member.roles:
-                    await member.remove_roles(role)
-                    print(f"Unmuted: {member.display_name}")
-
-                await self.bc.mutes.delete(member.id)
+                if not member:
+                    continue
                 try:
-                    self.bc.muted_users.pop(member.id)
+                    role = discord.utils.get(guild.roles, id=int(channel[str(guild.id)]))
                 except KeyError:
-                    pass
+                    await self.bc.mutes.delete(member.id)
+                    try:
+                        self.bc.muted_users.pop(member.id)
+                    except:
+                        pass
+                else:
+                    if role in member.roles:
+                        await member.remove_roles(role)
+                        print(f"Unmuted: {member.display_name}")
+
+                    await self.bc.mutes.delete(member.id)
+                    try:
+                        self.bc.muted_users.pop(member.id)
+                    except KeyError:
+                        pass
     
     @check_current_mutes.before_loop
     async def before_check_current_mutes(self):
         await self.bc.wait_until_ready()
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print(f"\n{self.__class__.__name__} Cog has been loaded\n-----")
 
     @commands.command(
         description="Mutes a given user for an amount of time!",
@@ -88,7 +93,7 @@ class Moderation(commands.Cog):
     )
     @commands.has_permissions(manage_messages=True)
     async def mute(self, ctx, member: discord.Member, *, time: TimeConverter=None):
-        with open('muteroles.json', 'r') as f:
+        with open('utility/storage/json/muteroles.json', 'r') as f:
             channel = json.load(f)
         try:
             role = discord.utils.get(ctx.guild.roles, id=int(channel[str(ctx.guild.id)]))
@@ -156,7 +161,7 @@ class Moderation(commands.Cog):
     )
     @commands.has_permissions(manage_roles=True)
     async def unmute(self, ctx, member: discord.Member):
-        with open('muteroles.json', 'r') as f:
+        with open('utility/storage/json/muteroles.json', 'r') as f:
             channel = json.load(f)
         role = discord.utils.get(ctx.guild.roles, id=int(channel[str(ctx.guild.id)]))
         if not role:
@@ -206,18 +211,17 @@ class Moderation(commands.Cog):
 
     @commands.command(description='Massnick everyone anythin', usage='<name>')
     @commands.has_permissions(manage_guild=True)
-    async def massnick(self, ctx, *args):
-        Nick = ' '.join(map(str, args))
+    async def massnick(self, ctx, *, nick):
         for member in ctx.guild.members:
             if member == ctx.guild.owner:
                 pass
             else:
                 try:
-                    await member.edit(nick=f'{Nick}')
+                    await member.edit(nick=nick)
                     await asyncio.sleep(0.5)
                 except:
                     pass
-        await ctx.send(f'The entire guild user name was set to `{Nick}`')
+        await ctx.send(f'The entire guild user name was set to `{nick}`')
 
     @commands.command(description='revert all nicknames to regular', usage=' ')
     @commands.has_permissions(manage_nicknames=True)
@@ -299,12 +303,6 @@ class Moderation(commands.Cog):
         data["logs"].append({"Moderator": ctx.author.name + "#" + str(ctx.author.discriminator), "Action": ctx.command.qualified_name, "Target": f"{member.name}#{member.discriminator}", "Target ID": member.id, "Date": str(datetime.datetime.utcnow().strftime("%x %X"))})
         await self.bc.logs.upsert(data)
 
-    @commands.command()
-    @commands.has_permissions(manage_channels=True)
-    async def channelsync(self,ctx):
-        await ctx.channel.edit(sync_permissions=True)
-        await ctx.send("Channel perms synced with category!")
-
     @commands.command(
         name='ban',
         description='ban people',
@@ -365,60 +363,66 @@ class Moderation(commands.Cog):
         await self.postmodlog(ctx.guild,"Channel Purge",ctx.author,ctx.channel)
 
     @commands.command(description='lock the channel ', usage=' ')
-    @commands.has_permissions(manage_channels=True)
-    async def lock(self,ctx):
+    @commands.has_permissions(manage_guild=True)
+    async def lock(self,ctx,channel:discord.TextChannel=None):
+        channel = channel or ctx.channel
         data = await self.bc.modroles.find(ctx.guild.id)
-        data2 = await self.bc.locked.find(ctx.channel.id)
+        data2 = await self.bc.locked.find(channel.id)
         if data2:
             return await ctx.send("This channel is already locked!")
         else:
-            data2 = {"_id": ctx.channel.id, "perms": {}}
+            data2 = {"_id": channel.id, "name": channel.name, "perms": {}}
         #Before channel locks the perms are saved into db
-        data2["perms"] = self._overwrites_to_json(ctx.channel.overwrites)
-        for role in ctx.channel.overwrites:
+        data2["perms"] = self._overwrites_to_json(channel.overwrites)
+        for role in channel.overwrites:
             if role.name == self.bc.user.name:
                 continue
-            perms = ctx.channel.overwrites_for(role)
+            perms = channel.overwrites_for(role)
             perms.send_messages = False
             perms.add_reactions = False
-            await ctx.channel.set_permissions(role, overwrite=perms)
+            await channel.set_permissions(role, overwrite=perms)
             await asyncio.sleep(0.5)
         try:
             for role in data["roles"]:
                 role = discord.utils.get(ctx.guild.roles, id=role)
-                perms = ctx.channel.overwrites_for(role)
+                perms = channel.overwrites_for(role)
                 perms.send_messages = True
                 perms.add_reactions = True
-                await ctx.channel.set_permissions(role, overwrite=perms)
+                await channel.set_permissions(role, overwrite=perms)
                 await asyncio.sleep(0.5)
         except Exception as e:
             print(e)
         
         await self.bc.locked.upsert(data2)
-        await ctx.send(f"Locked {ctx.channel.mention}. Eveyone that doesnt have a modrole set with me cant chat here.")
-        await self.postmodlog(ctx.guild,"Channel Lock",ctx.author,ctx.channel)
+        await ctx.send(f"Locked {channel.mention}. Everyone that doesnt have a modrole set with me cant chat here.")
+        await channel.edit(name="🔒 " + channel.name)
+        await self.postmodlog(ctx.guild,"Channel Lock",ctx.author,channel)
 
     @commands.command(description='unlock a channel you locked', usage='unlock')
-    @commands.has_permissions(manage_channels=True)
-    async def unlock(self,ctx):
-        with open('muteroles.json', 'r') as f:
-            channel = json.load(f)
-        muterole = discord.utils.get(ctx.guild.roles, id=int(channel[str(ctx.guild.id)]))
-        if not muterole:
-            pass
-        data = await self.bc.locked.find(ctx.channel.id)
+    @commands.has_permissions(manage_guild=True)
+    async def unlock(self,ctx,channel:discord.TextChannel=None):
+        channel = channel or ctx.channel
+        with open('utility/storage/json/muteroles.json', 'r') as f:
+            role = json.load(f)
+        try:
+            muterole = discord.utils.get(ctx.guild.roles, id=int(role[str(ctx.guild.id)]))
+        except:
+            muterole = None
+        data = await self.bc.locked.find(channel.id)
         if data is None:
             return await ctx.send("This channel is not locked!")
         for role, permissions in data["perms"].items():
-            if role == muterole.id:
-                continue
+            if muterole:
+                if role == muterole.id:
+                    continue
             guildrole = discord.utils.get(ctx.guild.roles, id=int(role))
             await ctx.channel.set_permissions(guildrole, overwrite=discord.PermissionOverwrite(**permissions))
             await asyncio.sleep(0.5)
-        await ctx.send(f"Unlocked {ctx.channel.mention} all roles can talk here now")
-        await self.bc.locked.delete(ctx.channel.id)
-        await self.postmodlog(ctx.guild,"Channel Unlock",ctx.author,ctx.channel)
-
+        await ctx.send(f"Unlocked {channel.mention} all roles can talk here now")
+        await channel.edit(name=data["name"])
+        await self.bc.locked.delete(channel.id)
+        await self.postmodlog(ctx.guild,"Channel Unlock",ctx.author,channel)
+        
     @commands.command(description='set a slowmode to a channel. leave blank to reset. max is 21600 seconds', usage='[seconds]')
     @commands.has_permissions(manage_channels=True)
     async def slowmode(self,ctx,*, time: TimeConverter=None):

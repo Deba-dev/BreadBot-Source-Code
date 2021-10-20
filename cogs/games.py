@@ -4,7 +4,7 @@ from discord.ext.commands import cooldown, BucketType
 import random
 from random import choice
 import asyncio
-from tools import words
+import utility
 
 class TicTacToeButton(discord.ui.Button['TicTacToe']):
     def __init__(self, x: int, y: int):
@@ -120,13 +120,13 @@ class Games(commands.Cog):
             return
         choice = opt.lower()
         if choice == 'easy':
-            choice = random.choice(words.easy)
+            choice = random.choice(utility.words.easy)
         elif choice == 'medium':
-            choice = random.choice(words.medium)
+            choice = random.choice(utility.words.medium)
         elif choice == 'hard':
-            choice = random.choice(words.hard)
+            choice = random.choice(utility.words.hard)
         elif choice == 'impossible':
-            choice = random.choice(words.impossible)
+            choice = random.choice(utility.words.impossible)
         x = list(choice)
         random.shuffle(x)
         await ctx.send('**⬇ The word you must decipher is ⬇**')

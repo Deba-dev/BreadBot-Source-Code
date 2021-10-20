@@ -79,7 +79,7 @@ class SkyblockPlayer:
     def getauctions(self):
         res = requests.get(f"https://api.hypixel.net/skyblock/auction?key={self.apikey}&uuid={self.uuid}").json()
         return res["auctions"]
-    
+
     def getprofile(self):
         res = requests.get(f"https://api.hypixel.net/skyblock/profile?key={self.apikey}&profile={self.uuid}").json()
         return res["profile"] if res["success"] else None
