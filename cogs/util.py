@@ -8,7 +8,9 @@ import sys
 import random
 import traceback
 import io
+import aiohttp
 import re
+import ast
 import contextlib
 import textwrap
 from traceback import format_exception
@@ -39,6 +41,366 @@ def clean_code(content):
 
 time_regex = re.compile("(?:(\d{1,5})(h|s|m|d||))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400,"":1}
+
+
+class Calculator(discord.ui.View):
+    def __init__(self, ctx, bc):
+        super().__init__()
+        self.ans = 0
+        self.eq = ""
+        self.ctx = ctx
+        self.bc = bc
+
+    def insert_returns(self,body):
+        if isinstance(body[-1], ast.Expr):
+            body[-1] = ast.Return(body[-1].value)
+            ast.fix_missing_locations(body[-1])
+        if isinstance(body[-1], ast.If):
+            self.insert_returns(body[-1].body)
+            self.insert_returns(body[-1].orelse)
+        if isinstance(body[-1], ast.With):
+            self.insert_returns(body[-1].body)
+
+    async def calculate(self, calc, button, interaction):
+        fn_name = "_eval_expr"
+        cmd = f"print(float({calc}))"
+        cmd = "\n".join(f"    {i}" for i in cmd.splitlines())
+        body = f"async def {fn_name}():\n{cmd}"
+        parsed = ast.parse(body)
+        body = parsed.body[0].body
+        self.insert_returns(body)
+        env = {
+            "Ans": self.ans
+        }
+        try:
+            exec(compile(parsed, filename="<ast>", mode="exec"), env)
+            result = (await eval(f"{fn_name}()", env))
+        except Exception as e:
+            result = "An Error Occurred! Make sure you entered numbers correctly"
+            print(e)
+        try:
+            self.ans = float(result)
+        except Exception as e:
+            try:
+                result = float(result.strip("\n"))
+            except:
+                pass
+        return result
+
+    @discord.ui.button(row=0, label="AC", style=discord.ButtonStyle.success)
+    async def ac(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq = ""
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```Enter equation here```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=0, label="sin(", style=discord.ButtonStyle.primary)
+    async def sin(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=0, label="cos(", style=discord.ButtonStyle.primary)
+    async def cos(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=0, label="tan(", style=discord.ButtonStyle.primary)
+    async def tan(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=0, label="pi", style=discord.ButtonStyle.primary)
+    async def pi(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+    
+    @discord.ui.button(row=1, label="7", style=discord.ButtonStyle.secondary)
+    async def _7(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=1, label="8", style=discord.ButtonStyle.secondary)
+    async def _8(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+    
+    @discord.ui.button(row=1, label="9", style=discord.ButtonStyle.secondary)
+    async def _9(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=1, label="/", style=discord.ButtonStyle.danger)
+    async def divide(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=1, label="Ans", style=discord.ButtonStyle.success)
+    async def Ans(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=2, label="4", style=discord.ButtonStyle.secondary)
+    async def _4(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=2, label="5", style=discord.ButtonStyle.secondary)
+    async def _5(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+    
+    @discord.ui.button(row=2, label="6", style=discord.ButtonStyle.secondary)
+    async def _6(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=2, label="x", style=discord.ButtonStyle.danger)
+    async def multiply(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=2, label="^", style=discord.ButtonStyle.danger)
+    async def exponent(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=3, label="1", style=discord.ButtonStyle.secondary)
+    async def _1(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=3, label="2", style=discord.ButtonStyle.secondary)
+    async def _2(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+    
+    @discord.ui.button(row=3, label="3", style=discord.ButtonStyle.secondary)
+    async def _3(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=3, label="-", style=discord.ButtonStyle.danger)
+    async def minus(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=3, label="(", style=discord.ButtonStyle.primary)
+    async def openp(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=4, label="0", style=discord.ButtonStyle.secondary)
+    async def _0(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=4, label=".", style=discord.ButtonStyle.primary)
+    async def decimal(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=4, label="=", style=discord.ButtonStyle.success)
+    async def equal(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        calc = self.eq
+        calc = calc.replace("^","**")
+        calc = calc.replace("x", "*")
+        calc = clean_code(calc)
+        async def calculate(calc):
+            async with aiohttp.ClientSession(headers={"api-key": "E04E69e2466262770cE3"}) as session:
+                async with session.post("https://api.breadbot.me/v1/calc", params={"calc": calc, "ans": str(self.ans)}) as res:
+                    return await res.json()
+
+        result = await calculate(calc)
+        try:
+            self.ans = float(result["result"])
+        except:
+            self.ans = 0
+
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{result['result']}```",
+            color = random.choice(self.bc.color_list)
+        )
+        self.eq = ""
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=4, label="+", style=discord.ButtonStyle.danger)
+    async def add(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
+
+    @discord.ui.button(row=4, label=")", style=discord.ButtonStyle.primary)
+    async def closep(self,button:discord.ui.Button,interaction:discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("You cannot fool with this calculator!", ephemeral=True)
+        self.eq += button.label
+        em = discord.Embed(
+            title=f"BreadBot Calculator",
+            description=f"```{self.eq}```",
+            color = random.choice(self.bc.color_list)
+        )
+        await interaction.message.edit(embed=em)
 
 class TimeConverter(commands.Converter):
     async def convert(self, ctx, argument):
@@ -92,7 +454,7 @@ class Utility(commands.Cog):
             except:
                 continue
 
-    @commands.command()
+    @commands.command(description="The bot will dm you at the time set your reminder")
     async def remind(self,ctx,time: TimeConverter, *, reminder):
         m, s = divmod(time, 60)
         h, m = divmod(m, 60)
@@ -243,37 +605,15 @@ class Utility(commands.Cog):
         tags = [f"**{tag}**" for tag in data["tags"]]
         await ctx.send("\n".join(tags))
 
-    @commands.command(name="calc", aliases=["calculator", "calculate"],usage="<equation>")
-    async def _calc(self,ctx, *, equation=None):
-        if not equation:
-            return await ctx.send("Specify an equation!")
-        local_variables = {}
-
-        stdout = io.StringIO()
-
-        try:
-            calc = equation
-            calc = calc.replace("^","**")
-            calc = calc.replace("x", "*")
-            calc = clean_code(calc)
-            filtcode = f"print({calc})"
-            with contextlib.redirect_stdout(stdout):
-                exec(
-                    f"from math import sin, cos, tan, pi\nfrom fractions import Fraction as f2d\nasync def func():\n{textwrap.indent(filtcode, '    ')}", local_variables,
-                )
-                
-                await local_variables["func"]()
-                result = f"{stdout.getvalue()}"
-        except Exception as e:
-            result = "An Error Occurred! Make sure you entered numbers correctly"
-            #await ctx.send(format_exception(e, e, e.__traceback__))
+    @commands.command(name="calc", aliases=["calculator", "calculate"],usage="<equation>", description="The bot can calculate any equation (other than complicated things)")
+    async def _calc(self,ctx):
         em = discord.Embed(
-            title=f"Calculating {equation}...",
-            description=f"Answer:\n```{result}```",
+            title=f"BreadBot Calculator",
+            description=f"```Enter equation here```",
             color = random.choice(self.bc.color_list)
         )
-        em.set_footer(text="Calculator 2.0")
-        await ctx.send(embed=em)
+        em.set_footer(text="Calculator 3.0")
+        await ctx.send(embed=em, view=Calculator(ctx, self.bc))
 
 
     @commands.command(

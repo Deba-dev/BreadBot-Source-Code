@@ -10,7 +10,7 @@ import datetime
 import sys
 from utility import Pag
 
-invite = discord.ui.Button(label='Invite', style=discord.ButtonStyle.link, url="https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=2146958839")
+invite = discord.ui.Button(label='Invite', style=discord.ButtonStyle.link, url="https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=8")
 
 support = discord.ui.Button(label='Support Server', style=discord.ButtonStyle.link, url="https://discord.gg/zuv2XW6tzb")
 
@@ -173,7 +173,7 @@ class Support(commands.Cog):
             em.add_field(name="Music (SHUT DOWN) | Page 8", value=f"`{prefix}help 8`")
             em.add_field(name="Server Events | Page 9", value=f"`{prefix}help 9`")    
             em.add_field(name="How to get help for a command", value=f"`{prefix}help <command>`")
-            em.set_footer(text=f"Want more help? try out my {prefix}info command", icon_url=ctx.author.avatar)
+            em.set_footer(text=f"Want more help? try out my {prefix}info command", icon_url=ctx.author.avatar if ctx.author.avatar else ctx.author.default_avatar)
             await ctx.send(embed=em, view=Items())
         elif entity == "1":
             cog = self.bc.get_cog("Config")
@@ -244,8 +244,9 @@ class Support(commands.Cog):
         )
         em.add_field(name="About",value="I am a bot that provides economy, moderation, configuration, and more!",inline=False)
         em.add_field(name="What do I provide?", value="**- Economy\n- Welcome system\n- Leave system\n- Moderation\n- Suspicious account detector\n- And More!**")
-        em.add_field(name="<a:tick:763428030320214036>| Important links",value="**[Support Server](https://discord.gg/zuv2XW6tzb) | [Invite Me!](https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=2146958839) | [Vote For Me!](https://top.gg/bot/760871722718855169/vote) | [Very cool discord!](https://discord.gg/fz5EYUfEFp) | [Dashboard](https://dashboard.breadbot.me)**",inline=False)
-        em.add_field(name="❓| Informative Links",value="**[discord.py docs](https://discordpy.readthedocs.io/en/latest/) | [Bot Page](https://top.gg/bot/760871722718855169) | [My Own Discord Server](https://discord.gg/awy35MJ5pc) | Contact: BongoPlayzYT#1646**")
+        em.add_field(name="Partners", value="Connect by UnsoughtConch#9225: [Invite Connect](https://bit.ly/discord-connect)")
+        em.add_field(name="<a:tick:763428030320214036>| Important links",value="**[Support Server](https://discord.gg/zuv2XW6tzb) | [Invite Me!](https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=8) | [Vote For Me!](https://top.gg/bot/760871722718855169/vote) | [Very cool discord!](https://discord.gg/fz5EYUfEFp) | [Dashboard](https://dashboard.breadbot.me)**",inline=False)
+        em.add_field(name="❓| Informative Links",value="**[breadbot docs](https://docs.breadbot.me) | [Bot Page](https://top.gg/bot/760871722718855169) | [My Own Discord Server](https://discord.gg/awy35MJ5pc) | Contact: BongoPlayzYT#1646**")
         await ctx.send(embed=em)
 
 def setup(bc):

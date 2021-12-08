@@ -3,6 +3,7 @@ import asyncio
 import traceback
 import json
 import string, random
+import utility
 from random import choice
 from discord.ext import commands
 
@@ -43,7 +44,7 @@ class Errors(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         #Ignore these errors
-        ignored = (commands.CommandNotFound)
+        ignored = (commands.CommandNotFound, utility.EditError)
         if isinstance(error, ignored):
             return
 
@@ -54,6 +55,10 @@ class Errors(commands.Cog):
             msg = await ctx.message.reply('Only **{}** can use this command.'.format(await self.bc.fetch_user(self.bc.owner)))
             await asyncio.sleep(3)
             await msg.delete()
+        elif isinstance(error, utility.Blacklisted):
+            msg = await ctx.message.reply(error)
+        elif isinstance(error, utility.Premium):
+            msg = await ctx.message.reply(error)
         elif isinstance(error, commands.errors.DisabledCommand):
             msg = await ctx.message.reply("This command is disabled for mantinance!")
             await asyncio.sleep(3)

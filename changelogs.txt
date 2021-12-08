@@ -1,0 +1,18 @@
+
+**Version:** 1.6.5
+**Notes:**
+- Polished economy
+- Bot is now closed source
+- Polished a few configuration command responses
+- Added BreadBot premium
+- Lock command now adds a lock command to a channel name to indicate that it is locked
+- Added prestige to economy
+- Added phone, rifle and lootboxes
+- Added work and hunt commands
+- Item lookup is now on the shop command
+- Changed fish ID to fish instead of fishy
+- Redesign of serverinfo command
+- Remind command
+- Pixelate and glitch commands added to image commands
+- Removed gun command because bad quality
+- Changed help command buttons to better buttons            

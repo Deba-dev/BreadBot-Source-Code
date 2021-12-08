@@ -1,6 +1,4 @@
 
-**Version:** 1.5.1
+**Version:** 1.7.0
 **Notes:**
-- Added fish command
-- Started changing what commands say
-- added oil command            
+- Added restriction commands with =restrictions            

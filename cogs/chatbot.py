@@ -9,6 +9,8 @@ class ChatBot(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self,msg):
+        if not msg.guild:
+            return
         if msg.author.bot:
             return
         data = await self.bc.chatbot.find(msg.guild.id)

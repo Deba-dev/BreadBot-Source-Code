@@ -32,7 +32,43 @@ class Checking(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
 
-    @commands.command()
+    @commands.command(description="Diagnose a command to see why it may not be working!")
+    async def diagnose(self,ctx,cmd):
+        cmd = self.bc.get_command(cmd)
+        if not cmd:
+            return await ctx.send("This is not a valid command!")
+        
+        data = await self.bc.botedit.find(ctx.guild.id)
+        if not data:
+            return await ctx.send("There is nothing set that could possibly interfere with this command")
+        em = discord.Embed(title="Diagnosis")
+        data["roles_bl"] = [await commands.RoleConverter().convert(ctx, str(role)) for role in data["roles_bl"]]
+        em.add_field(name="Server Blacklisted Roles", value=", ".join([role.mention for role in data["roles_bl"]]) if data["roles_bl"] else "None")
+        data["roles_wl"] = [await commands.RoleConverter().convert(ctx, str(role)) for role in data["roles_wl"]]
+        em.add_field(name="Server Whitelisted Roles", value=", ".join([role.mention for role in data["roles_wl"]]) if data["roles_wl"] else "None")
+        data["channels_bl"] = [await commands.TextChannelConverter().convert(ctx, str(channel)) for channel in data["channels_bl"]]
+        em.add_field(name="Server Blacklisted Channels", value=", ".join([channel.mention for channel in data["channels_bl"]]) if data["channels_bl"] else "None")
+        data["channels_wl"] = [await commands.TextChannelConverter().convert(ctx, str(channel)) for channel in data["channels_wl"]]
+        em.add_field(name="Server Whitelisted Channels", value=", ".join([channel.mention for channel in data["channels_wl"]]) if data["channels_wl"] else "None")
+
+        if cmd.qualified_name not in data["commands"]:
+            em.add_field(name="Command Blacklisted Roles", value="None")
+            em.add_field(name="Command Whitelisted Roles", value="None")
+            em.add_field(name="Command Blacklisted Channels", value="None")
+            em.add_field(name="Command Whitelisted Channels", value="None")
+        else:
+            data = data["commands"][cmd.qualified_name]
+            data["roles_bl"] = [await commands.RoleConverter().convert(ctx, str(role)) for role in data["roles_bl"]]
+            em.add_field(name="Command Blacklisted Roles", value=", ".join([role.mention for role in data["roles_bl"]]) if data["roles_bl"] else "None")
+            data["roles_wl"] = [await commands.RoleConverter().convert(ctx, str(role)) for role in data["roles_wl"]]
+            em.add_field(name="Command Whitelisted Roles", value=", ".join([role.mention for role in data["roles_wl"]]) if data["roles_wl"] else "None")
+            data["channels_bl"] = [await commands.TextChannelConverter().convert(ctx, str(channel)) for channel in data["channels_bl"]]
+            em.add_field(name="Command Blacklisted Channels", value=", ".join([channel.mention for channel in data["channels_bl"]]) if data["channels_bl"] else "None")
+            data["channels_wl"] = [await commands.TextChannelConverter().convert(ctx, str(channel)) for channel in data["channels_wl"]]
+            em.add_field(name="Command Whitelisted Channels", value=", ".join([channel.mention for channel in data["channels_wl"]]) if data["channels_wl"] else "None")
+        await ctx.send(embed=em)
+
+    @commands.command(description="Check out the hypixel stats of a user")
     async def hypixel(self,ctx,user):
         player = utility.hypixel.Player(user)
         data = player.getdata()
@@ -66,7 +102,7 @@ Map: {}
     async def skyblock(self,ctx):
         await ctx.invoke(self.bc.get_command("help"), entity="skyblock")
         
-    @skyblock.command(name="player")
+    @skyblock.command(name="player", description="Check out a player's general profile stats")
     async def skyblock_player(self,ctx,user):
         player = utility.SkyblockPlayer(user)
         stats1 = player.getprofile()
@@ -89,7 +125,7 @@ Map: {}
     async def bazaar(self,ctx):
         await ctx.invoke(self.bc.get_command("help"), entity="skyblock bazaar")
     
-    @bazaar.command(name="item")
+    @bazaar.command(name="item", description="Lookup any item in the bazaar")
     async def bazaar_item(self,ctx,*,item):
         sb = utility.Skyblock()
         item = sb.getbazaar(item)
@@ -228,7 +264,7 @@ Joined: {}
                 em.add_field(name=f"Member Roles ({len(roles)})", value=", ".join([role.mention for role in roles]), inline=False)
             else:
                 em.add_field(name=f"Member Roles ({len(roles)})", value="Too many roles to send", inline=False)
-        em.add_field(name="General Permissions",value=", ".join([f"{perm[0].replace('_', ' ')}" for perm in user.guild_permissions if perm[1] and perm[0] in self.bc.main_perms]),inline=False)
+        em.add_field(name="General Permissions",value=", ".join([f"{perm[0].replace('_', ' ')}" for perm in user.guild_permissions if perm[1] and perm[0] in self.bc.main_perms])  if [f"{perm[0].replace('_', ' ').title()}" for perm in user.guild_permissions if perm[1] and perm[0] in self.bc.main_perms] else "No Permissions",inline=False)
         em.set_footer(text=f'Member ID: {user.id}')
         em.set_thumbnail(url=user.avatar)
         await ctx.send(embed=em)
@@ -251,7 +287,7 @@ Joined: {}
         embed.set_footer(text=f'Requested by: {user}')
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(description="See what modroles are set in your server")
     async def modroles(self,ctx):
         data = await self.bc.modroles.find(ctx.guild.id)
         roles = []

@@ -101,4 +101,6 @@ nature = [
     "volcano"
 ]
 
-randtopic = random.choice([nature, tools, animals, coding])
+def randtopic():
+    rand = random.choice([nature, tools, animals, coding])
+    return rand

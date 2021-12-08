@@ -8,6 +8,7 @@ import asyncio
 import datetime
 from utility import words
 from utility import working
+from utility import Pag
 
 shop = [
     {
@@ -19,10 +20,42 @@ shop = [
         "canbuy": True
     },
     {
+        "name": "Gaming PC", 
+        "desc": "Used to start the Cryptocurrency known as Dough", 
+        "cost": 30000,
+        "id": "gamingpc",
+        "hidden": False,
+        "canbuy": True
+    },
+    {
+        "name": "GPU", 
+        "desc": "Main Component with your gaming pc", 
+        "cost": 35000,
+        "id": "gpu",
+        "hidden": False,
+        "canbuy": True
+    },
+    {
+        "name": "Water Cooler", 
+        "desc": "Must have in order to not overheat your pc", 
+        "cost": 25000,
+        "id": "watercooler",
+        "hidden": False,
+        "canbuy": True
+    },
+    {
+        "name": "Power Supply", 
+        "desc": "Needed for your gaming pc", 
+        "cost": 40000,
+        "id": "powersupply",
+        "hidden": False,
+        "canbuy": True
+    },
+    {
         "name": "Bread Coin", 
         "desc": "A flex item.", 
         "cost": 100000,
-        "id": "breadcoin",
+        "id": "Dough",
         "hidden": False,
         "canbuy": True
     },
@@ -111,7 +144,7 @@ shop = [
         "desc": "Use this with lootbox command", 
         "cost": 0,
         "id": "lootbox",
-        "hidden": False,
+        "hidden": True,
         "canbuy": False
     },
     {
@@ -119,7 +152,7 @@ shop = [
         "desc": "Use this with premlootbox command", 
         "cost": 0,
         "id": "premlootbox",
-        "hidden": False,
+        "hidden": True,
         "canbuy": False
     }
 ]
@@ -372,6 +405,62 @@ class Blackjack(discord.ui.View):
             await interaction.message.edit(embed=em, view=self)
             return
 
+class NFTBuy(discord.ui.View):
+    def __init__(self, ctx, nft_id:int, offer:int):
+        self.bc = ctx.bot
+        self.nft_id = nft_id
+        self.offer = offer
+        self.ctx = ctx
+        super().__init__(timeout=300)
+
+    async def on_timeout(self):
+        return await self.ctx.send("{} Seems like your offer expired for this person".format(self.ctx.author.mention))
+
+    @discord.ui.button(label="Accept", style=discord.ButtonStyle.success)
+    async def buy_confirm(self,button,interaction):
+        data = await self.bc.nfts.find(self.nft_id) 
+        eco = await self.bc.economy.find(self.ctx.author.id)
+
+        em = discord.Embed(
+            title="Offer on {} (ID: {})".format(data["name"], data["_id"]),
+            description="{} wants to buy your NFT: {} for {} Dough".format(self.ctx.author, data["name"], self.offer),
+            color=random.choice(self.bc.color_list)
+        )
+        
+        if eco["Dough"] < self.offer:
+            for child in self.children:
+                child.disabled = True
+            await interaction.message.edit(embed=em, view=self)
+            return await interaction.response.send_message("Seems like this person does not have enough dough to cover their offer!", ephemeral=True)
+        eco["Dough"] -= self.offer
+        await self.bc.economy.upsert(eco)
+        eco = await self.bc.economy.find(interaction.user.id)
+        eco["Dough"] += self.offer
+        await self.bc.economy.upsert(eco)
+        data["owner"] = self.ctx.author.id
+        await self.bc.nfts.upsert(data)
+        for child in self.children:
+            child.disabled = True
+        self.stop()
+        await interaction.message.edit(embed=em, view=self)
+        await self.ctx.send("{} Seems like {} has accepted your offer!".format(self.ctx.author.mention, interaction.user))
+        return await interaction.response.send_message("You have sold this NFT and you aquired {} Dough".format(self.offer), ephemeral=True)
+
+    @discord.ui.button(label="Decline", style=discord.ButtonStyle.danger)
+    async def nft_decline(self,button,interaction):
+        data = await self.bc.nfts.find(self.nft_id)
+        em = discord.Embed(
+            title="Offer on {} (ID: {})".format(data["name"], data["_id"]),
+            description="{} wants to buy your NFT: {} for {} Dough".format(self.ctx.author, data["name"], self.offer),
+            color=random.choice(self.bc.color_list)
+        )
+        
+        for child in self.children:
+            child.disabled = True
+        self.stop()
+        await interaction.message.edit(embed=em, view=self)
+        await self.ctx.send("{} Seems like {} has declined your offer!".format(self.ctx.author.mention, interaction.user))
+
 def custom_cooldown(rate:int, per:int, newrate:int, newper:int, bucket: commands.BucketType):
 
     default_mapping = commands.CooldownMapping.from_cooldown(rate, per, bucket)
@@ -395,11 +484,188 @@ class Economy(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
         self.heists = self.checkHeist.start()
+        self.mons = self.give_mons.start()
+        self._running = {}
 
     def cog_unload(self):
         self.heists.cancel()
+        self.mons.cancel()
+
+    @tasks.loop(seconds=5)
+    async def give_mons(self):
+        data = await self.bc.economy.get_all()
+        for data in data:
+            if "Dough" not in data:
+                continue
+            self._running[str(data["_id"])] = True
+            if data["gpu"] - data["cooling"] > 20:
+                user = self.bc.get_user(data["_id"])
+                await user.send("Your GPU Overheated and exploded your setup!")
+                data["gpu"] = 1
+                data["cooling"] = 1
+                data["power"] = 1
+                await self.bc.economy.upsert(data)
+                self._running[str(data["_id"])] = False
+                continue
+            if data["gpu"] - data["power"] > 15:
+                level_multi = int(data["gpu"] / 5) + 1
+                decreased_by = 1 - (((data["gpu"] - data["power"]) - 15) / 15)
+                if decreased_by < 0.001:
+                    self._running[str(data["_id"])] = False
+                    continue
+                data["Dough"] += ((round((0.005 * data["gpu"]) * 1000) / 1000) * level_multi) * decreased_by
+
+                data["Dough"] = round(data["Dough"] * 1000) / 1000
+                self._running[str(data["_id"])] = False
+                await self.bc.economy.upsert(data)
+                continue
+            level_multi = int(data["gpu"] / 5) + 1
+            data["Dough"] += (round((0.005 * data["gpu"]) * 1000) / 1000) * level_multi
+
+            data["Dough"] = round(data["Dough"] * 1000) / 1000
+            self._running[str(data["_id"])] = False
+            await self.bc.economy.upsert(data)
+
+    @commands.group(invoke_without_command=True,aliases=["up"])
+    async def upgrade(self,ctx):
+        await ctx.invoke(self.bc.get_command("help"), entity="upgrade")
+    
+    @upgrade.command(description="Upgrade your GPU", aliases=["g"], name="gpu")
+    async def up_gpu(self,ctx,amount):
+        await self.check_acc(ctx.author)
+        data = await self.bc.economy.find(ctx.author.id)
+        if "Dough" not in data:
+            return await ctx.send("You need Dough before you can upgrade your gpu!")
+        if amount == "all" or amount == "a":
+            _ = 1
+            cost = 0
+            while True:
+                cost += int(35000 + (500 * data["gpu"]) * data["gpu"])
+                if data["wallet"] < cost:
+                    cost -= int(35000 + (500 * data["gpu"]) * data["gpu"])
+                    _ -= 1
+                    amount = _ - 1
+                    data["gpu"] -= 1
+                    if amount <= 0:
+                        return await ctx.send("You do not have enough money to upgrade atleast once")
+                    break
+                data["gpu"] += 1
+                _ += 1
+        else:
+            cost = 0
+            _amount = int(amount)
+            _ = 1
+            for i in range(_amount):
+                data["gpu"] += 1
+                cost += int(35000 + (500 * data["gpu"]) * data["gpu"])
+                if data["wallet"] < cost:
+                    cost -= int(35000 + (500 * data["gpu"]) * data["gpu"])
+                    _ -= 1
+                    amount = _
+                    data["gpu"] -= 1
+                    if amount <= 0:
+                        return await ctx.send("You do not have enough money to upgrade atleast once")
+                    return await ctx.send("You do not have enough coins to upgrade that many times! It would cost {} to upgrade {} times".format(int(40000 + (2000 * (_ + 1)) * data["gpu"]), amount))
+                    break
+                amount = _
+                _ += 1
+        data["wallet"] -= cost
+        await ctx.send("Successfully upgraded your gpu for: {} coins\n\n**[Level {} >> Level {}]**".format(cost, data["gpu"] - amount, data["gpu"]))
+        await self.bc.economy.upsert(data)
+
+    @upgrade.command(description="Upgrade your cooling", aliases=["c"], name="cooling")
+    async def up_cooling(self,ctx,amount):
+        await self.check_acc(ctx.author)
+        data = await self.bc.economy.find(ctx.author.id)
+        if "Dough" not in data:
+            return await ctx.send("You need Dough before you can upgrade your cooling!")
+        if amount == "all" or amount == "a":
+            _ = 1
+            cost = 0
+            while True:
+                cost += int(25000 + (500 * data["cooling"]) * data["cooling"])
+                if data["wallet"] < cost:
+                    cost -= int(25000 + (500 * data["cooling"]) * data["cooling"])
+                    _ -= 1
+                    amount = _ - 1
+                    data["cooling"] -= 1
+                    if amount <= 0:
+                        return await ctx.send("You do not have enough money to upgrade atleast once")
+                    break
+                data["cooling"] += 1
+                _ += 1
+        else:
+            _amount = int(amount)
+            _ = 1
+            cost = 0
+            for i in range(_amount):
+                data["cooling"] += 1
+                cost += int(25000 + (500 * data["cooling"]) * data["cooling"])
+                if data["wallet"] < cost:
+                    cost -= int(25000 + (500 * data["cooling"]) * data["cooling"])
+                    _ -= 1
+                    amount = _
+                    data["cooling"] -= 1
+                    if amount <= 0:
+                        return await ctx.send("You do not have enough money to upgrade atleast once")
+                    return await ctx.send("You do not have enough coins to upgrade that many times! It would cost {} to upgrade {} times".format(int(25000 + (2000 * (_ + 1)) * data["cooling"]), amount))
+                    break
+                amount = _
+                _ += 1
+        data["wallet"] -= cost
+        await ctx.send("Successfully upgraded your cooling for: {} coins\n\n**[Level {} >> Level {}]**".format(cost, data["cooling"] - amount, data["cooling"]))
+        await self.bc.economy.upsert(data)
+
+    @upgrade.command(description="Upgrade your power", aliases=["p"], name="power")
+    async def up_power(self,ctx,amount):
+        await self.check_acc(ctx.author)
+        data = await self.bc.economy.find(ctx.author.id)
+        if "Dough" not in data:
+            return await ctx.send("You need Dough before you can upgrade your power!")
+        if amount == "all" or amount == "a":
+            _ = 1
+            cost = 0
+            while True:
+                cost += int(40000 + (500 * data["power"]) * data["power"])
+                if data["wallet"] < cost:
+                    cost -= int(40000 + (500 * data["power"]) * data["power"])
+                    _ -= 1
+                    amount = _ - 1
+                    data["power"] -= 1
+                    if amount <= 0:
+                        return await ctx.send("You do not have enough money to upgrade atleast once")
+                    break
+                data["power"] += 1
+                _ += 1
+        else:
+            _amount = int(amount)
+            _ = 1
+            cost = 0
+            for i in range(_amount):
+                data["power"] += 1
+                cost += int(40000 + (500 * data["power"]) * data["power"])
+                if data["wallet"] < cost:
+                    cost -= int(40000 + (500 * data["power"]) * data["power"])
+                    _ -= 1
+                    amount = _
+                    data["power"] -= 1
+                    if amount <= 0:
+                        return await ctx.send("You do not have enough money to upgrade atleast once")
+                    return await ctx.send("You do not have enough coins to upgrade that many times! It would cost {} to upgrade {} times".format(int(40000 + (2000 * (_ + 1)) * data["power"]), amount))
+                    break
+                amount = _
+                _ += 1
+        data["wallet"] -= cost
+        await ctx.send("Successfully upgraded your power for: {} coins\n\n**[Level {} >> Level {}]**".format(cost, data["power"] - amount, data["power"]))
+        await self.bc.economy.upsert(data)
 
     async def cog_before_invoke(self, ctx):
+        print(self._running)
+        self._running[str(ctx.author.id)] = False if str(ctx.author.id) not in self._running else self._running[str(ctx.author.id)]
+        if self._running[str(ctx.author.id)]:
+            while True:
+                if not self._running[str(ctx.author.id)]:
+                    break
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
         if "xp" not in data:
@@ -409,19 +675,162 @@ class Economy(commands.Cog):
         if data["xp"] >= 100:
             data["banklimit"] += random.randint(2000,3000)
             data["level"] += 1
+            data["xp"] = 0
         data["xp"] += 1
         await self.bc.economy.upsert(data)
 
-    @commands.command()
+    @commands.command(description="Start your journy for Dough")
+    async def Dough(self,ctx):
+        await self.check_acc(ctx.author)
+        res = await self.check_for(ctx.author, "gamingpc")
+        if not res[0]:
+            if res[1] == 2:
+                return await ctx.send("You need a gaming pc!")
+        res = await self.check_for(ctx.author, "powersupply")
+        if not res[0]:
+            if res[1] == 2:
+                return await ctx.send("You need a power supply!")
+        res = await self.check_for(ctx.author, "gpu")
+        if not res[0]:
+            if res[1] == 2:
+                return await ctx.send("You need a gpu!")
+        res = await self.check_for(ctx.author, "watercooler")
+        if not res[0]:
+            if res[1] == 2:
+                return await ctx.send("You need a water cooler!")
+        data = await self.bc.economy.find(ctx.author.id)
+        if "Dough" in data:
+            level_multi = int(data["gpu"] / 5) + 1
+            estimate = (round((0.005 * data["gpu"]) * 1000) / 1000) * level_multi
+            if data["gpu"] - data["power"] > 15:
+                estimate *= 1 - (((data["gpu"] - data["power"]) - 15) / 15)
+                estimate = round(estimate * 1000) / 1000
+            em = discord.Embed(
+                title="Dough Mining Stats"
+            )
+            em.add_field(name="Power Stats", value="Level: {}\nEnergy Consumption: {}%".format(data["power"], (((data["gpu"] - data["power"]) - 15) / 15) * 100 if (((data["gpu"] - data["power"]) - 15) / 15) * 100 > 0 else 0))
+            em.add_field(name="GPU Stats", value="Level: {}\nEstimated Dough per 5 seconds: {}".format(data["gpu"], estimate))
+            em.add_field(name="Cooling Stats", value = "Level: {}\nOverheat Progress: {}%".format(data["cooling"], ((data["gpu"] - data["cooling"]) / 20) * 100 if ((data["gpu"] - data["cooling"]) / 20) * 100 > 0 else 0))
+            return await ctx.send(embed=em)
+        data["Dough"] = 0
+        data["gpu"] = 1
+        data["power"] = 1
+        data["cooling"] = 1
+        await ctx.send("You can now begin your journy on getting Dough! I will DM you if there is an issue with the power supply or anything!")
+        await self.bc.economy.upsert(data)
+
+    @commands.group(invoke_without_command=True, description="Check out or make some cool NFTs")
+    async def nft(self,ctx):
+        await ctx.invoke(self.bc.get_command("help"), entity="nft")
+
+    @nft.command(name="lookup", aliases=["view"], description="Look at an NFT by its ID")
+    async def nft_lookup(self,ctx,nft_id:int):
+        data = await self.bc.nfts.find(nft_id)
+        if not data:
+            return await ctx.send("That NFT does not exist!")
+        total = 0
+        for offer in data["offers"]:
+            total += offer
+        owner = self.bc.get_user(data["owner"])
+        em = discord.Embed(
+            title = data["name"],
+            description = "**Estimated Value:** {} Dough\n**Owner:** {}".format(total / len(data["offers"]), owner.mention),
+            color = random.choice(self.bc.color_list)
+        )
+        em.set_image(url=data["image"])
+        await ctx.send(embed=em)
+
+    @nft.command(name="create", aliases=["make"], description="Create your own NFT!") 
+    async def nft_create(self,ctx,image, *, name):
+        if not image.startswith("https://"):
+            return await ctx.send("Image must be https!")
+        if not image.endswith((".png", ".jpg", ".jpeg", ".gif")):
+            return await ctx.send("Image must be .png, .jpg, .jpeg, or .gif")
+        eco = await self.bc.economy.find(ctx.author.id)
+        if not eco or "Dough" not in eco:
+            return await ctx.send("You need to mine some dough before you can make an NFT!")
+        latest_nft = 0
+        nfts = await self.bc.nfts.get_all()
+        for nft in nfts:
+            if nft["_id"] > latest_nft:
+                latest_nft = nft["_id"]
+        data = {"_id": latest_nft + 1, "owner": ctx.author.id, "offers": [10], "name": name, "image": image}
+        if eco["Dough"] < 10:
+            return await ctx.send("You need 10 Dough to make an NFT")
+        eco["Dough"] -= 10
+        await self.bc.economy.upsert(eco)
+        await self.bc.nfts.upsert(data)
+        await ctx.send("Successfully made your NFT for 10 dough")
+
+    @nft.command(name="buy", aliases=["offer"], description="Make an offer for an NFT", hidden=True)
+    async def nft_buy(self,ctx,nft_id:int,offer:int):
+        data = await self.bc.nfts.find(nft_id)
+        if not data:
+            return await ctx.send("That NFT does not exist!")
+        if data["owner"] == ctx.author.id:
+            return await ctx.send("You cannot buy your own NFT")
+        eco = await self.bc.economy.find(ctx.author.id)
+        if "Dough" not in eco:
+            return await ctx.send("You need some dough first!")
+        if eco["Dough"] < offer:
+            return await ctx.send("You do not have enough dough for this offer!")
+        if offer <= 0:
+            return await ctx.send("Offer must be a positive number!")
+        user = self.bc.get_user(data["owner"])
+        em = discord.Embed(
+            title="Offer on {} (ID: {})".format(data["name"], data["_id"]),
+            description="{} wants to buy your NFT: {} for {} Dough".format(ctx.author, data["name"], offer),
+            color=random.choice(self.bc.color_list)
+        )
+        await user.send(embed=em,view=NFTBuy(ctx,nft_id,offer))
+        data["offers"].append(offer)
+        await self.bc.nfts.upsert(data)
+        await ctx.send("Offer sent! I will mention you when something happens!")
+
+    @nft.group(invoke_without_command=True, description="Browse NFTs that were created")
+    async def browse(self,ctx):
+        await ctx.invoke(self.bc.get_command("help"), entity="nft browse")
+
+    @browse.command(name="hightolow",aliases=["htl"],description="Search NFTs from high values to low values")
+    async def browse_htl(self,ctx):
+        data = await self.bc.nfts.get_all()
+        for _data in data:
+            total = 0
+            for offer in _data["offers"]:
+                total += offer
+            _data["offers"] = int(total / len(_data["offers"]))
+        data = sorted(data, key=lambda x: x["offers"], reverse=True)
+        pages = []
+        for nft in data:
+            pages.append({"content": "**{} (ID: {})**\n\n**Average Value:** {}\n**Owner:** {}".format(nft["name"], nft["_id"], nft["offers"], self.bc.get_user(nft["owner"])), "image": nft["image"]})
+        await Pag(title="NFTs from High to Low", color=random.choice(self.bc.color_list), entries=pages, length=1).start(ctx)
+        
+    @commands.command(description="Exchange Dough for Coins")
+    async def exchange(self,ctx):
+        await self.check_acc(ctx.author)
+        data = await self.bc.economy.find(ctx.author.id)
+        if "Dough" not in data:
+            return await ctx.send("You need some Dough before you can exchange")
+        data["wallet"] += int(4500 * data["Dough"])
+        await ctx.send("Exchanged your {} Dough into {} Coins".format(data["Dough"], int(4500 * data["Dough"])))
+        data["Dough"] = 0
+        await self.bc.economy.upsert(data)
+
+    @commands.command(description="Get some money by doing some tasks")
     @commands.check(custom_cooldown(1, 30, 1, 12, BucketType.user))
     async def work(self, ctx):
         await self.check_acc(ctx.author)
+        res = await self.check_for(ctx.author, "phone")
+        if not res[0]:
+            if res[1] == 2:
+                return await ctx.send("You do not have a phone to work on!")
         data = await self.bc.economy.find(ctx.author.id)
-        topic = words.randtopic
-        buttons = []
-        for x in range(5):
-            _topic = random.choice(topic)
-            if _topic in buttons:
+        topic = words.randtopic()
+        work = ["match", "order"]
+        chosen = random.choice(work)
+        if chosen == "order":
+            buttons = []
+            for x in range(5):
                 _topic = random.choice(topic)
                 if _topic in buttons:
                     _topic = random.choice(topic)
@@ -431,13 +840,41 @@ class Economy(commands.Cog):
                             _topic = random.choice(topic)
                             if _topic in buttons:
                                 _topic = random.choice(topic)
-            buttons.append(_topic)
+                                if _topic in buttons:
+                                    _topic = random.choice(topic)
+                buttons.append(_topic)
 
-        msg = await ctx.send("\n".join([f"`{word}`" for word in buttons]))
-        await asyncio.sleep(5)
-        await msg.edit("Choose the items in order", view=working.Order(buttons, self.bc, ctx))
+            msg = await ctx.send("\n".join([f"`{word}`" for word in buttons]))
+            await asyncio.sleep(5)
+            await msg.edit("Choose the items in order", view=working.Order(buttons, self.bc, ctx))
+        elif chosen == "match":
+            colors = ["blue", "yellow", "red", "green"]
+            buttons = []
+            for x in range(4):
+                _topic = random.choice(topic)
+                if _topic in buttons:
+                    _topic = random.choice(topic)
+                    if _topic in buttons:
+                        _topic = random.choice(topic)
+                        if _topic in buttons:
+                            _topic = random.choice(topic)
+                            if _topic in buttons:
+                                _topic = random.choice(topic)
+                                if _topic in buttons:
+                                    _topic = random.choice(topic)
+                buttons.append(_topic)
+            choices = {}
+            print(choices)
+            choice = 0
+            for color in colors:
+                choices[color] = buttons[choice]
+                choice += 1
+            randcolor = random.choice(colors)
+            msg = await ctx.send("\n".join([f"`{color}` {word}" for color, word in choices.items()]))
+            await asyncio.sleep(5)
+            await msg.edit(f"Choose the item that was next to the color {randcolor}", view=working.Match(choices, self.bc, ctx, randcolor))
 
-    @commands.command()
+    @commands.command(description="Collect your weekly coins")
     async def weekly(self,ctx):
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
@@ -455,8 +892,8 @@ class Economy(commands.Cog):
                 earnings = 75000*2
             data["wallet"] += earnings
             await ctx.send("You have now claimed your {}k coins for this week!".format(earnings/1000))
-            await self.bc.economy.upsert(data)
             data["claimedweekly"] = datetime.datetime.now()
+            await self.bc.economy.upsert(data)
         else:
             timeleft = claimtime - datetime.datetime.now()
             seconds = timeleft.total_seconds()
@@ -476,7 +913,7 @@ class Economy(commands.Cog):
                 duration = f"{int(d)} days, {int(h)} hours, {int(m)} minutes and {int(s)} seconds"
             await ctx.send("Bro wait for {} to claim your weekly prize".format(duration))
 
-    @commands.command()
+    @commands.command(description="Collect your daily coins")
     async def daily(self,ctx):
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
@@ -494,8 +931,8 @@ class Economy(commands.Cog):
                 earnings = 25000*2
             data["wallet"] += earnings
             await ctx.send("You have now claimed your {}k coins for today!".format(earnings/1000))
-            await self.bc.economy.upsert(data)
             data["claimeddaily"] = datetime.datetime.now()
+            await self.bc.economy.upsert(data)
         else:
             timeleft = claimtime - datetime.datetime.now()
             seconds = timeleft.total_seconds()
@@ -669,10 +1106,10 @@ class Economy(commands.Cog):
             amount = data["wallet"] / 2
             if amount > 500000:
                 amount = 500000
+        amount = int(amount)
         if amount > 500000:
             return await ctx.send("You can only gamble 500k coins")
 
-        amount = int(amount)
         if amount > data["wallet"]:
             await ctx.send("you dont have that much money!")
             return
@@ -764,7 +1201,7 @@ class Economy(commands.Cog):
         data["wallet"] += earnings
         await self.bc.economy.upsert(data)
 
-    @commands.command()
+    @commands.command(description="Gift an item to a user")
     async def gift(self, ctx, member:discord.Member, item, amount = 1):
         await self.check_acc(ctx.author)
         await self.check_acc(member)
@@ -829,10 +1266,10 @@ class Economy(commands.Cog):
             amount = data["wallet"] / 2
             if amount > 500000:
                 amount = 500000
+        amount = int(amount)
         if amount > 500000:
             return await ctx.send("You can only gamble 500k coins")
-
-        amount = int(amount)
+            
         if amount > data["wallet"]:
             await ctx.send("you dont have that much money!")
             return
@@ -853,7 +1290,8 @@ class Economy(commands.Cog):
 
 
     @commands.command(
-        aliases=["bal"]
+        aliases=["bal"],
+        description="Look at how much money you have in the bank"
     )
     async def balance(self, ctx, member: discord.Member=None):
         member = member or ctx.author
@@ -864,9 +1302,11 @@ class Economy(commands.Cog):
             description=f"**Wallet:** {data['wallet']:,d}\n**Bank:** {data['bank']:,d}/{data['banklimit']:,d}",
             color=random.choice(self.bc.color_list)
         )
+        if "Dough" in data:
+            em.description += f"\n**Dough:** {data['Dough']}"
         await ctx.send(embed=em)
 
-    @commands.command()
+    @commands.command(description="Look at a more detailed menu of your stats")
     async def profile(self, ctx, member: discord.Member=None):
         member = member or ctx.author
         await self.check_acc(member)
@@ -878,18 +1318,24 @@ class Economy(commands.Cog):
         )
         embed.add_field(name="Leveling", value="**Level** - {}\n**XP** - {}".format(data["level"], data["xp"]))
 
-    @commands.command()
+    @commands.command(description="Check out the cool items in the shop")
     async def shop(self,ctx,item=None):
         await self.check_acc(ctx.author)
         if not item:
-            em = discord.Embed(
-                title="Economy Shop",
-                color=random.choice(self.bc.color_list)
-            )
-            for item in shop:
-                if not item["hidden"]:
-                    em.add_field(name=f'{item["name"]} — {item["cost"]:,d}',value="{}\nID: `{}`".format(item["desc"], item["id"]), inline=False)
-            await ctx.send(embed=em)
+            pages = []
+            for i in range(0, len(shop), 5):
+                shop_items = shop[i : i + 5]
+                items_entry = ""
+
+                for item in shop_items:
+                    if item["hidden"]:
+                        continue
+                    desc = item["desc"]
+                    _id = item["id"]
+
+                    items_entry += f'**{item["name"]} — {item["cost"]:,d}**\n{desc}\nID: `{_id}`\n\n'
+                pages.append(items_entry)
+            await Pag(title="Economy Shop", color=random.choice(self.bc.color_list), entries=pages, length=1).start(ctx)
         else:
             await self.check_acc(ctx.author)
             data = await self.bc.economy.find(ctx.author.id)
@@ -921,13 +1367,13 @@ class Economy(commands.Cog):
             
             embed = discord.Embed(
                 title=name_["name"] + " ({} Owned)".format(amount),
-                description=name_["desc"] + "\n\n**BUY** - {} coins\n**SELL** - {} coins".format(name_["cost"], int(name_["cost"] / 3))
+                description=name_["desc"] + "\n\n**BUY** - {}\n**SELL** - {} coins".format(str(name_["cost"]) + " coins" if name_["canbuy"] else "NOT FOR SALE", int(name_["cost"] / 3))
             )
 
             await ctx.send(embed = embed)
 
 
-    @commands.command(aliases=["pm"])
+    @commands.command(aliases=["pm"], description="Use your laptop to post some reddit memes")
     @commands.check(custom_cooldown(1,30,1,12,BucketType.user))
     async def postmeme(self, ctx):
         await self.check_acc(ctx.author)
@@ -958,7 +1404,7 @@ class Economy(commands.Cog):
             else:
                 return await ctx.send("You did not enter the choices right")
 
-    @commands.command()
+    @commands.command(description="Start all over again with a few buffs")
     async def prestige(self,ctx):
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
@@ -993,7 +1439,7 @@ class Economy(commands.Cog):
         await ctx.send(embed=embed)
         await self.bc.economy.upsert(data)
 
-    @commands.command()
+    @commands.command(description="Go hunting for some wild animals")
     @commands.check(custom_cooldown(1,45,1,20,BucketType.user))
     async def hunt(self, ctx):
         await self.check_acc(ctx.author)
@@ -1010,7 +1456,7 @@ class Economy(commands.Cog):
         else:
             await ctx.send("You fired your rifle and the animal got away.")
 
-    @commands.command()
+    @commands.command(description="Go fishing with your old man")
     @commands.check(custom_cooldown(1,45,1,20,BucketType.user))
     async def fish(self, ctx):
         await self.check_acc(ctx.author)
@@ -1022,14 +1468,14 @@ class Economy(commands.Cog):
         await self.add_item(ctx.author, "fish", fish)
         await ctx.send("You have caught {} fish".format(fish))
 
-    @commands.command(aliases=["scout"])
+    @commands.command(aliases=["scout"], description="Look for coins around the world")
     @commands.check(custom_cooldown(1,30,1,12,BucketType.user))
     async def search(self,ctx):
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
         await ctx.send("**Where do you want to search?**\nPick one of the options below to search", view=Search(self.bc, ctx))
 
-    @commands.command()
+    @commands.command(description="Beg for coins.")
     @commands.check(custom_cooldown(1,30,1,12,BucketType.user))
     async def beg(self,ctx):
         await self.check_acc(ctx.author)
@@ -1046,7 +1492,7 @@ class Economy(commands.Cog):
         data["wallet"] += earnings
         await self.bc.economy.upsert(data)
 
-    @commands.command(aliases=["with"])
+    @commands.command(aliases=["with"], description="Take some money out of your bank")
     async def withdraw(self,ctx,amount):
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
@@ -1064,7 +1510,7 @@ class Economy(commands.Cog):
         await self.bc.economy.upsert(data)
         await ctx.send("Successfully withdrew **{}** coins from your bank!".format(amount))
 
-    @commands.command(aliases=["dep"])
+    @commands.command(aliases=["dep"], description="Put some money into your bank")
     async def deposit(self,ctx,amount):
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
@@ -1094,7 +1540,7 @@ class Economy(commands.Cog):
         await ctx.send("Successfully deposited **{}** coins!".format(amount))
 
 
-    @commands.command()
+    @commands.command(description="Check out the top 10 global richest people using this bot")
     async def rich(self,ctx):
         data = await self.bc.economy.get_all()
         lb = sorted(data, key=lambda x: x["wallet"], reverse=True)
@@ -1110,7 +1556,7 @@ class Economy(commands.Cog):
                 em.add_field(name=f"{index}. {self.bc.get_user(user['_id'])}", value=f"{user['wallet']}", inline=False)
         await ctx.send(embed=em)
 
-    @commands.command()
+    @commands.command(description="Buy an item from the shop")
     async def buy(self,ctx,item,amount=1):
         await self.check_acc(ctx.author)
         res = await self.buy_item(ctx.author, item, amount)
@@ -1123,7 +1569,7 @@ class Economy(commands.Cog):
                 return await ctx.send("You don't have enough money in your wallet for this!")
         await ctx.send("Item Bought Successfully!")
 
-    @commands.command()
+    @commands.command(description="Sell an item for 1/3 of its price")
     async def sell(self,ctx,item,amount=1):
         await self.check_acc(ctx.author)
         res = await self.sell_item(ctx.author, item, amount)
@@ -1147,7 +1593,7 @@ class Economy(commands.Cog):
             return await ctx.send("I could not find that item in the shop! Please check your spelling!")
         await ctx.send("Item Sold Successfully for {} coins!".format(int(name_["cost"] / 3)))
 
-    @commands.command(aliases=["inv"])
+    @commands.command(aliases=["inv"], description="Check out what items you have in your inventory")
     async def inventory(self,ctx, member:discord.Member=None):
         member = member or ctx.author
         await self.check_acc(member)
@@ -1196,8 +1642,10 @@ class Economy(commands.Cog):
         await self.bc.economy.upsert(data)
         await self.bc.economy.upsert(data2)
 
-    @commands.command()
+    @commands.command(description="Share some coins and bring some joy :)")
     async def share(self,ctx,member:discord.Member, amount:int):
+        if amount < 0:
+            return await ctx.send("Amount must be a positive number")
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)
         await self.check_acc(member)
@@ -1214,7 +1662,7 @@ class Economy(commands.Cog):
         await self.bc.economy.upsert(data)
         await self.bc.economy.upsert(data2)
 
-    @commands.command(description="rob a person", usage="<user>")
+    @commands.command(description="rob a person's bank", usage="<user>")
     async def heist(self, ctx, member: discord.Member):
         await self.check_acc(ctx.author)
         data = await self.bc.economy.find(ctx.author.id)

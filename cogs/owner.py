@@ -16,6 +16,7 @@ import requests
 from io import BytesIO
 import time
 import datetime
+from utility import util
 
 def format_num(num):
     magnitude = 0
@@ -60,6 +61,18 @@ class Owner(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
+    async def updatedocs(self,ctx):
+        await util.docs("premium", "config", self.bc, ctx)
+        await util.docs("daily", "economy", self.bc, ctx)
+        await util.docs("meme", "fun", self.bc, ctx)
+        await util.docs("lock", "moderation", self.bc, ctx)
+        await util.docs("calc", "utility", self.bc, ctx)
+        await util.docs("serverinfo", "checking", self.bc, ctx)
+        await util.docs("pixelate", "images", self.bc, ctx)
+        await util.docs("gaw", "serverevents", self.bc, ctx)
+
+    @commands.command()
+    @commands.is_owner()
     async def botfarms(self, ctx):
         for guild in self.bc.guilds:
             botcount = len([member for member in guild.members if member.bot])
@@ -92,7 +105,7 @@ class Owner(commands.Cog):
 
     @commands.group(invoke_without_command=True)
     async def changelogs(self,ctx):
-        with open("changelogs.txt","r") as f:
+        with open("utility/storage/changelogs.txt","r") as f:
             lines = f.readlines()
         notes = "".join(line for line in lines)
         em = discord.Embed(
@@ -110,8 +123,9 @@ class Owner(commands.Cog):
         await ctx.send(data["logs"])
     
     @changelogs.command()
+    @commands.is_owner()
     async def add(self,ctx,version,*,notes):
-        with open("changelogs.txt","w+") as f:
+        with open("utility/storage/changelogs.txt","w+") as f:
             f.write("""
 **Version:** {}
 **Notes:**
@@ -359,28 +373,6 @@ class Owner(commands.Cog):
                     title='Ran into a error while evaluating...')
                 embed.add_field(name='Error: ', value=e)
                 await ctx.send(embed=embed)
-
-
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        data = await self.bc.prefixes.get_by_id(message.guild.id)
-        if not data or "prefix" not in data:
-            prefix = self.bc.DEFAULTPREFIX
-        else:
-            prefix = data["prefix"]
-        #if message.author.id == self.bc.user.id:
-         #   return
-        if message.author != message.author.bot and not message.author.bot:
-            if not message.guild and not message.content.startswith(prefix):
-                await self.bc.get_guild(760950684849537124).get_channel(
-                    760950866701320193
-                ).send(
-                    f'User `{message.author}` has sent a report saying: **{message.content}**'
-                )
-                await self.bc.process_commands(message)
-        if not message.guild:
-            return
-        await self.bc.process_commands(message)
 
     @commands.command(
         name='reload', description="Reload all/one of the bots cogs!")

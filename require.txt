@@ -1,11 +1,14 @@
-goo
-https://github.com/Pycord-Development/pycord
+git+https://github.com/Pycord-Development/pycord
 flask
 six
-googletrans==3.1.0a
 asyncpraw
+googletrans==3.1.0a
 discordmongopy
 aiohttp
 pillow
 glitchart
 motor
+captcha
+numpy
+opencv-python
+emojis

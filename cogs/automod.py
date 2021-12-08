@@ -71,6 +71,8 @@ class AutoMod(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
+        if not before.guild:
+            return
         data = await self.bc.rickroll.find(after.guild.id)
         if data:
             if data["enabled"]:
@@ -114,18 +116,9 @@ class AutoMod(commands.Cog):
             try:
                 data1 = await self.bc.linksonly.find(after.guild.id)
                 data2 = await self.bc.modroles.find(after.guild.id)
-                #Antispam Mentions
-                msgs = list(filter(lambda m: _check(m), self.bc.cached_messages))
-                if len(msgs) >= 3:
-                    await after.channel.send("{} Don't spam mentions please!".format(after.author.mention), delete_after=10)
-                    try:
-                        await after.delete()
-                    except:
-                        pass
-
                 #Anti Links in channels
                 
-                elif after.channel.id not in data1["channels"]:
+                if after.channel.id not in data1["channels"]:
                     if data1 is None:
                         return
                     if data2 is not None:
@@ -167,6 +160,8 @@ class AutoMod(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self,message):
+        if not message.guild:
+            return
         data = await self.bc.rickroll.find(message.guild.id)
         if data:
             if data["enabled"]:
@@ -209,18 +204,9 @@ class AutoMod(commands.Cog):
             try:
                 data1 = await self.bc.linksonly.find(message.guild.id)
                 data2 = await self.bc.modroles.find(message.guild.id)
-                #Antispam Mentions
-                msgs = list(filter(lambda m: _check(m), self.bc.cached_messages))
-                if len(msgs) >= 3:
-                    await message.channel.send("{} Don't spam mentions pls or else!".format(message.author.mention), delete_after=10)
-                    try:
-                        await message.delete()
-                    except:
-                        pass
-
                 #Anti Links in channels
                 
-                elif message.channel.id not in data1["channels"]:
+                if message.channel.id not in data1["channels"]:
                     if data1 is None:
                         return
                     if data2 is not None:

@@ -27,9 +27,9 @@ import utility
 import discordmongo
 import googletrans
 import sys
+from .base import BaseBot
 
 async def get_prefix(bc, message):
-    # If dm's
     if not message.guild:
         return commands.when_mentioned_or(bc.DEFAULTPREFIX)(bc, message)
 
@@ -43,7 +43,7 @@ async def get_prefix(bc, message):
     except:
         return commands.when_mentioned_or(bc.DEFAULTPREFIX)(bc, message)
 
-class BreadBot(commands.AutoShardedBot):
+class BreadBot(BaseBot):
     def __init__(self):
 
         # Important things
@@ -77,91 +77,108 @@ class BreadBot(commands.AutoShardedBot):
         self.dbltoken = os.environ.get("DBLTOKEN")
         self.gettingmemes = True
 
-        # Colors and main permissions
-        self.colors = {
-            "WHITE": 0xFFFFFF,
-            "AQUA": 0x1Abc9C,
-            "GREEN": 0x2ECC71,
-            "BLUE": 0x3498DB,
-            "PURPLE": 0x9B59B6,
-            "LUMINOUS_VIVID_PINK": 0xE91E63,
-            "GOLD": 0xF1C40F,
-            "ORANGE": 0xE67E22,
-            "RED": 0xE74C3C,
-            "NAVY": 0x34495E,
-            "DARK_AQUA": 0x11806A,
-            "DARK_GREEN": 0x1F8B4C,
-            "DARK_BLUE": 0x206694,
-            "DARK_PURPLE": 0x71368A,
-            "DARK_VIVID_PINK": 0xAD1457,
-            "DARK_GOLD": 0xC27C0E,
-            "DARK_ORANGE": 0xA84300,
-            "DARK_RED": 0x992D22,
-            "DARK_NAVY": 0x2C3E50,
-        }
-        self.color_list = [c for c in self.colors.values()]
-        self.main_perms = ["administrator", "manage_channels", "manage_guild", "kick_members", "ban_members","view_audit_log", "send_messages", "read_messages", "send_tts_messages", "attach_files", "embed_links", "mention_everyone", "connect", "speak", "mute_members", "deafen_members", "change_nicknames", "manage_roles", "manage_messages"]
-
-        # Define the db
-        self.connection_url = os.environ.get("mongo")
-        self.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(self.connection_url))
-        self.db = self.mongo["bread"]
-        self.prefixes = discordmongo.Mongo(connection_url=self.db, dbname="prefixes")
-        self.mutes = discordmongo.Mongo(connection_url=self.db, dbname="mutes")
-        self.modroles = discordmongo.Mongo(connection_url=self.db, dbname="modroles")
-        self.heists = discordmongo.Mongo(connection_url=self.db, dbname="heists")
-        self.cmd_usage = discordmongo.Mongo(connection_url=self.db, dbname="usage")
-        self.linksonly = discordmongo.Mongo(connection_url=self.db, dbname="linkonly")
-        self.premium = discordmongo.Mongo(connection_url=self.db, dbname="premium")
-        self.packs = discordmongo.Mongo(connection_url=self.db, dbname="packs")
-        self.warns = discordmongo.Mongo(connection_url=self.db, dbname="warnings")
-        self.invites = discordmongo.Mongo(connection_url=self.db, dbname="invites")
-        self.config = discordmongo.Mongo(connection_url=self.db, dbname="config")
-        self.reaction_roles = discordmongo.Mongo(connection_url=self.db, dbname="reactionroles")
-        self.modlogs = discordmongo.Mongo(connection_url=self.db, dbname="modlogs")
-        self.giveaways = discordmongo.Mongo(connection_url=self.db, dbname="giveaways")
-        self.suggestions = discordmongo.Mongo(connection_url=self.db, dbname="suggestions")
-        self.censor = discordmongo.Mongo(connection_url=self.db, dbname="censor")
-        self.welcomes = discordmongo.Mongo(connection_url=self.db, dbname="welcomes")
-        self.leaves = discordmongo.Mongo(connection_url=self.db, dbname="leaves")
-        self.starboard = discordmongo.Mongo(connection_url=self.db, dbname="starboard")
-        self.ranks = discordmongo.Mongo(connection_url=self.db, dbname="levels")
-        self.tags = discordmongo.Mongo(connection_url=self.db, dbname="tags")
-        self.chatbot = discordmongo.Mongo(connection_url=self.db, dbname="chatbot")
-        self.locked = discordmongo.Mongo(connection_url=self.db, dbname="locked")
-        self.logs = discordmongo.Mongo(connection_url=self.db, dbname="cmdlogs")
-        self.economy = discordmongo.Mongo(connection_url=self.db, dbname="economy")
-        self.rickroll = discordmongo.Mongo(connection_url=self.db, dbname="rickroll")
-        self.afk = discordmongo.Mongo(connection_url=self.db, dbname="afk")
-        self.reminders = discordmongo.Mongo(connection_url=self.db, dbname="reminders")
-
         # Load cogs
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py') and not filename.startswith("_"):
                 self.load_extension(f'cogs.{filename[:-3]}')
                 print(filename[:-3].capitalize() + " Cog has been loaded\n" + "-"*len(filename[:-3] + " Cog has been loaded") + "\n")
+        self.load_extension("slashtest.test")
+        self.load_extension("slash.checking")
 
         @self.before_invoke
         async def before_any_command(ctx):
+            if not isinstance(ctx.command, commands.Command):
+                return
             data = read_json("utility/storage/json/blacklist")
             self.blacklisted_users = data["blacklistedUsers"]
             if ctx.author.id in self.blacklisted_users:
-                error = utility.Blacklisted(ctx)
-                raise await error.send()
+                raise utility.Blacklisted()
             
             data = await self.premium.find(ctx.guild.id)
             if data is None and ctx.command.qualified_name.lower() in utility.commands2.premium:
-                error = utility.Premium(ctx)
-                raise await error.send()
+                raise utility.Premium()
 
+            data = await self.botedit.find(ctx.guild.id)
+            if data:
+                # Check Role Blacklist
+                for role in data["roles_bl"]:
+                    role = await commands.RoleConverter().convert(ctx, str(role))
+                    if role in ctx.author.roles:
+                        raise utility.EditError
+
+                # Check Role Whitelist
+                found = False
+                for role in data["roles_wl"]:
+                    role = await commands.RoleConverter().convert(ctx, role)
+                    if role in ctx.author.roles:
+                        found = True
+                        break
+                
+                if not found and data["roles_wl"]:
+                    raise utility.EditError
+
+                # Check Channel Blacklist
+                for channel in data["channels_bl"]:
+                    if ctx.channel.id == channel:
+                        raise utility.EditError
+
+                # Check Channel Whitelist
+                found = False
+                for channel in data["channels_wl"]:
+                    if channel == ctx.channel.id:
+                        found = True
+                        break
+                
+                if not found and data["channels_wl"]:
+                    raise utility.EditError
+                # Check Command Settings
+                if ctx.command.qualified_name in data["commands"]:
+                    cmd_data = data["commands"][ctx.command.qualified_name]
+
+                    # Check Role Blacklist
+                    for role in cmd_data["roles_bl"]:
+                        role = await commands.RoleConverter().convert(ctx, str(role))
+                        if role in ctx.author.roles:
+                            raise utility.EditError
+
+                    # Check Role Whitelist
+                    found = False
+                    for role in cmd_data["roles_wl"]:
+                        role = await commands.RoleConverter().convert(ctx, role)
+                        if role in ctx.author.roles:
+                            found = True
+                            break
+                    
+                    if not found and cmd_data["roles_wl"]:
+                        raise utility.EditError
+
+                    # Check Channel Blacklist
+                    for channel in cmd_data["channels_bl"]:
+                        if ctx.channel.id == channel:
+                            raise utility.EditError
+
+                    # Check Channel Whitelist
+                    found = False
+                    for channel in cmd_data["channels_wl"]:
+                        if channel == ctx.channel.id:
+                            found = True
+                            break
+                    
+                    if not found and cmd_data["channels_wl"]:
+                        raise utility.EditError
             try:
                 await ctx.trigger_typing()
             except discord.errors.Forbidden:
                 pass
 
     async def on_ready(self):
+        for guild in self.guilds:
+            botcount = len([member for member in guild.members if member.bot])
+            if botcount >= 100:
+                await guild.leave()
 
         await self.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{self.DEFAULTPREFIX}help | https://dashboard.breadbot.me"))
+        await self.register_commands()
         data = read_json("utility/storage/json/blacklist")
         self.blacklisted_users = data["blacklistedUsers"]
         currentMutes = await self.mutes.get_all()
@@ -187,6 +204,13 @@ class BreadBot(commands.AutoShardedBot):
         self.launch_time = datetime.datetime.utcnow()
 
     async def on_message(self,message):
+        if message.author != message.author.bot and not message.author.bot:
+            if not message.guild and not message.content.startswith(prefix):
+                await self.get_guild(760950684849537124).get_channel(
+                    760950866701320193
+                ).send(
+                    f'User `{message.author}` has sent a report saying: **{message.content}**'
+                )
         if not message.guild:
             return
         data = await self.prefixes.get_by_id(message.guild.id)
@@ -211,6 +235,7 @@ class BreadBot(commands.AutoShardedBot):
             await message.channel.send(
                 f"My prefix here is `{prefix}`", delete_after=15)
 
+        await self.process_commands(message)
         #If a person is using a premium command the bot will ignore if the command is being used in a non premium server
 
 

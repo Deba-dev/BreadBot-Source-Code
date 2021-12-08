@@ -47,7 +47,7 @@ class Moderation(commands.Cog):
 
 
 
-    @tasks.loop(seconds=1)
+    @tasks.loop(seconds=3)
     async def check_current_mutes(self):
         currentTime = datetime.datetime.now()
         mutes = deepcopy(self.bc.muted_users)
@@ -91,6 +91,7 @@ class Moderation(commands.Cog):
         description="Mutes a given user for an amount of time!",
         usage='<user> [time]'
     )
+    @commands.bot_has_permissions(manage_roles=True)
     @commands.has_permissions(manage_messages=True)
     async def mute(self, ctx, member: discord.Member, *, time: TimeConverter=None):
         with open('utility/storage/json/muteroles.json', 'r') as f:

@@ -1,23 +1,34 @@
 import discord
+import typing
 from discord.ext import commands
 from PIL import Image, ImageDraw, ImageOps, ImageFont
 from io import BytesIO
 import datetime
 import glitchart
+import random
+from utility import image_convert as im_cv
+from utility.imager import IMAGEOPS
 
 class Images(commands.Cog):
     def __init__(self,bc):
         self.bc = bc
 
-    @commands.command(description="Invert the color on ur pfp")
-    async def invert(self,ctx,member:discord.Member=None):
-        member = ctx.author if not member else member
-        avatar = member.avatar
-        await avatar.save('utility/storage/images/Avatar.png')
-        im = Image.open('utility/storage/images/Avatar.png').convert("RGB")
-        inverted = ImageOps.invert(im)
-        inverted.save("utility/storage/images/inverted.png")
-        await ctx.send(file=discord.File("utility/storage/images/inverted.png"))
+    @commands.command(name='Invert', usage="[image]")
+    async def invert(self, ctx, argument: str = None, animate: str = '--true', *size) -> typing.Union[discord.MessageReference, discord.Embed]:
+        stream = await im_cv.get_stream(ctx, query=argument)
+
+        if not stream:
+            return await ctx.message.reply(content='Invalid image url passed')
+
+        file = await self.bc.loop.run_in_executor(None, IMAGEOPS, ImageOps.invert, stream, animate, *size)
+        embed = discord.Embed(title='Inverted!', color=random.choice(self.bc.color_list)).set_image(
+            url='attachment://{}'.format(file.filename))
+
+        try:
+            await ctx.message.reply(file=file, embed=embed)
+        except Exception:
+            return await ctx.message.reply(content='File is too large to send')
+
 
     @commands.command(
         description="Add a glitch effect to your images"

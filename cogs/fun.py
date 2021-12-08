@@ -106,7 +106,7 @@ class Fun(commands.Cog):
 
     @tasks.loop(minutes=60)
     async def refresh_memes(self):
-        subreddit = await reddit.subreddit("kidsarefuckingstupid")
+        subreddit = await reddit.subreddit("memes")
         top = subreddit.top(limit=500)
         self.subs.clear()
         async for submission in top:
@@ -166,14 +166,14 @@ class Fun(commands.Cog):
         Object1 = random.choice(All_Objects)
         Punctuation = random.choice(All_Punctuation)
         offset = margin = 60
-        font = ImageFont.truetype("abel-regular.ttf", 45)
+        font = ImageFont.truetype("utility/fonts/abel-regular.ttf", 45)
         im = Image.new("RGB", (720, 420), (0, 0, 0))
         text = "{} {} {} {} {}{}".format(Adjective, Subject3, Adverby, Verb, Object1, Punctuation)
         draw = ImageDraw.Draw(im)
         textwrapped = textwrap.wrap(text, width=35)
         draw.text((offset,margin), "\n".join(textwrapped), font=font, fill="#ffffff")
-        im.save("images/words.png")
-        await ctx.send(file=discord.File("images/words.png"))
+        im.save("utility/storage/images/words.png")
+        await ctx.send(file=discord.File("utility/storage/images/words.png"))
         await ctx.send("**You must type exactly as it is said on the image. You have 60 seconds**")
         def check(msg):
             return msg.author == ctx.author
@@ -195,7 +195,7 @@ class Fun(commands.Cog):
     @commands.command(
         name="8ball",
         aliases=['eightball'],
-        description="ask the danepai gods anything with your magik 8ball",
+        description="ask the bread gods anything with your magik 8ball",
         usage='<question>')
     @cooldown(1, 5, BucketType.user)
     async def _8ball_(self, ctx, *, question):
@@ -212,17 +212,10 @@ class Fun(commands.Cog):
             f'Question: {question}\nAnswer: {random.choice(responses)}')
 
     @commands.command(
-        description='Accidentally looked at something distrubing? use this command for the bot to give holy water',
-        usage=' ')
-    async def holywater(self,ctx):
-      await ctx.send(file=discord.File('holy-water.png'))
-
-    @commands.command(
         description='fake ban people and prank',
         usage='<person>')
     async def fban(self, ctx, person):
       await ctx.send(f'{person} was banned by <@{ctx.author.id}>')
-      await ctx.message.delete()
 
 
     @commands.command(hidden=True)

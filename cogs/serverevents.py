@@ -115,7 +115,12 @@ class ServerEvents(commands.Cog):
                         pass
                     return await ctx.send("A winner could not be determined.")
                 for x in range(winners):
-                    ppl.append(random.choice(users))
+                    winner = random.choice(users)
+                    users.remove(winner)
+                    ppl.append(winner)
+                    if len(users) == 0:
+                        break
+                
                 await ctx.send("The people who won the giveaway for **{}** were: {}\nMessage link: https://discord.com/channels/{}/{}/{}".format(reward,", ".join([user.mention for user in ppl]),guild.id,channel.id,new_msg.id))
                 await gawedit(new_msg,value,self.bc)
                 await self.bc.giveaways.delete(msg)
@@ -147,7 +152,7 @@ class ServerEvents(commands.Cog):
     async def giveaway(self, ctx):
         await ctx.invoke(self.bc.get_command("help"), entity="giveaway")
 
-    @giveaway.command(name="start")
+    @giveaway.command(name="start", description="Start a giveaway")
     async def gaw_start(self,ctx,channel:discord.TextChannel,winners:int,time: TimeConverter,*, reward):
         if not channel:
             await ctx.invoke(self.bc.get_command("help"),entity="giveaway")
@@ -187,7 +192,8 @@ class ServerEvents(commands.Cog):
         await self.bc.giveaways.upsert(data)
         self.bc.GAWdata[msg.id] = data
 
-    @giveaway.command(name="reroll")
+    @giveaway.command(name="reroll", description="Reroll a new winner")
+    @commands.has_role("Giveaway")
     async def gaw_reroll(self,ctx,channel:discord.TextChannel,msgid,winners:int):
         try:
             await ctx.send("Rerolling...")
@@ -202,7 +208,8 @@ class ServerEvents(commands.Cog):
             #await ctx.send(traceback.format_exc())
             return
     
-    @giveaway.command(name="end")
+    @giveaway.command(name="end", description="End a giveaway early")
+    @commands.has_role("Giveaway")
     async def gaw_end(self,ctx,channel:discord.TextChannel,msgid):
         try:
             data = await self.bc.giveaways.find_by_id(int(msgid))

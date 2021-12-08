@@ -21,6 +21,7 @@ class Ranks(commands.Cog):
             for member in data["members"]:
                 rank = data["members"].index(member)
                 member["rank"] = rank + 1
+            data["members"] = sorted(data["members"], key=lambda x: x["xp"], reverse=True)
             await self.bc.ranks.upsert(data)
 
     @commands.Cog.listener()
@@ -33,7 +34,7 @@ class Ranks(commands.Cog):
         if msg.author.bot:
             return
         if data is None:
-            data = {"_id":msg.guild.id, "multi":1, "message":"{member} you just leveled up to level {level} GG!","channel": None, "members": [], "blacklisted": [], "rewards": {}}
+            data = {"_id":msg.guild.id, "multi":1, "MaxEarn": 45, "message":"{member} you just leveled up to level {level} GG!","channel": None, "members": [], "blacklisted": [], "rewards": {}}
             data["members"].append({"username": "{}#{}".format(msg.author.name, msg.author.discriminator), "userid": msg.author.id, "level":1, "xp": 0, "maxXp": 35, "rank": None})
         isindata = False    
         for member in data["members"]:
@@ -42,7 +43,10 @@ class Ranks(commands.Cog):
         if not isindata:
             data["members"].append({"username": "{}#{}".format(msg.author.name, msg.author.discriminator), "userid": msg.author.id, "level":1, "xp": 0, "maxXp": 35, "rank": None})
         user = next((user for user in data["members"] if user['userid'] == msg.author.id), None)
-        user["xp"] += 1*data["multi"]
+        earnings = round(len(msg.content) / 2)
+        if earnings > int(data["MaxEarn"]):
+            earnings = int(data["MaxEarn"])
+        user["xp"] += earnings*data["multi"]
         rank = data["members"].index(user) 
         if user["xp"] >= user["maxXp"]:
             user["level"] += 1
