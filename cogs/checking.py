@@ -41,7 +41,7 @@ class Checking(commands.Cog):
         branch = 'master'
         if command is None:
             return await ctx.send(source_url)
-        obj = self.client.get_command(command.replace('.', ' '))
+        obj = self.bc.get_command(command.replace('.', ' '))
         if obj is None:
             return await ctx.send('Could not find command.')
 
@@ -61,7 +61,7 @@ class Checking(commands.Cog):
             branch = 'master'
 
         final_url = f'<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>'
-        await ctx.send(final_url + "<- Source")
+        await ctx.send(final_url + " <- Source")
         
     @commands.command(description="Diagnose a command to see why it may not be working!")
     async def diagnose(self,ctx,cmd):

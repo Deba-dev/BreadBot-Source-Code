@@ -235,8 +235,10 @@ class Owner(commands.Cog):
 
 
     @commands.command()
-    @commands.is_owner()
     async def run(self,ctx, *, cmd):
+        whitelist = [self.bc.owner, 724275771278884906]
+        if not ctx.author.id in whitelist:
+            return
         fn_name = "_eval_expr"
         cmd = cmd.strip("` ")
         cmd = "\n".join(f"    {i}" for i in cmd.splitlines())

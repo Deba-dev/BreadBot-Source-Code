@@ -8,6 +8,7 @@ from discord.ext import commands
 import time
 import datetime
 import sys
+import psutil
 from utility import Pag
 
 invite = discord.ui.Button(label='Invite', style=discord.ButtonStyle.link, url="https://discord.com/oauth2/authorize?client_id=760871722718855169&scope=bot&permissions=8")
@@ -223,14 +224,17 @@ class Support(commands.Cog):
           color=0x0000ff
         )
         em.add_field(name='Version', value=version)
-        em.add_field(name='Discord.py Version', value=dpyVersion)
+        em.add_field(name='Pycord Version', value=dpyVersion)
         em.add_field(name='Python Version', value=pythonVersion)
         em.add_field(name='Guilds im in', value=len(self.bc.guilds))
         em.add_field(name='People in the guilds im in', value=len(set(self.bc.get_all_members())))
         em.add_field(name="All the channels I have access to:", value=len(set(self.bc.get_all_channels())))
         em.add_field(name="Shards",value=self.bc.shards[0].shard_count)
         em.add_field(name='Number of Commands', value=x)
+        em.add_field(name="Memory Usage", value=str(psutil.virtual_memory().percent) + "%")
+        em.add_field(name="CPU Usage", value=str(psutil.cpu_percent()) + "%")
         await ctx.send(embed=em)
+        
 
     @commands.command(
         description="Check out the links of the bot",

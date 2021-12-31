@@ -80,8 +80,7 @@ class Images(commands.Cog):
         await ctx.send(file=discord.File("utility/storage/images/completenuts.jpg"))
     
     @commands.command(
-        description="slap someone",
-        usage="[user]"
+        description="slap someone"
     )
     async def slap(self,ctx,member:discord.Member):
         if not member:
