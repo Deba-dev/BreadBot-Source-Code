@@ -12,3 +12,4 @@ captcha
 numpy
 opencv-python
 emojis
+psutil

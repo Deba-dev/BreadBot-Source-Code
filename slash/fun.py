@@ -1,5 +1,6 @@
 import discord
 import re
+from discord import commands as slash
 from discord.ext import commands, tasks
 import asyncio
 import random
@@ -68,7 +69,7 @@ class MemeView(discord.ui.View):
         em.set_image(url=url)
         await interaction.response.edit_message(embed=em)
 
-class Fun(commands.Cog):
+class FunSlash(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
         self.subs = []
@@ -77,7 +78,7 @@ class Fun(commands.Cog):
     def cog_unload(self):
         self.meme_task.cancel()
 
-    @commands.command(
+    @slash.command(
         description="Mutes you for an amount of time!",
         usage='[time]'
     )
@@ -88,19 +89,19 @@ class Fun(commands.Cog):
         try:
             role = discord.utils.get(ctx.guild.roles, id=int(channel[str(ctx.guild.id)]))
         except KeyError:
-            await ctx.send("No muted role was found! Please set one with the muterole command")
+            await ctx.respond("No muted role was found! Please set one with the muterole command")
             return
 
 
         try:
             if self.bc.muted_users[member.id]:
-                await ctx.send("This user is already muted")
+                await ctx.respond("This user is already muted")
                 return
         except KeyError:
             pass
 
 
-        await ctx.send("Are you sure you want to mute yourself?\nThis action is irreversable unless a mod decides to unmute you\n\nThis message will time out in 30 seconds. Reply with yes or no")
+        await ctx.respond("Are you sure you want to mute yourself?\nThis action is irreversable unless a mod decides to unmute you\n\nThis message will time out in 30 seconds. Reply with yes or no")
         def check(z):
             return z.author == ctx.author and z.channel == ctx.channel
         msg = await self.bc.wait_for('message', check=check, timeout = 30)
@@ -119,20 +120,20 @@ class Fun(commands.Cog):
             minutes, seconds = divmod(time, 60)
             hours, minutes = divmod(minutes, 60)
             if int(hours):
-                await ctx.send(
+                await ctx.respond(
                     f"Muted {member.display_name} for {hours} hours, {minutes} minutes and {seconds} seconds"
                 )
                 await self.postmodlog(ctx.guild,"Mute",ctx.author,ctx.channel,member=member,duration=f"{hours} hours, {minutes} minutes and {seconds} seconds")
             elif int(minutes):
-                await ctx.send(
+                await ctx.respond(
                     f"Muted {member.display_name} for {minutes} minutes and {seconds} seconds"
                 )
                 await self.postmodlog(ctx.guild,"Mute",ctx.author,ctx.channel,member=member,duration=f"{minutes} minutes and {seconds} seconds")
             elif int(seconds):
-                await ctx.send(f"Muted {member.display_name} for {seconds} seconds")
+                await ctx.respond(f"Muted {member.display_name} for {seconds} seconds")
                 await self.postmodlog(ctx.guild,"Mute",ctx.author,ctx.channel,member=member,duration=f"{seconds} seconds")
         else:
-            await ctx.send("Aborting...")
+            await ctx.respond("Aborting...")
             return
 
     @tasks.loop(minutes=60)
@@ -148,7 +149,7 @@ class Fun(commands.Cog):
     async def before_refresh_memes(self):
         await self.bc.wait_until_ready()
 
-    @commands.command(hidden=True)
+    @slash.command(hidden=True)
     async def mock(self,ctx,*,words):
         formated = [letters for letters in words]
         final = ""
@@ -158,15 +159,15 @@ class Fun(commands.Cog):
                 final += i.lower()
             else:
                 final += i.upper()
-        await ctx.send(final)
+        await ctx.respond(final)
             
-    @commands.command(description="Let's see how fast you can get the cookie")
+    @slash.command(description="Let's see how fast you can get the cookie")
     async def cookie(self,ctx):
         embed=discord.Embed(
             title="Catch The Cookie!",
             description="In 5 seconds I will react to this message with a cookie and you have to react as fast as you can!"
         )
-        msg = await ctx.send(embed=embed)
+        msg = await ctx.respond(embed=embed)
         await asyncio.sleep(5)
         await msg.add_reaction("🍪")
         def check(reaction, user):
@@ -175,13 +176,13 @@ class Fun(commands.Cog):
             start = time.perf_counter()
             reaction, user = await self.bc.wait_for('reaction_add', timeout=30, check=check)
         except asyncio.TimeoutError:
-            return await ctx.send("This message has timed out!")
+            return await ctx.respond("This message has timed out!")
         else:
             end = time.perf_counter()
-            await ctx.send("**{}** has caught the cookie in {} seconds!".format(ctx.author, (round((end - start) * 100)) / 100))
+            await ctx.respond("**{}** has caught the cookie in {} seconds!".format(ctx.author, (round((end - start) * 100)) / 100))
 
 
-    @commands.command(description="Test how fast you can type")
+    @slash.command(description="Test how fast you can type")
     async def wpm(self,ctx):
         All_Adjectives = ["The fierce", "The obedient", "The skinny", "The delicious", "The damaged", "The heavy", "The aquatic", "The ancient", "The chivalrous", "The cowardly", "The anxious", "The deranged", "The draconian", "The evanescent", "The quick", "The scaled", "The furry", "The wet", "The dry", "The dark blue", "The French", "The illegal", "The suspicious", "The fresh", "The German", "An arctic", "An ordinary", "The salty", "A dirty", "The loud", "The young", "The colossal", "The fat", "The mysterious", "The silly", "The powerful", "The rich", "The oily", "The poisonous", "The venomous", "The chocolate", "The cold", "The chaotic", "The lawful", "The good", "The evil", "The motivated", "The undead"]
         All_Subjects = ["kitten", "salmon", "knight", "teacher", "bear", "doctor", "fox", "tapir", "phoenix", "lawyer", "warlock", "dragon", "sheep", "judge", "barrel", "demon", "orc","inspector", "detective", "attorney", "prosecutor", "man", "teenager", "woman", "boy", "girl", "jackal", "ghost", "moth", "pancake", "pan cake", "paladin", "policeman", "samurai", "explorer", "traitor", "king", "queen", "animal", "goldfish", "zombie", "mummy", "witch", "cheerleader", "conductor", "priest", "alien", "god", "deity", "chicken", "butler", "monk"]
@@ -204,8 +205,8 @@ class Fun(commands.Cog):
         textwrapped = textwrap.wrap(text, width=35)
         draw.text((offset,margin), "\n".join(textwrapped), font=font, fill="#ffffff")
         im.save("utility/storage/images/words.png")
-        await ctx.send(file=discord.File("utility/storage/images/words.png"))
-        await ctx.send("**You must type exactly as it is said on the image. You have 60 seconds**")
+        await ctx.respond(file=discord.File("utility/storage/images/words.png"))
+        await ctx.respond("**You must type exactly as it is said on the image. You have 60 seconds**")
         def check(msg):
             return msg.author == ctx.author
         try:
@@ -217,13 +218,13 @@ class Fun(commands.Cog):
                     title="Stats",
                     description=f"**Time upon completion:** {end - start}\n**Words Per Minute:** {5 / (end - start) * 60}"
                 )
-                return await ctx.send("You have completed the sentence correctly!", embed=embed)
+                return await ctx.respond("You have completed the sentence correctly!", embed=embed)
             else:
-                return await ctx.send("You did not enter the right sentence!")
+                return await ctx.respond("You did not enter the right sentence!")
         except asyncio.TimeoutError:
-            return await ctx.send("You have run out of time!")
+            return await ctx.respond("You have run out of time!")
 
-    @commands.command(
+    @slash.command(
         name="8ball",
         aliases=['eightball'],
         description="ask the bread gods anything with your magik 8ball",
@@ -239,51 +240,22 @@ class Fun(commands.Cog):
             "Don't count on it.", "My reply is no.", "My sources say no.",
             "Outlook not so good.", "Very doubtful."
         ]
-        await ctx.send(
+        await ctx.respond(
             f'Question: {question}\nAnswer: {random.choice(responses)}')
 
-    @commands.command(
+    @slash.command(
         description='fake ban people and prank',
         usage='<person>')
     async def fban(self, ctx, person):
-      await ctx.send(f'{person} was banned by <@{ctx.author.id}>')
-
-
-    @commands.command(hidden=True)
-    @cooldown(1, 10, BucketType.user)
-    async def pp(self, ctx, user : discord.Member=None):
-        if user == None:
-            user = ctx.author
-        else:
-            pass
-        pen = ['8D',
-               '8=D',
-               '8==D',
-               '8===D',
-               '8====D',
-               '8=====D',
-               '8======D',
-               '8=======D',
-               '8========D',
-               '8=========D',
-               '8==========D',
-               '8===========D',
-               '8============D',
-               '8=============D',
-               '8==============D',
-               '8===============D']
-        e = discord.Embed(title="", description="", color=0x50C878)
-        e.add_field(name='**PP machine 5000**',
-                    value=f'{user.display_name} pp size is:\n{random.choice(pen)}\n**Even my angel has a bigger one**', )
-        await ctx.send(embed=e)
+      await ctx.respond(f'{person} was banned by <@{ctx.author.id}>')
           
-    @commands.command(
+    @slash.command(
         description="get some fresh memes",
         usage=" "
     )
     async def meme(self,ctx):
         if self.bc.gettingmemes:
-            return await ctx.send("Sorry but the memes are still loading! Try again later!")
+            return await ctx.respond("Sorry but the memes are still loading! Try again later!")
         meme = random.choice(self.subs)
 
         name=meme.title
@@ -293,17 +265,18 @@ class Fun(commands.Cog):
             description=f"**[{name}]({url})**"
         )
         em.set_image(url=url)
-        await ctx.send(embed=em, view=MemeView(ctx,self.subs))
+        await ctx.respond(embed=em, view=MemeView(ctx,self.subs))
 
 
-    @commands.command(
+    @slash.command(
       description='make an embed', usage=' '
     )
     async def embed(self, ctx):
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel
         embed = discord.Embed()
-        _ = await ctx.send("What do you want your embed title to be?")
+        _ = await ctx.respond("What do you want your embed title to be?")
+        _ = await _.original_message()
         try:
             msg = await self.bc.wait_for("message", check=check, timeout=60)
         except asyncio.TimeoutError:
@@ -368,4 +341,4 @@ class Fun(commands.Cog):
         await ctx.send(embed=embed)
 
 def setup(bc):
-    bc.add_cog(Fun(bc))
+    bc.add_cog(FunSlash(bc))

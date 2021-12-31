@@ -61,6 +61,38 @@ class Owner(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
+    async def rollbacks(self,ctx,db):
+        with open("utility/storage/json/backups.json", "r") as f:
+            data = json.load(f)
+        message = ""
+        for save in data[db.lower()]:
+            _save = eval(save)
+            message += "Save #{} - <t:{}:R>\n".format(data[db.lower()].index(save), int(_save["timestamp"]))
+        await ctx.send(message)
+
+    @commands.command()
+    @commands.is_owner()
+    async def rollback(self,ctx,db,save:int):
+        with open("utility/storage/json/backups.json", "r") as f:
+            data = json.load(f)
+        save = eval(data[db.lower()][save])
+        msg = await ctx.send("Freezing all tasks...")
+        try:
+            await self.bc.rewind.clear()
+        except:
+            pass
+        await msg.edit("Rolling back...")
+        for data in save["data"]:
+            await self.bc.economy.upsert(data)
+        await msg.edit("Unfreezing tasks...")
+        try:
+            await self.bc.rewind.set()
+        except:
+            pass
+        await msg.edit("Successfully rolled back the database to that time!")
+    
+    @commands.command()
+    @commands.is_owner()
     async def updatedocs(self,ctx):
         await util.docs("premium", "config", self.bc, ctx)
         await util.docs("daily", "economy", self.bc, ctx)
@@ -214,6 +246,9 @@ class Owner(commands.Cog):
         self.insert_returns(body)
         env = {
             'bc': self.bc,
+            'guild': ctx.guild,
+            'author': ctx.author,
+            'os': os,
             'discord': discord,
             'commands': commands,
             'ctx': ctx,
@@ -226,7 +261,8 @@ class Owner(commands.Cog):
         try:
             exec(compile(parsed, filename="<ast>", mode="exec"), env)
             result = (await eval(f"{fn_name}()", env))
-            result = list(result)
+            if type(result) == discord.Message:
+                return
             await ctx.send(result)
         except Exception:
             await ctx.send(traceback.format_exc(),delete_after=10)
@@ -251,7 +287,7 @@ class Owner(commands.Cog):
 
     @commands.command(aliases=["bl"])
     @commands.is_owner()
-    async def blacklist(self,ctx, user: discord.Member, *,
+    async def blacklist(self,ctx, user: discord.User, *,
                         reason='No Reason Specified'):
 
         self.bc.blacklisted_users.append(user.id)
@@ -261,7 +297,7 @@ class Owner(commands.Cog):
         await ctx.send(f"{user.name} is now blacklisted")
 
     @commands.command(aliases=["unbl"])
-    async def unblacklist(self,ctx, user: discord.Member):
+    async def unblacklist(self,ctx, user: discord.User):
 
         self.bc.blacklisted_users.remove(user.id)
         data = read_json("utility/storage/json/blacklist")

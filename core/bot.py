@@ -1,5 +1,5 @@
 """
-   Copyright [2021] [BongoPlayzYT]
+   Copyright [2021] [BungoChungo]
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,10 +20,11 @@ import os
 import json
 import time
 from random import choice
-from discord.ext import commands
+from discord.ext import commands, tasks
 import motor.motor_asyncio
 import datetime
 import utility
+import asyncio
 import discordmongo
 import googletrans
 import sys
@@ -59,7 +60,9 @@ class BreadBot(BaseBot):
             command_prefix=get_prefix,
             case_insensitive=True, 
             owner_id=owner,
-            intents=intents)
+            intents=intents,
+            
+            allowed_mentions=discord.AllowedMentions(everyone=False))
 
         # Task data
         self.muted_users = {}
@@ -76,6 +79,8 @@ class BreadBot(BaseBot):
         self.remove_command("help")
         self.dbltoken = os.environ.get("DBLTOKEN")
         self.gettingmemes = True
+        self.rewind = asyncio.Event(loop=self.loop)
+        self.rewind.set()
 
         # Load cogs
         for filename in os.listdir('./cogs'):
@@ -83,7 +88,7 @@ class BreadBot(BaseBot):
                 self.load_extension(f'cogs.{filename[:-3]}')
                 print(filename[:-3].capitalize() + " Cog has been loaded\n" + "-"*len(filename[:-3] + " Cog has been loaded") + "\n")
         self.load_extension("slashtest.test")
-        self.load_extension("slash.checking")
+        self.load_extension("slash.fun")
 
         @self.before_invoke
         async def before_any_command(ctx):
@@ -171,7 +176,35 @@ class BreadBot(BaseBot):
             except discord.errors.Forbidden:
                 pass
 
+    def __repr__(self):
+        return "**BreadBot Core** Version {}".format(self.version)
+    
+    @tasks.loop(minutes = 90)
+    async def create_backup(self):
+        
+        # Backup Economy
+
+        all = await self.economy.get_all()
+        with open("utility/storage/json/backups.json", "r") as f:
+            data = json.load(f)
+        
+        
+        if len(data["economy"]) == 10:
+            oldest = sorted(data["economy"], key=lambda x: eval(x)["timestamp"])[0]
+            data["economy"].remove(oldest)
+        data["economy"].append(str({"timestamp": datetime.datetime.now().timestamp(), "data": all}))
+
+        all = await self.nfts.get_all()
+        if len(data["nfts"]) == 10:
+            oldest = sorted(data["nfts"], key=lambda x: eval(x)["timestamp"])[0]
+            data["nfts"].remove(oldest)
+        data["nfts"].append(str({"timestamp": datetime.datetime.now().timestamp(), "data": all}))
+
+        with open("utility/storage/json/backups.json", "w") as f:
+            data = json.dump(data, f, indent=4)
+
     async def on_ready(self):
+        self.create_backup.start()
         for guild in self.guilds:
             botcount = len([member for member in guild.members if member.bot])
             if botcount >= 100:
@@ -242,8 +275,10 @@ class BreadBot(BaseBot):
     
     def run(self):
         token = os.environ.get("token")
-        
-        super().run(token, reconnect=True)
+        try:
+            super().run(token, reconnect=True)
+        except:
+            os.system("kill 1")
 
 def read_json(filename):
     with open(f"{filename}.json", "r") as file:

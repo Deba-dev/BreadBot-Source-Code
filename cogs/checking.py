@@ -32,6 +32,37 @@ class Checking(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
 
+    @commands.command(name="source",aliases=["github"])
+    @commands.cooldown(1, 1, commands.BucketType.channel)
+    async def source(self, ctx, *, command: str = None):
+        """Source code command by BobDotCom
+        """
+        source_url = 'https://github.com/RealBongoChongo/BreadBot-Source-Code'
+        branch = 'master'
+        if command is None:
+            return await ctx.send(source_url)
+        obj = self.client.get_command(command.replace('.', ' '))
+        if obj is None:
+            return await ctx.send('Could not find command.')
+
+            # since we found the command we're looking for, presumably anyway, let's
+            # try to access the code itself
+        src = obj.callback.__code__
+        module = obj.callback.__module__
+        filename = src.co_filename
+
+        lines, firstlineno = inspect.getsourcelines(src)
+        if not module.startswith('discord'):
+            # not a built-in command
+            location = os.path.relpath(filename).replace('\\', '/')
+        else:
+            location = module.replace('.', '/') + '.py'
+            source_url = 'https://github.com/Rapptz/discord.py'
+            branch = 'master'
+
+        final_url = f'<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>'
+        await ctx.send(final_url + "<- Source")
+        
     @commands.command(description="Diagnose a command to see why it may not be working!")
     async def diagnose(self,ctx,cmd):
         cmd = self.bc.get_command(cmd)
@@ -230,7 +261,7 @@ Map: {}
         roles = [role for role in user.roles]
         roles.remove(ctx.guild.default_role)
         nick = user.nick if user.nick else "No Nickname"
-        activity = user.activity if user.activity else "No Activity"
+        activity = user.activity.name if user.activity else "No Activity"
         perm_list = [perm[0] for perm in user.guild_permissions if perm[1]]
         booster = "<a:tick:816709602384937031>" if ctx.guild.premium_subscriber_role in user.roles else "<a:no:816709772342591498>"
         if user.status == discord.Status.online:

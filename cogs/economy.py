@@ -493,6 +493,7 @@ class Economy(commands.Cog):
 
     @tasks.loop(seconds=5)
     async def give_mons(self):
+        await self.bc.rewind.wait()
         data = await self.bc.economy.get_all()
         for data in data:
             if "Dough" not in data:
@@ -500,7 +501,10 @@ class Economy(commands.Cog):
             self._running[str(data["_id"])] = True
             if data["gpu"] - data["cooling"] > 20:
                 user = self.bc.get_user(data["_id"])
-                await user.send("Your GPU Overheated and exploded your setup!")
+                try:
+                    await user.send("Your GPU Overheated and exploded your setup!")
+                except:
+                    pass
                 data["gpu"] = 1
                 data["cooling"] = 1
                 data["power"] = 1
@@ -660,7 +664,7 @@ class Economy(commands.Cog):
         await self.bc.economy.upsert(data)
 
     async def cog_before_invoke(self, ctx):
-        print(self._running)
+        await self.bc.rewind.wait()
         self._running[str(ctx.author.id)] = False if str(ctx.author.id) not in self._running else self._running[str(ctx.author.id)]
         if self._running[str(ctx.author.id)]:
             while True:
@@ -1392,7 +1396,7 @@ class Economy(commands.Cog):
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel
         try:
-            msg = await self.bc.wait_for("message", check=check, timeout=30)
+            msg = await self.bc.wait_for("message", check=check, timeout=10)
         except asyncio.TimeoutError:
             return await ctx.send("Your choices have timed out")
         else:

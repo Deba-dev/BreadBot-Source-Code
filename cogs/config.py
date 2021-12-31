@@ -53,7 +53,9 @@ class Config(commands.Cog):
 
     @tasks.loop(seconds=15)
     async def check_if_paid(self):
-        guild = await self.bc.fetch_guild(760950684849537124)
+        guild = self.bc.get_guild(760950684849537124)
+        if not guild:
+            guild = await self.bc.fetch_guild(760950684849537124)
         all = await self.bc.packs.get_all()
         _ = [_data["_id"] for _data in await self.bc.premium.get_all()]
         for _guild in _:
@@ -66,11 +68,13 @@ class Config(commands.Cog):
                 await self.bc.premium.delete(_guild)
         for data in all:
             try:
-                payer = await guild.fetch_member(data["_id"])
+                payer = guild.get_member(data["_id"])
             except:
                 await self.bc.packs.delete(data["_id"])
             else:
-                payer = await guild.fetch_member(data["_id"])
+                payer = guild.get_member(data["_id"])
+                if not payer:
+                    payer = await guild.fetch_member(data["_id"])
             role = discord.utils.get(guild.roles, id=897215523861958707)
             if role not in payer.roles:
                 for guild in data["GuildsPaid"]:

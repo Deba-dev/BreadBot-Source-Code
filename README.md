@@ -1,9 +1,10 @@
 # BreadBot-Source-Code
 
 Hello and welcome to BreadBot Source Code
-In order to run the bot you need to make a .env file and put "token = (your token)" inside
 
 I prefer that you dont copy and paste this code because you wont learn anything. 
+
+If you see any issues you can open a pr or just open an issue
 
 If you want to join my servers you can click here:
 
@@ -13,7 +14,5 @@ If you want to join my servers you can click here:
 <a href="https://discord.gg/hfMfFH3has" target="_blank" rel="noopener noreferrer">
     <img src="https://discordapp.com/api/guilds/760950684849537124/widget.png?style=banner4" alt="Discord" />
 </a>
-
-Im lazy rn so im gonna finish this readme in another day
 
 i like chicken
