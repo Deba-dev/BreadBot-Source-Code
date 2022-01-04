@@ -3,3 +3,6 @@ pip install -r require.txt
 python -m main.py
 """
 language = "python3"
+
+[packager]
+ignoredPackages = ["discord", "discord.py"]

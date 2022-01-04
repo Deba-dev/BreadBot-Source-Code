@@ -480,16 +480,35 @@ def custom_cooldown(rate:int, per:int, newrate:int, newper:int, bucket: commands
     
     return inner
 
+class DataObject:
+    def __init__(self, data):
+        self.data = data
+
 class Economy(commands.Cog):
     def __init__(self, bc):
         self.bc = bc
         self.heists = self.checkHeist.start()
         self.mons = self.give_mons.start()
         self._running = {}
+        self.queue = []
+        self._queue = self.run_queue.start()
+
+    @tasks.loop(seconds=0)
+    async def run_queue(self):
+        if self.queue:
+            print(len(self.queue))
+            nextItem = self.queue[0]
+            self.queue.remove(nextItem)
+            if "_id" in nextItem.data:
+                await self.bc.economy.upsert(nextItem.data)
 
     def cog_unload(self):
         self.heists.cancel()
         self.mons.cancel()
+        self._queue.cancel()
+
+    async def upsert(self, data):
+        self.queue.append(DataObject(data))
 
     @tasks.loop(seconds=5)
     async def give_mons(self):
@@ -508,7 +527,7 @@ class Economy(commands.Cog):
                 data["gpu"] = 1
                 data["cooling"] = 1
                 data["power"] = 1
-                await self.bc.economy.upsert(data)
+                await self.upsert(data)
                 self._running[str(data["_id"])] = False
                 continue
             if data["gpu"] - data["power"] > 15:
@@ -521,14 +540,14 @@ class Economy(commands.Cog):
 
                 data["Dough"] = round(data["Dough"] * 1000) / 1000
                 self._running[str(data["_id"])] = False
-                await self.bc.economy.upsert(data)
+                await self.upsert(data)
                 continue
             level_multi = int(data["gpu"] / 5) + 1
             data["Dough"] += (round((0.005 * data["gpu"]) * 1000) / 1000) * level_multi
 
             data["Dough"] = round(data["Dough"] * 1000) / 1000
             self._running[str(data["_id"])] = False
-            await self.bc.economy.upsert(data)
+            await self.upsert(data)
 
     @commands.group(invoke_without_command=True,aliases=["up"])
     async def upgrade(self,ctx):
@@ -575,7 +594,7 @@ class Economy(commands.Cog):
                 _ += 1
         data["wallet"] -= cost
         await ctx.send("Successfully upgraded your gpu for: {} coins\n\n**[Level {} >> Level {}]**".format(cost, data["gpu"] - amount, data["gpu"]))
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     @upgrade.command(description="Upgrade your cooling", aliases=["c"], name="cooling")
     async def up_cooling(self,ctx,amount):
@@ -618,7 +637,7 @@ class Economy(commands.Cog):
                 _ += 1
         data["wallet"] -= cost
         await ctx.send("Successfully upgraded your cooling for: {} coins\n\n**[Level {} >> Level {}]**".format(cost, data["cooling"] - amount, data["cooling"]))
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     @upgrade.command(description="Upgrade your power", aliases=["p"], name="power")
     async def up_power(self,ctx,amount):
@@ -661,7 +680,7 @@ class Economy(commands.Cog):
                 _ += 1
         data["wallet"] -= cost
         await ctx.send("Successfully upgraded your power for: {} coins\n\n**[Level {} >> Level {}]**".format(cost, data["power"] - amount, data["power"]))
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     async def cog_before_invoke(self, ctx):
         await self.bc.rewind.wait()
@@ -681,7 +700,7 @@ class Economy(commands.Cog):
             data["level"] += 1
             data["xp"] = 0
         data["xp"] += 1
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     @commands.command(description="Start your journy for Dough")
     async def Dough(self,ctx):
@@ -721,7 +740,7 @@ class Economy(commands.Cog):
         data["power"] = 1
         data["cooling"] = 1
         await ctx.send("You can now begin your journy on getting Dough! I will DM you if there is an issue with the power supply or anything!")
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     @commands.group(invoke_without_command=True, description="Check out or make some cool NFTs")
     async def nft(self,ctx):
@@ -762,7 +781,7 @@ class Economy(commands.Cog):
         if eco["Dough"] < 10:
             return await ctx.send("You need 10 Dough to make an NFT")
         eco["Dough"] -= 10
-        await self.bc.economy.upsert(eco)
+        await self.upsert(eco)
         await self.bc.nfts.upsert(data)
         await ctx.send("Successfully made your NFT for 10 dough")
 
@@ -818,7 +837,7 @@ class Economy(commands.Cog):
         data["wallet"] += int(4500 * data["Dough"])
         await ctx.send("Exchanged your {} Dough into {} Coins".format(data["Dough"], int(4500 * data["Dough"])))
         data["Dough"] = 0
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     @commands.command(description="Get some money by doing some tasks")
     @commands.check(custom_cooldown(1, 30, 1, 12, BucketType.user))
@@ -897,7 +916,7 @@ class Economy(commands.Cog):
             data["wallet"] += earnings
             await ctx.send("You have now claimed your {}k coins for this week!".format(earnings/1000))
             data["claimedweekly"] = datetime.datetime.now()
-            await self.bc.economy.upsert(data)
+            await self.upsert(data)
         else:
             timeleft = claimtime - datetime.datetime.now()
             seconds = timeleft.total_seconds()
@@ -936,7 +955,7 @@ class Economy(commands.Cog):
             data["wallet"] += earnings
             await ctx.send("You have now claimed your {}k coins for today!".format(earnings/1000))
             data["claimeddaily"] = datetime.datetime.now()
-            await self.bc.economy.upsert(data)
+            await self.upsert(data)
         else:
             timeleft = claimtime - datetime.datetime.now()
             seconds = timeleft.total_seconds()
@@ -1060,11 +1079,11 @@ class Economy(commands.Cog):
                 winings = data1["bank"] / len(win)
                 winings = int(winings)
                 data1["bank"] -= data1["bank"]
-                await self.bc.economy.upsert(data1)
+                await self.upsert(data1)
                 for user in win:
                     data = await self.bc.economy.find(user.id)
                     data["wallet"] += winings
-                    await self.bc.economy.upsert(data)
+                    await self.upsert(data)
                 wins = ""
                 for user in win:
                     wins += f"{user} won {winings} from the heist\n"
@@ -1158,7 +1177,7 @@ class Economy(commands.Cog):
             em.add_field(name='BreadBot', value=f'Rolled `{P2}`')
             await ctx.send(embed=em)
             data["wallet"] += amount
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
     
     @commands.command(description="expand your bank")
     async def expand(self, ctx, amount=1):
@@ -1177,7 +1196,7 @@ class Economy(commands.Cog):
         expansion = random.randrange(20000, 25000)
         data["banklimit"] += expansion*amount
         await ctx.send("Your bank has been expanded by {} coins".format(expansion*amount))
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     @commands.command(description="Get something random from the shop")
     async def lootbox(self, ctx):
@@ -1203,7 +1222,7 @@ class Economy(commands.Cog):
             await ctx.send("You managed to get a crisp {} coins".format(earnings))
         data = await self.bc.economy.find(ctx.author.id)
         data["wallet"] += earnings
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     @commands.command(description="Gift an item to a user")
     async def gift(self, ctx, member:discord.Member, item, amount = 1):
@@ -1248,7 +1267,7 @@ class Economy(commands.Cog):
             await ctx.send("You managed to get a crisp {} coins".format(earnings))
         data = await self.bc.economy.find(ctx.author.id)
         data["wallet"] += earnings
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
 
     @commands.command(
@@ -1282,7 +1301,7 @@ class Economy(commands.Cog):
             return
 
         data["wallet"] -= amount
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
         em = discord.Embed(
             title=f"{ctx.author.name}'s blackjack game", color=random.choice(self.bc.color_list))
         em.add_field(name=ctx.author.name, value=pcards)
@@ -1404,7 +1423,7 @@ class Economy(commands.Cog):
                 earnings = random.randrange(0, 3000)
                 data["wallet"] += earnings
                 await ctx.send("You posted your meme and you got **{}** coins from it".format(earnings))
-                await self.bc.economy.upsert(data)
+                await self.upsert(data)
             else:
                 return await ctx.send("You did not enter the choices right")
 
@@ -1441,7 +1460,7 @@ class Economy(commands.Cog):
             data["banklimit"] = 150000
             embed.add_field(name="Rewards", value="Laptop x1\nFishing Pole x1\nRifle x1\nPhone x1\nBasic Lootbox x2\n\nStarter Bank Space: 150k")
         await ctx.send(embed=embed)
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     @commands.command(description="Go hunting for some wild animals")
     @commands.check(custom_cooldown(1,45,1,20,BucketType.user))
@@ -1494,7 +1513,7 @@ class Economy(commands.Cog):
         if earnings in range(601, 800):
             await ctx.send("**BongoPlayzYT** donated {}".format(earnings))
         data["wallet"] += earnings
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     @commands.command(aliases=["with"], description="Take some money out of your bank")
     async def withdraw(self,ctx,amount):
@@ -1511,7 +1530,7 @@ class Economy(commands.Cog):
 
         data["wallet"] += amount
         data["bank"] -= amount
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
         await ctx.send("Successfully withdrew **{}** coins from your bank!".format(amount))
 
     @commands.command(aliases=["dep"], description="Put some money into your bank")
@@ -1540,7 +1559,7 @@ class Economy(commands.Cog):
         data["bank"] += amount
         data["wallet"] -= amount
         
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
         await ctx.send("Successfully deposited **{}** coins!".format(amount))
 
 
@@ -1621,7 +1640,7 @@ class Economy(commands.Cog):
         data["passive"] = not data["passive"]
         ternary = "enabled" if data["passive"] else "disabled"
         await ctx.send(f"Your passive mode is now {ternary}")
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
 
     @commands.command(description="rob a person")
     @commands.check(custom_cooldown(1,45,1,20,BucketType.user))
@@ -1643,8 +1662,8 @@ class Economy(commands.Cog):
         data["wallet"] += earnings
         data2["wallet"] -= earnings
         await ctx.send("You robbed this person and got {}".format(earnings))
-        await self.bc.economy.upsert(data)
-        await self.bc.economy.upsert(data2)
+        await self.upsert(data)
+        await self.upsert(data2)
 
     @commands.command(description="Share some coins and bring some joy :)")
     async def share(self,ctx,member:discord.Member, amount:int):
@@ -1663,8 +1682,8 @@ class Economy(commands.Cog):
         data["wallet"] -= amount
         data2["wallet"] += amount
         await ctx.send("You have now shared **{}** to `{}`".format(amount, member))
-        await self.bc.economy.upsert(data)
-        await self.bc.economy.upsert(data2)
+        await self.upsert(data)
+        await self.upsert(data2)
 
     @commands.command(description="rob a person's bank", usage="<user>")
     async def heist(self, ctx, member: discord.Member):
@@ -1723,7 +1742,7 @@ class Economy(commands.Cog):
                 "level": 1,
                 "bag": []
             }
-            await self.bc.economy.upsert(data)
+            await self.upsert(data)
 
     async def check_for(self,member,item_name):
         data = await self.bc.economy.find(member.id)
@@ -1772,7 +1791,7 @@ class Economy(commands.Cog):
                 break
         if not iteminbag:
             data["bag"].append({"name": name_["name"], "id": name_["id"], "amount": amount})
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
         return [True]
 
     async def buy_item(self, member, item_name, amount):
@@ -1809,7 +1828,7 @@ class Economy(commands.Cog):
         if not iteminbag:
             data["bag"].append({"name": name_["name"], "id": name_["id"], "amount": amount})
             data["wallet"] -= name_["cost"] * amount
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
         return [True]
     
     async def remove_item(self, member, item_name, amount):
@@ -1833,7 +1852,7 @@ class Economy(commands.Cog):
                 if item["amount"] == 0:
                     data["bag"].remove(item)
                 break
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
         return [True]
 
     async def sell_item(self, member, item_name, amount):
@@ -1864,7 +1883,7 @@ class Economy(commands.Cog):
                 if item["amount"] == 0:
                     data["bag"].remove(item)
                 break
-        await self.bc.economy.upsert(data)
+        await self.upsert(data)
         return [True]
 
 def setup(bc):
