@@ -496,7 +496,6 @@ class Economy(commands.Cog):
     @tasks.loop(seconds=0)
     async def run_queue(self):
         if self.queue:
-            print(len(self.queue))
             nextItem = self.queue[0]
             self.queue.remove(nextItem)
             if "_id" in nextItem.data:
