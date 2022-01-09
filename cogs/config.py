@@ -248,7 +248,7 @@ class Config(commands.Cog):
                 em = discord.Embed(color=discord.Color.red())
                 em.set_author(name="This role was never blacklisted!")
                 return await ctx.send(embed=em)
-            data["roles_bl"].append(arg.id)
+            data["roles_bl"].remove(arg.id)
             await self.bc.botedit.upsert(data)
             em = discord.Embed(color=discord.Color.green())
             em.set_author(name="No longer ignoring anyone with the {} role".format(arg.name))

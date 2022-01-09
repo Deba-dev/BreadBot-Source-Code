@@ -22,7 +22,7 @@ class ChatBot(commands.Cog):
             async with aiohttp.ClientSession(headers={"x-api-key": os.environ.get("prsawapi")}) as session:
                 async with session.get("https://api.pgamerx.com/v4/ai", params={'type':"stable" , 'message':msg.content, "lang": "en", "uid": str(msg.author.id)}) as res:
                     text = await res.json()
-                    await msg.reply(text[0]["message"])
+                    await msg.reply(text)
 
             
 

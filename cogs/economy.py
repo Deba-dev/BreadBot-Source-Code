@@ -496,10 +496,16 @@ class Economy(commands.Cog):
     @tasks.loop(seconds=0)
     async def run_queue(self):
         if self.queue:
-            nextItem = self.queue[0]
-            self.queue.remove(nextItem)
+            nextItem = self.queue.pop(0)
             if "_id" in nextItem.data:
-                await self.bc.economy.upsert(nextItem.data)
+                data = await self.bc.economy.find(nextItem.data["_id"])
+                for key, value in data.items():
+                    if value != nextItem.data[key]:
+                        if type(value) in (int, float):
+                            data[key] += (nextItem[key] - data[key])
+                        else:
+                            data[key] = nextItem.data[key]
+                await self.bc.economy.upsert(data)
 
     def cog_unload(self):
         self.heists.cancel()
